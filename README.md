@@ -50,7 +50,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 
 ```json
 {
-  "rulesDirectory": "path/to/tslint-immutable/dist/src",
+  "rulesDirectory": "path/to/tslint-immutable/rules",
   "rules": {
     "no-let": true,
     "no-this": true,
