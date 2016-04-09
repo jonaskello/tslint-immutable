@@ -29,7 +29,7 @@ array.push(1)
 alert('Hello world!')
 ```
 
-This rule checks that the value of an expression is assign to a variable. However it will still be possible to perform mutations, eg. this rule will not catch these expressions:
+This rule checks that the value of an expression is assigned to a variable. However it will still be possible to perform mutations, eg. this rule will not catch these expressions:
 
 ```TypeScript
 const namesWithBar = names.concat([' bar ']) // ok, bound to another variable
