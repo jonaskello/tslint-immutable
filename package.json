@@ -1,0 +1,34 @@
+{
+  "name": "tslint-immutable",
+  "version": "0.1.0",
+  "description": "TSLint rules to disable all mutation in TypeScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.ts --require ts-node/register",
+    "build": "tsc --outDir rules --sourceMap && rm rules/*.map"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonaskello/tslint-immutable.git"
+  },
+  "keywords": [
+    "eslint",
+    "immutability"
+  ],
+  "author": "Jonas Kello",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jhusain/eslint-plugin-immutable/issues"
+  },
+  "homepage": "https://github.com/jhusain/eslint-plugin-immutable#readme",
+  "dependencies": {
+    "tslint": "^3.7.1",
+    "typescript": "^1.8.9"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "ntypescript": "^1.201604080019.1",
+    "ts-node": "^0.7.1"
+  }
+}

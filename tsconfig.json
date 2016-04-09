@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true,
+    "outDir": "js_out"
+  },
+  "files": [
+    "src/noLetRule.ts",
+    "src/noThisRule.ts",
+    "src/noMutationRule.ts",
+    "src/noExpressionStatementRule.ts",
+    "typings/main.d.ts",
+    "node_modules/ntypescript/bin/typescript.d.ts"
+  ]
+}
