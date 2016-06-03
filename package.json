@@ -1,6 +1,6 @@
 {
   "name": "tslint-immutable",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TSLint rules to disable all mutation in TypeScript.",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
   "keywords": [
-    "eslint",
+    "tslint",
     "immutability"
   ],
   "author": "Jonas Kello",
