@@ -18,9 +18,9 @@
   "author": "Jonas Kello",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/jhusain/eslint-plugin-immutable/issues"
+    "url": "https://github.com/jonaskello/tslint-immutable/issues"
   },
-  "homepage": "https://github.com/jhusain/eslint-plugin-immutable#readme",
+  "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "dependencies": {
     "tslint": "^3.7.1",
     "typescript": "^1.8.9"
