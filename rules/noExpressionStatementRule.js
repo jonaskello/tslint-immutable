@@ -26,7 +26,10 @@ var NoExpressionStatementWalker = (function (_super) {
     }
     NoExpressionStatementWalker.prototype.visitNode = function (node) {
         if (node && node.kind === ts.SyntaxKind.ExpressionStatement) {
-            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
+            var children = node.getChildren();
+            if (children.every(function (n) { return n.kind !== ts.SyntaxKind.YieldExpression; })) {
+                this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
+            }
         }
         _super.prototype.visitNode.call(this, node);
     };
