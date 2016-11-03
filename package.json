@@ -1,11 +1,14 @@
 {
   "name": "tslint-immutable",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "TSLint rules to disable all mutation in TypeScript.",
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/*.ts --require ts-node/register",
-    "build": "tsc -p tsconfig.prod.json"
+    "build": "tsc -p tsconfig.prod.json",
+    "publish:major": "npm run build && node scripts/publish.js major",
+    "publish:minor": "npm run build && node scripts/publish.js minor",
+    "publish:patch": "npm run build && node scripts/publish.js patch"
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,7 @@
     "@types/node": "^6.0.46",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "shelljs": "^0.7.5",
     "ts-node": "^1.6.1",
     "tslint": "^3.15.1",
     "typescript": "^2.0.6"
