@@ -1,6 +1,3 @@
-var ts = require("ntypescript");
-//import * as ts from "ntypescript";
-
 import TestHelper = require('./TestHelper');
 
 describe('noMutationRule', ():void => {

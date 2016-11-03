@@ -1,4 +1,3 @@
-var ts = require("ntypescript");
 import TestHelper = require('./TestHelper');
 var x = require("../src/noExpressionStatementRule");
 
