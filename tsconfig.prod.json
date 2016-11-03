@@ -2,8 +2,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
-    "outDir": "js_out"
+    "sourceMap": false,
+    "outDir": "rules"
   },
   "include": [
     "src/*.ts"

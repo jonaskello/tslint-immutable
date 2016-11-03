@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha tests/*.ts --require ts-node/register",
-    "build": "tsc --outDir rules --sourceMap && rm rules/*.map"
+    "build": "tsc -p tsconfig.prod.json"
   },
   "repository": {
     "type": "git",
@@ -21,14 +21,14 @@
     "url": "https://github.com/jonaskello/tslint-immutable/issues"
   },
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
-  "dependencies": {
-    "tslint": "^3.7.1",
-    "typescript": "^1.8.9"
-  },
   "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.46",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "ntypescript": "^1.201604080019.1",
-    "ts-node": "^0.7.1"
+    "ts-node": "^1.6.1",
+    "tslint": "^3.15.1",
+    "typescript": "^2.0.6"
   }
 }

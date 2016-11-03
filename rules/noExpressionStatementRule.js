@@ -32,4 +32,3 @@ var NoExpressionStatementWalker = (function (_super) {
     };
     return NoExpressionStatementWalker;
 }(Lint.RuleWalker));
-//# sourceMappingURL=noExpressionStatementRule.js.map

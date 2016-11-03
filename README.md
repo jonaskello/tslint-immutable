@@ -10,7 +10,7 @@ This goal of these TSLint rules are to disable all mutation in TypeScript. Pleas
 `npm install tslint-immutable --save-dev`
 
 ## TSLint Rules
-There are three rules in the plugin:
+There following rules are availavle:
 
 ### no-let 
 See eslint version for [documentation](https://github.com/jhusain/eslint-plugin-immutable/blob/master/README.md#no-let).

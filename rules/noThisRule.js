@@ -32,4 +32,3 @@ var NoThisWalker = (function (_super) {
     };
     return NoThisWalker;
 }(Lint.RuleWalker));
-//# sourceMappingURL=noThisRule.js.map

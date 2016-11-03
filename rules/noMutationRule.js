@@ -35,4 +35,3 @@ var NoMutationWalker = (function (_super) {
     };
     return NoMutationWalker;
 }(Lint.RuleWalker));
-//# sourceMappingURL=noMutationRule.js.map
