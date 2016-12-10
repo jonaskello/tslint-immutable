@@ -19,18 +19,94 @@ This can be solved by using linting rules. So the aim of this project is to leve
 `npm install tslint-immutable --save-dev`
 
 ## TSLint Rules
+
+In addition to immutable rules this project also contains a few rules for enforcing a functional style and some coding style.
+
 There following rules are availavle:
 
-### no-let 
-See eslint version for [documentation](https://github.com/jhusain/eslint-plugin-immutable/blob/master/README.md#no-let).
+### Immutability rules
 
-### no-this
-See eslint version for [documentation](https://github.com/jhusain/eslint-plugin-immutable/blob/master/README.md#no-this).
+#### readonly-interface
 
-### no-mutation
-See eslint version for [documentation](https://github.com/jhusain/eslint-plugin-immutable/blob/master/README.md#no-mutation).
+This rule enforces having the readonly modifier on all interface members.
 
-### no-expression-statement
+#### readonly-array
+
+This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
+
+#### no-let 
+There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
+
+```TypeScript
+let x = 5; // <- Unexpected let or var, use const.
+```
+
+What about `for` loops? Loops can be replaced with the Array methods like `map`, `filter`, and so on. If you find the built-in JS Array methods lacking, use [ramda](http://ramdajs.com/), or [lodash-fp](https://github.com/lodash/lodash/wiki/FP-Guide).
+
+```TypeScript
+const SearchResults = 
+  ({ results }) => 
+    <ul>{
+      results.map(result => <li>result</li>) // <- Who needs let?
+    }</ul>;
+```
+
+#### no-this, no-class, no-new
+Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
+
+```TypeScript
+const Message = React.createClass({
+  render: function() {
+    return <div>{ this.props.message }</div>; // <- no this allowed
+  }
+})
+```
+Instead of creating classes, you should use React 0.14's [Stateless Functional Components](https://medium.com/@joshblack/stateless-components-in-react-0-14-f9798f8b992d#.t5z2fdit6) and save yourself some keystrokes:
+
+```TypeScript
+const Message = ({message}) => <div>{ message }</div>;
+```
+
+What about lifecycle methods like `shouldComponentUpdate`? We can use the [recompose](https://github.com/acdlite/recompose) library to apply these optimizations to your Stateless Functional Components. The [recompose](https://github.com/acdlite/recompose) library relies on the fact that your Redux state is immutable to efficiently implement shouldComponentUpdate for you.
+
+```TypeScript
+import { pure, onlyUpdateForKeys } from 'recompose';
+
+const Message = ({message}) => <div>{ message }</div>;
+
+// Optimized version of same component, using shallow comparison of props
+// Same effect as React's PureRenderMixin
+const OptimizedMessage = pure(Message);
+
+// Even more optimized: only updates if specific prop keys have changed
+const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
+```
+
+#### no-mutation
+You might think that prohibiting the use of `let` and `var` would eliminate mutation from your JavaScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`...
+
+```TypeScript
+const point = { x: 23, y: 44 };
+point.x = 99; // This is legal
+```
+
+This is why the `no-mutation` rule exists. This rule prevents you from assigning a value to the result of a member expression.
+
+```TypeScript
+const point = { x: 23, y: 44 };
+point.x = 99; // <- No object mutation allowed.
+```
+
+This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost.** A good alternative to object mutation is to use the object spread syntax coming in ES2016.
+
+```TypeScript
+const point = { x: 23, y: 44 };
+const transformedPoint = { ...point, x: 99 };
+```
+
+To use this [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) you need TypeScript 2.1 or later.
+
+#### no-expression-statement
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
 
 ```TypeScript
@@ -41,17 +117,52 @@ alert('Hello world!')
 This rule checks that the value of an expression is assigned to a variable. However it will still be possible to perform mutations, eg. this rule will not catch these expressions:
 
 ```TypeScript
-const namesWithBar = names.concat([' bar ']) // ok, bound to another variable
-return namesWithBar // ok, returned
-const newSize = names.push('baz') // maybe `no-unused-vars` can catch this
-const newObject = Object.assign(oldObject, { foo: 'bar' }) // tough luck
+const namesWithBar = names.concat([' bar ']); // ok, bound to another variable
+return namesWithBar; // ok, returned
+const newSize = names.push('baz'); // maybe `no-unused-vars` can catch this
+const newObject = Object.assign(oldObject, { foo: 'bar' }); // tough luck
 ```
 
-## Supplementary TSLint Rules to Enable
+### Functional style rules
 
-The rules in this package alone can not eliminate mutation in your TypeScript programs. To go the distance I suggest you also enable the following built-in TSLint rules:
+#### no-mixed-interface
 
-* no-var-keyword (self-explanatory)
+Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.  
+
+#### restrict-interface
+
+This rule can be used in conjuction with `no-mixed-interface` to ensure that we only have allow interfaces with only functions or only data-properties.
+
+### Other style rules
+
+#### import-containment
+
+ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
+
+#### no-arguments
+
+Disallows use of the `arguments` keyword.
+
+#### no-label
+
+Disallows the use of labels, and indirectly also `goto`.
+
+#### semicolon-interface
+
+Ensures that interfaces only use commas as separator instead semicolor.
+ 
+```TypeScript
+// This is NOT ok.
+inferface Foo {
+  bar: string;
+  zoo(): number;
+}
+// This is ok.
+inferface Foo {
+  bar: string,
+  zoo(): number,
+}
+```
 
 ## Sample Configuration File
 
