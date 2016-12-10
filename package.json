@@ -1,7 +1,7 @@
 {
   "name": "tslint-immutable",
   "version": "1.9.9",
-  "description": "TSLint rules to disable all mutation in TypeScript.",
+  "description": "TSLint rules to disable mutation in TypeScript.",
   "main": "index.js",
   "scripts": {
     "test": "yarn run tsc && mocha tests/*.ts --require ts-node/register",
