@@ -9,7 +9,16 @@ console.log(`Tagging with ${newVersion}...`);
 gitTag(newVersion);
 console.log(`Pushing...`);
 push();
+console.log(`Publishing to npm...`);
+publish();
 console.log(`Publish of new ${versionPart} versioned ${newVersion} completed successfully`);
+
+function publish() {
+    if (exec(`npm publish`).code !== 0) {
+        echo("Error: Npm publish failed");
+        exit(1);
+    }
+}
 
 function push() {
 	if (exec(`git push --follow-tags`).code !== 0) {
