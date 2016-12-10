@@ -29,21 +29,4 @@ describe('noArgumentsRule', (): void => {
     ]);
   });
 
-  it('for let loop should produce violations ', (): void => {
-    const script : string = `
-            for(let x = 0; x < 1;x++);
-        `;
-    TestHelper.assertViolations(RULE_NAME, script, [
-      {
-        "failure": "Unexpected let, use const.",
-        "name": "file.ts",
-        "ruleName": "no-let",
-        "startPosition": {
-          "line": 2,
-          "character": 17
-        }
-      }
-    ]);
-  });
-
 });
