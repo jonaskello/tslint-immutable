@@ -6,9 +6,9 @@
   "scripts": {
     "test": "mocha tests/*.ts --require ts-node/register",
     "build": "tsc -p tsconfig.prod.json",
-    "publish:major": "npm run build && node scripts/publish.js major",
-    "publish:minor": "npm run build && node scripts/publish.js minor",
-    "publish:patch": "npm run build && node scripts/publish.js patch"
+    "publish:major": "rm -rf rules && npm run build && node scripts/publish.js major",
+    "publish:minor": "rm -rf rules && npm run build && node scripts/publish.js minor",
+    "publish:patch": "rm -rf rules && npm run build && node scripts/publish.js patch"
   },
   "repository": {
     "type": "git",
