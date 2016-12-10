@@ -3,7 +3,7 @@
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "outDir": "js_out"
+    "outDir": "js_out_test"
   },
   "include": [
     "src/*.ts"

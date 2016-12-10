@@ -3,4 +3,4 @@
 thumbs.db
 *.log
 node_modules/
-js_out/
+js_out_test/

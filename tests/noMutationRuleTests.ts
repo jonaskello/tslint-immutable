@@ -1,19 +1,19 @@
-import TestHelper = require('./TestHelper');
+import * as TestHelper from "./TestHelper";
 
-describe('noMutationRule', ():void => {
+describe('noMutationRule', (): void => {
 
-  var RULE_NAME:string = 'no-mutation';
+  const RULE_NAME: string = 'no-mutation';
 
-  it('should not produce violations', ():void => {
-    var script:string = `
+  it('should not produce violations', (): void => {
+    const script: string = `
             let x = y.z;
         `;
 
     TestHelper.assertViolations(RULE_NAME, script, []);
   });
 
-  it('should produce violations ', ():void => {
-    var script:string = `
+  it('should produce violations ', (): void => {
+    const script: string = `
             x.y = 0;
         `;
     TestHelper.assertViolations(RULE_NAME, script, [
@@ -29,26 +29,26 @@ describe('noMutationRule', ():void => {
     ]);
   });
 
-/*
-  it('should work', ():void => {
+  /*
+   it('should work', ():void => {
 
-    function printAllChildren(node:ts.Node, depth = 0) {
-      console.log(new Array(depth + 1).join('----'),
-        ts.syntaxKindToName(node.kind),
-        node.flags,
-        node.pos, node.end);
-      depth++;
-      node.getChildren().forEach(c => printAllChildren(c, depth));
-    }
+   function printAllChildren(node:ts.Node, depth = 0) {
+   console.log(new Array(depth + 1).join('----'),
+   ts.syntaxKindToName(node.kind),
+   node.flags,
+   node.pos, node.end);
+   depth++;
+   node.getChildren().forEach(c => printAllChildren(c, depth));
+   }
 
-    var sourceCode = `
-      x.foo = 3;
-      `.trim();
+   var sourceCode = `
+   x.foo = 3;
+   `.trim();
 
-    var sourceFile = ts.createSourceFile('foo.ts', sourceCode, ts.ScriptTarget.ES5, true);
-    printAllChildren(sourceFile);
+   var sourceFile = ts.createSourceFile('foo.ts', sourceCode, ts.ScriptTarget.ES5, true);
+   printAllChildren(sourceFile);
 
-  });
-*/
+   });
+   */
 
 });

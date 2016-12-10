@@ -1,19 +1,19 @@
-import TestHelper = require('./TestHelper');
+import * as TestHelper from "./TestHelper";
 
 describe('noLetRule', (): void => {
 
-  var RULE_NAME: string = 'no-let';
+  const RULE_NAME: string = 'no-let';
 
   it('should not produce violations', (): void => {
-    var script : string = `
+    const script : string = `
             var x = 0;
         `;
 
-    TestHelper.assertViolations(RULE_NAME, script, []);
+    TestHelper.assertNoViolation(RULE_NAME, script);
   });
 
   it('variable declaration should produce violations ', (): void => {
-    var script : string = `
+    const script : string = `
             let x = 0;
         `;
     TestHelper.assertViolations(RULE_NAME, script, [
@@ -30,7 +30,7 @@ describe('noLetRule', (): void => {
   });
 
   it('for let loop should produce violations ', (): void => {
-    var script : string = `
+    const script : string = `
             for(let x = 0; x < 1;x++);
         `;
     TestHelper.assertViolations(RULE_NAME, script, [

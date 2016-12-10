@@ -1,20 +1,19 @@
-import TestHelper = require('./TestHelper');
-var x = require("../src/noExpressionStatementRule");
+import * as TestHelper from "./TestHelper";
 
-describe('noThisRule', ():void => {
+describe('noExpressionStatementRule', (): void => {
 
-  const RULE_NAME:string = 'no-expression-statement';
+  const RULE_NAME: string = 'no-expression-statement';
 
-  it('should not produce violations', ():void => {
-    const script:string = `
+  it('should not produce violations', (): void => {
+    const script: string = `
             let x = 0;
         `;
 
-    TestHelper.assertViolations(RULE_NAME, script, []);
+    TestHelper.assertNoViolation(RULE_NAME, script);
   });
 
-  it('should produce violations ', ():void => {
-    const script:string = `
+  it('should produce violations ', (): void => {
+    const script: string = `
             x.push(1);
         `;
     TestHelper.assertViolations(RULE_NAME, script, [

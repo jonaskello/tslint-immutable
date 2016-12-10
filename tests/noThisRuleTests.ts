@@ -1,19 +1,19 @@
-import TestHelper = require('./TestHelper');
+import * as TestHelper from "./TestHelper";
 
-describe('noThisRule', ():void => {
+describe('noThisRule', (): void => {
 
-  var RULE_NAME:string = 'no-this';
+  const RULE_NAME: string = 'no-this';
 
-  it('should not produce violations', ():void => {
-    var script:string = `
+  it('should not produce violations', (): void => {
+    const script: string = `
             let x = 0;
         `;
 
     TestHelper.assertViolations(RULE_NAME, script, []);
   });
 
-  it('should produce violations ', ():void => {
-    var script:string = `
+  it('should produce violations ', (): void => {
+    const script: string = `
             this.x = 0;
         `;
     TestHelper.assertViolations(RULE_NAME, script, [

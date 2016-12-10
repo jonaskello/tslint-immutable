@@ -4,7 +4,8 @@
   "description": "TSLint rules to disable all mutation in TypeScript.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/*.ts --require ts-node/register",
+    "test": "yarn run tsc && mocha tests/*.ts --require ts-node/register",
+    "tsc": "tsc",
     "build": "tsc -p tsconfig.prod.json",
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
@@ -32,7 +33,7 @@
     "mocha": "^2.4.5",
     "shelljs": "^0.7.5",
     "ts-node": "^1.6.1",
-    "tslint": "^3.15.1",
+    "tslint": "^4.0.2",
     "typescript": "^2.0.6"
   }
 }

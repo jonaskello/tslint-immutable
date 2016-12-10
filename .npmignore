@@ -1,7 +1,7 @@
 .idea/
 thumbs.db
 *.log
-js_out/
+js_out_test/
 src/
 tests/
 scripts/
