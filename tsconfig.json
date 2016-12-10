@@ -6,6 +6,6 @@
     "outDir": "js_out_test"
   },
   "include": [
-    "src/*.ts"
+    "src/**/*"
   ]
 }

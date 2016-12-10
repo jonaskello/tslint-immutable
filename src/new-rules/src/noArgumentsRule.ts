@@ -2,21 +2,20 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 
 export class Rule extends Lint.Rules.AbstractRule {
-  public static FAILURE_STRING = "Unexpected this, use functions not classes.";
+
+  public static FAILURE_STRING = "Use a named parameter instead.";
 
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    const noThisKeywordWalker = new NoThisWalker(sourceFile, this.getOptions());
-    return this.applyWithWalker(noThisKeywordWalker);
+    const walker = new NoArgumentsWalker(sourceFile, this.getOptions());
+    return this.applyWithWalker(walker);
   }
 }
 
-class NoThisWalker extends Lint.RuleWalker {
-
+class NoArgumentsWalker extends Lint.RuleWalker {
   public visitNode(node: ts.Node): void {
-    if (node && node.kind === ts.SyntaxKind.ThisKeyword) {
+    if (node && node.kind === ts.SyntaxKind.Identifier && node.valueOf() === "identifier") {
       this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
     }
     super.visitNode(node);
   }
-
 }

@@ -19,6 +19,10 @@ export function assertNoViolation(ruleName: string, inputFileOrScript: string) {
   runRuleAndEnforceAssertions(ruleName, null, inputFileOrScript, []);
 }
 
+export function assertViolations(ruleName: string, inputFileOrScript: string, expectedFailures: ExpectedFailure[]) {
+  runRuleAndEnforceAssertions(ruleName, null, inputFileOrScript, expectedFailures);
+}
+
 export function assertNoViolationWithOptions(ruleName: string, options: any[], inputFileOrScript: string) {
   runRuleAndEnforceAssertions(ruleName, options, inputFileOrScript, []);
 }
@@ -28,17 +32,13 @@ export function assertViolationsWithOptions(ruleName: string, options: any[], in
   runRuleAndEnforceAssertions(ruleName, options, inputFileOrScript, expectedFailures);
 }
 
-export function assertViolations(ruleName: string, inputFileOrScript: string, expectedFailures: ExpectedFailure[]) {
-  runRuleAndEnforceAssertions(ruleName, null, inputFileOrScript, expectedFailures);
-}
-
 function runRuleAndEnforceAssertions(ruleName: string, userOptions: string[], inputFileOrScript: string,
                                      expectedFailures: ExpectedFailure[]) {
 
   const configuration = {
     rules: {}
   };
-  if (userOptions != null && userOptions.length > 0) {
+  if (userOptions && userOptions.length > 0) {
     //options like `[4, 'something', false]` were passed, so prepend `true` to make the array like `[true, 4, 'something', false]`
     configuration.rules[ruleName] = (<any[]>[true]).concat(userOptions);
   } else {
@@ -80,7 +80,7 @@ function runRuleAndEnforceAssertions(ruleName: string, userOptions: string[], in
   });
 
   const errorMessage = 'Wrong # of failures: \n' + JSON.stringify(actualFailures, null, 2);
-  chai.assert.equal(expectedFailures.length, actualFailures.length, errorMessage);
+  chai.assert.equal(actualFailures.length, expectedFailures.length, errorMessage);
 
   expectedFailures.forEach((expected: ExpectedFailure, index: number): void => {
     const actual = actualFailures[index];
