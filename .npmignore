@@ -4,6 +4,6 @@ thumbs.db
 js_out/
 src/
 tests/
-typings/
+scripts/
 tsconfig.json
 tsconfig.prod.json
