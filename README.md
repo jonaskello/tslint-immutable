@@ -2,7 +2,7 @@
 
 [TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
 
-> NOTE: tslint-immutable 2.0.0 and above is compatible with typescript 2.0, tslint 4.0 and above. If you are looking for the old version please check the v1 branch.
+> NOTE: tslint-immutable >= 2.0.0 is compatible with tslint >= 4.0.0. For older versions that is compatible with older tslint versions please check the [v1](https://github.com/jonaskello/tslint-immutable/tree/v1) branch.
 
 ## Background
 
