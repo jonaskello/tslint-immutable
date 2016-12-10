@@ -28,9 +28,49 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 This rule enforces having the `readonly` modifier on all interface members.
 
+You might think that prohibiting the use of `let` and `var` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
+
+```TypeScript
+interface Point { x, y }
+const point: Point = { x: 23, y: 44 };
+point.x = 99; // This is legal
+```
+
+This is why the `readonly-interface` rule exists. This rule prevents you from assigning a value to the result of a member expression.
+
+```TypeScript
+interface Point { readonly x, readonly y }
+const point: Point = { x: 23, y: 44 };
+point.x = 99; // <- No object mutation allowed.
+```
+
+This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1.
+
+```TypeScript
+interface Point { readonly x, readonly y }
+const point: Point = { x: 23, y: 44 };
+const transformedPoint = { ...point, x: 99 };
+```
+
 #### readonly-array
 
 This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
+
+Even if an array is declared with `const` it is still possible to mutate the contents of the array.
+
+```TypeScript
+interface Point { readonly x, readonly y }
+const points: Array<Point> = [{ x: 23, y: 44 }];
+points.push({ x: 1, y: 2 }) = 99; // This is legal
+```
+
+Using the readonly-array rule will stop this mutation:
+
+```TypeScript
+interface Point { readonly x, readonly y }
+const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
+points.push({ x: 1, y: 2 }) = 99; // Unresolved method push()
+```
 
 #### no-let 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
