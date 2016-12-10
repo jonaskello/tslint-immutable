@@ -20,7 +20,7 @@ This can be solved by using linting rules. So the aim of this project is to leve
 
 ## TSLint Rules
 
-In addition to immutable rules this project also contains a few rules for enforcing a functional style and some coding style. The following rules are available:
+In addition to immutable rules this project also contains a few rules for enforcing a functional style and a few other rules. The following rules are available:
 
 ### Immutability rules
 
@@ -61,15 +61,15 @@ Even if an array is declared with `const` it is still possible to mutate the con
 ```TypeScript
 interface Point { readonly x: number, readonly y: number }
 const points: Array<Point> = [{ x: 23, y: 44 }];
-points.push({ x: 1, y: 2 }) = 99; // This is legal
+points.push({ x: 1, y: 2 }); // This is legal
 ```
 
 Using the readonly-array rule will stop this mutation:
 
 ```TypeScript
-interface Point { readonly x, readonly y }
+interface Point { readonly x: number, readonly y: number }
 const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
-points.push({ x: 1, y: 2 }) = 99; // Unresolved method push()
+points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
 #### no-let 
@@ -140,7 +140,7 @@ alert('Hello world!')
 
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
-### Other style rules
+### Other rules
 
 #### import-containment
 
