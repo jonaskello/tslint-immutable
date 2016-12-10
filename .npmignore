@@ -5,5 +5,5 @@ js_out/
 src/
 tests/
 typings/
-typings.json
 tsconfig.json
+tsconfig.prod.json

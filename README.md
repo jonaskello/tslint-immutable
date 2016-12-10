@@ -1,9 +1,18 @@
 # tslint-immutable
 
-This repo contains a [TSLint](https://github.com/palantir/tslint) version of the [eslint-plugin-immutable
-](https://github.com/jhusain/eslint-plugin-immutable).
+[TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
 
-This goal of these TSLint rules are to disable all mutation in TypeScript. Please see the [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable) version for the rationale beind this.
+> NOTE: tslint-immutable 2.0.0 and above is compatible with typescript 2.0, tslint 4.0 and above. If you are looking for the old version please check the v1 branch.
+
+## Background
+
+In some projects it is important to not mutatable any data, for example when using redux to store state in a react application. Moreover immutable data structures has a lot of advantages in general so I want to use them everywhere in my applications. 
+
+I originally used [immutablejs](https://github.com/facebook/immutable-js/) for this purpose. It is nice in sveral ways but I found it had some drawbacks. Specifically when debugging it was hard to see the structure, creating JSON was not straightforward, and passing parameters to other libraries required converting to regular mutable arrays and objects. The [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) project seems to have the same conclusions and they use regular objects and arrays and check for immutability at run-time. This solves all the aformentioned drawbacks but introduces a new drawback of only being enforced at run-time. 
+
+Then typescript 2.0 came along and introduced a [readonly](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#read-only-properties-and-index-signatures) option for properties, indexers and arrays. This enables us to use regular object and arrays and have the immutability enfored at compile time rather than at run-time. Now the only drawback is that there is nothing enforcing the use of readonly.
+
+This can be solved by using linting rules. So the aim of this project is to leverage the type system in typescript to enforce immutability at compile-time while still using regular objects and arrays.
 
 ## Installing
 
@@ -60,3 +69,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
   }
 }
 ```
+
+## Prior work
+
+This work was originally inspired by [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable).
