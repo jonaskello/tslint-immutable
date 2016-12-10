@@ -13,7 +13,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 class NoNewWalker extends Lint.RuleWalker {
 
   public visitNode(node: ts.Node): void {
-    if (node && node.kind === ts.SyntaxKind.NewKeyword) {
+    if (node && node.kind === ts.SyntaxKind.NewKeyword || node.kind === ts.SyntaxKind.NewExpression) {
       this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
     }
     super.visitNode(node);
