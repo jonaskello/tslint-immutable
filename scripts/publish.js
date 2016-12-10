@@ -2,7 +2,7 @@ require("shelljs/global");
 
 const versionPart = process.argv[2];
 console.log(`Incrementing the ${versionPart} part of version in package.json...`);
-const newVersion = incrementVersion(versionPart);
+const newVersion = "1.0.0"; //incrementVersion(versionPart);
 console.log(`New version is ${newVersion}, commiting rules, package.json...`);
 commit(newVersion);
 console.log(`Tagging with ${newVersion}...`);
