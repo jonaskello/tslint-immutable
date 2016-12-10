@@ -20,15 +20,13 @@ This can be solved by using linting rules. So the aim of this project is to leve
 
 ## TSLint Rules
 
-In addition to immutable rules this project also contains a few rules for enforcing a functional style and some coding style.
-
-There following rules are availavle:
+In addition to immutable rules this project also contains a few rules for enforcing a functional style and some coding style. The following rules are available:
 
 ### Immutability rules
 
 #### readonly-interface
 
-This rule enforces having the readonly modifier on all interface members.
+This rule enforces having the `readonly` modifier on all interface members.
 
 #### readonly-array
 
@@ -97,30 +95,11 @@ const point = { x: 23, y: 44 };
 point.x = 99; // <- No object mutation allowed.
 ```
 
-This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost.** A good alternative to object mutation is to use the object spread syntax coming in ES2016.
+This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost.** A good alternative to object mutation is to use the object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1.
 
 ```TypeScript
 const point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
-```
-
-To use this [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) you need TypeScript 2.1 or later.
-
-#### no-expression-statement
-When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
-
-```TypeScript
-array.push(1)
-alert('Hello world!')
-```
-
-This rule checks that the value of an expression is assigned to a variable. However it will still be possible to perform mutations, eg. this rule will not catch these expressions:
-
-```TypeScript
-const namesWithBar = names.concat([' bar ']); // ok, bound to another variable
-return namesWithBar; // ok, returned
-const newSize = names.push('baz'); // maybe `no-unused-vars` can catch this
-const newObject = Object.assign(oldObject, { foo: 'bar' }); // tough luck
 ```
 
 ### Functional style rules
@@ -132,6 +111,16 @@ Mixing functions and data properties in the same interface is a sign of object-o
 #### restrict-interface
 
 This rule can be used in conjuction with `no-mixed-interface` to ensure that we only have allow interfaces with only functions or only data-properties.
+
+#### no-expression-statement
+When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
+
+```TypeScript
+array.push(1)
+alert('Hello world!')
+```
+
+This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
 ### Other style rules
 
