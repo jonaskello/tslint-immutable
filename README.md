@@ -80,28 +80,6 @@ const OptimizedMessage = pure(Message);
 const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 ```
 
-#### no-mutation
-You might think that prohibiting the use of `let` and `var` would eliminate mutation from your JavaScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`...
-
-```TypeScript
-const point = { x: 23, y: 44 };
-point.x = 99; // This is legal
-```
-
-This is why the `no-mutation` rule exists. This rule prevents you from assigning a value to the result of a member expression.
-
-```TypeScript
-const point = { x: 23, y: 44 };
-point.x = 99; // <- No object mutation allowed.
-```
-
-This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost.** A good alternative to object mutation is to use the object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1.
-
-```TypeScript
-const point = { x: 23, y: 44 };
-const transformedPoint = { ...point, x: 99 };
-```
-
 ### Functional style rules
 
 #### no-mixed-interface
