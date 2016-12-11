@@ -152,7 +152,7 @@ Disallows use of the `arguments` keyword.
 
 Disallows the use of labels, and indirectly also `goto`.
 
-#### semicolon-interface
+#### no-semicolon-interface
 
 Ensures that interfaces only use commas as separator instead semicolor.
  
