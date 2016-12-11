@@ -2,7 +2,7 @@ import * as TestHelper from "./TestHelper";
 
 describe('semicolonInterfaceRule', (): void => {
 
-  const RULE_NAME: string = 'semicolon-interface';
+  const RULE_NAME: string = 'no-semicolon-interface';
 
   it('should not produce violations', (): void => {
     const script : string = `
@@ -25,7 +25,7 @@ describe('semicolonInterfaceRule', (): void => {
       {
         "failure": "Use comma instead of semicolon in interfaces.",
         "name": "file.ts",
-        "ruleName": "semicolon-interface",
+        "ruleName": "no-semicolon-interface",
         "startPosition": {
           "line": 3,
           "character": 11

@@ -18,7 +18,7 @@ describe('noArgumentsRule', (): void => {
         `;
     TestHelper.assertViolations(RULE_NAME, script, [
       {
-        "failure": "Unexpected let, use const.",
+        "failure": "Use a named parameter instead.",
         "name": "file.ts",
         "ruleName": "no-let",
         "startPosition": {

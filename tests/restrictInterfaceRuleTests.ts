@@ -4,11 +4,37 @@ describe('restrictInterfaceRule', (): void => {
 
   const RULE_NAME: string = 'restrict-interface';
 
-  it('should not produce violations', (): void => {
+  it('properties should not produce violations', (): void => {
     const script : string = `
       interface Foo {
         bar: string,
+      }
+    `;
+    TestHelper.assertNoViolation(RULE_NAME, script);
+  });
+
+  it('function types should not produce violations', (): void => {
+    const script : string = `
+      interface Foo {
+        goo: () => number,
+      }
+    `;
+    TestHelper.assertNoViolation(RULE_NAME, script);
+  });
+
+  it('methods should not produce violations', (): void => {
+    const script : string = `
+      interface Foo {
         zoo(): number,
+      }
+    `;
+    TestHelper.assertNoViolation(RULE_NAME, script);
+  });
+
+  it('indexers should not produce violations', (): void => {
+    const script : string = `
+      interface Foo {
+        bar: {[key:string]: string},
       }
     `;
     TestHelper.assertNoViolation(RULE_NAME, script);
@@ -17,8 +43,7 @@ describe('restrictInterfaceRule', (): void => {
   it('should produce violations', (): void => {
     const script : string = `
       interface Foo {
-        bar: string,
-        zoo(): number,
+        bar: Array<string>,
       }
     `;
     TestHelper.assertViolations(RULE_NAME, script, [

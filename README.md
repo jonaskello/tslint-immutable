@@ -73,6 +73,8 @@ points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
 #### no-let 
+This rule should be combined with tslint's built-in `no-var` rule to enforce that all variables are declared as `const`.
+
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
 
 ```TypeScript
@@ -125,10 +127,6 @@ const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 #### no-mixed-interface
 
 Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.  
-
-#### restrict-interface
-
-This rule can be used in conjuction with `no-mixed-interface` to ensure that we only have allow interfaces with only functions or only data-properties.
 
 #### no-expression-statement
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.

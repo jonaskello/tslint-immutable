@@ -3,8 +3,9 @@ import * as Lint from "tslint";
 
 const allowedKinds: number[] = [
   ts.SyntaxKind.PropertySignature,
-  ts.SyntaxKind.IndexSignature,
+  // ts.SyntaxKind.IndexSignature,
   ts.SyntaxKind.FunctionType,
+  ts.SyntaxKind.MethodSignature,
 ];
 
 export class Rule extends Lint.Rules.AbstractRule {
