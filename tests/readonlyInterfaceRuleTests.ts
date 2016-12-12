@@ -4,13 +4,20 @@ describe("readonlyInterfaceRule", (): void => {
 
   const RULE_NAME: string = "readonly-interface";
 
-  it("should not produce violations", (): void => {
+  it("interface with readonly modifiers should not produce violations", (): void => {
     const script : string = `
       interface Foo {
         readonly bar: number,
         readonly zoo(): string
         readonly loo: Array<string>
       }
+    `;
+    TestHelper.assertNoViolation(RULE_NAME, script);
+  });
+
+  it("indexer type declaration should not produce violations", (): void => {
+    const script : string = `
+      let foo: {readonly [key: string]: number};
     `;
     TestHelper.assertNoViolation(RULE_NAME, script);
   });
@@ -25,7 +32,7 @@ describe("readonlyInterfaceRule", (): void => {
     `;
     TestHelper.assertViolations(RULE_NAME, script, [
       {
-        "failure": "Only readonly members allowed in interfaces.",
+        "failure": "Interface members must have readonly modifier.",
         "name": "file.ts",
         "ruleName": "readonly-interface",
         "startPosition": {
@@ -34,7 +41,7 @@ describe("readonlyInterfaceRule", (): void => {
         }
       },
       {
-        "failure": "Only readonly members allowed in interfaces.",
+        "failure": "Interface members must have readonly modifier.",
         "name": "file.ts",
         "ruleName": "readonly-interface",
         "startPosition": {
@@ -43,7 +50,7 @@ describe("readonlyInterfaceRule", (): void => {
         }
       },
       {
-        "failure": "Only readonly members allowed in interfaces.",
+        "failure": "Interface members must have readonly modifier.",
         "name": "file.ts",
         "ruleName": "readonly-interface",
         "startPosition": {
