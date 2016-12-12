@@ -27,12 +27,12 @@
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.32",
+    "@types/mocha": "^2.2.33",
     "@types/node": "^6.0.46",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
     "shelljs": "^0.7.5",
-    "ts-node": "^1.6.1",
+    "ts-node": "^1.7.2",
     "tslint": "^4.0.2",
     "typescript": "^2.0.6"
   }

@@ -3,9 +3,12 @@
     "module": "commonjs",
     "target": "es5",
     "sourceMap": true,
-    "outDir": "js_out_test"
+    "outDir": "js_out_test",
+    "typeRoots" : ["./node_modules/@types"],
+    "types": ["node", "mocha"]
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "tests/**/*"
   ]
 }

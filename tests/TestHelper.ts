@@ -47,7 +47,7 @@ function runRuleAndEnforceAssertions(ruleName: string, userOptions: string[], in
 
   const options: Lint.ILinterOptions = {
     formatter: 'json',
-    rulesDirectory: 'js_out_test/',
+    rulesDirectory: 'js_out_test/src/',
     fix: false
   };
 

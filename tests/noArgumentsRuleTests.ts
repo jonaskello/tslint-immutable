@@ -18,9 +18,9 @@ describe('noArgumentsRule', (): void => {
         `;
     TestHelper.assertViolations(RULE_NAME, script, [
       {
-        "failure": "Use a named parameter instead.",
+        "failure": "Use of arguments not allowed, name all parameters instead.",
         "name": "file.ts",
-        "ruleName": "no-let",
+        "ruleName": "no-arguments",
         "startPosition": {
           "line": 2,
           "character": 13
