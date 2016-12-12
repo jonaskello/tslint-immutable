@@ -17,7 +17,8 @@ var Rule = (function (_super) {
     };
     return Rule;
 }(Lint.Rules.AbstractRule));
-Rule.FAILURE_STRING = "Only readonly members allowed in interfaces.";
+Rule.FAILURE_STRING = "Interface members must have readonly modifier.";
+Rule.FAILURE_STRING_ARRAY = "Interface members of array type must be ReadonlyArray.";
 exports.Rule = Rule;
 var ReadonlyInterfaceWalker = (function (_super) {
     __extends(ReadonlyInterfaceWalker, _super);
@@ -27,20 +28,11 @@ var ReadonlyInterfaceWalker = (function (_super) {
     ReadonlyInterfaceWalker.prototype.visitInterfaceDeclaration = function (node) {
         for (var _i = 0, _a = node.members; _i < _a.length; _i++) {
             var member = _a[_i];
-            // if (!(member.flags & ts.NodeFlags.Readonly)) {
-            // console.log("member", member);
             if (!(member.modifiers && member.modifiers.filter(function (m) { return m.kind === ts.SyntaxKind.ReadonlyKeyword; }).length > 0)) {
                 this.addFailure(this.createFailure(member.getStart(), member.getWidth(), Rule.FAILURE_STRING));
             }
         }
         _super.prototype.visitInterfaceDeclaration.call(this, node);
-    };
-    ReadonlyInterfaceWalker.prototype.visitIndexSignatureDeclaration = function (node) {
-        // if (!(node.flags & ts.NodeFlags.Readonly)) {
-        if (!(node.modifiers && node.modifiers.filter(function (m) { return m.kind & ts.ModifierFlags.Readonly; }).length > 0)) {
-            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
-        }
-        _super.prototype.visitIndexSignatureDeclaration.call(this, node);
     };
     return ReadonlyInterfaceWalker;
 }(Lint.RuleWalker));

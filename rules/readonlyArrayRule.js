@@ -12,30 +12,30 @@ var Rule = (function (_super) {
         return _super.apply(this, arguments) || this;
     }
     Rule.prototype.apply = function (sourceFile) {
-        var walker = new ReadonlyArrayInterfaceWalker(sourceFile, this.getOptions());
+        var walker = new ReadonlyArrayWalker(sourceFile, this.getOptions());
         return this.applyWithWalker(walker);
     };
     return Rule;
 }(Lint.Rules.AbstractRule));
 Rule.FAILURE_STRING = "Only ReadonlyArray allowed.";
 exports.Rule = Rule;
-var ReadonlyArrayInterfaceWalker = (function (_super) {
-    __extends(ReadonlyArrayInterfaceWalker, _super);
-    function ReadonlyArrayInterfaceWalker() {
+var ReadonlyArrayWalker = (function (_super) {
+    __extends(ReadonlyArrayWalker, _super);
+    function ReadonlyArrayWalker() {
         return _super.apply(this, arguments) || this;
     }
-    ReadonlyArrayInterfaceWalker.prototype.visitTypeReference = function (node) {
+    ReadonlyArrayWalker.prototype.visitTypeReference = function (node) {
         _super.prototype.visitTypeReference.call(this, node);
         if (node.typeName.getText() === "Array") {
             this.addFailure(this.createFailure(node.typeName.getStart(), node.typeName.getWidth(), Rule.FAILURE_STRING));
         }
     };
-    ReadonlyArrayInterfaceWalker.prototype.visitTypeLiteral = function (node) {
+    ReadonlyArrayWalker.prototype.visitTypeLiteral = function (node) {
         _super.prototype.visitTypeLiteral.call(this, node);
         // if (node.kind === ts.SyntaxKind.ArrayType) {
         if (node.kind === ts.SyntaxKind.ArrayType) {
             this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
         }
     };
-    return ReadonlyArrayInterfaceWalker;
+    return ReadonlyArrayWalker;
 }(Lint.RuleWalker));
