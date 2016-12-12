@@ -22,7 +22,7 @@ describe("readonlyInterfaceRule", (): void => {
     TestHelper.assertNoViolation(RULE_NAME, script);
   });
 
-  it("should produce violations", (): void => {
+  it("interface members without readonly modifier should produce violations", (): void => {
     const script : string = `
       interface Foo {
         bar: number,
@@ -60,5 +60,24 @@ describe("readonlyInterfaceRule", (): void => {
       }
     ]);
   });
+
+  // it("regular array members should produce violations if readonly-array option is set", (): void => {
+  //   const script : string = `
+  //     interface Foo {
+  //       readonly foo: Array<string>
+  //     }
+  //   `;
+  //   TestHelper.assertViolations(RULE_NAME, script, [
+  //     {
+  //       "failure": "Interface members of array type must be ReadonlyArray.",
+  //       "name": "file.ts",
+  //       "ruleName": "readonly-interface",
+  //       "startPosition": {
+  //         "line": 3,
+  //         "character": 9
+  //       }
+  //     },
+  //   ]);
+  // });
 
 });

@@ -5,12 +5,13 @@ export class Rule extends Lint.Rules.AbstractRule {
   public static FAILURE_STRING = "Only ReadonlyArray allowed.";
 
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    const walker = new ReadonlyArrayInterfaceWalker(sourceFile, this.getOptions());
+    const walker = new ReadonlyArrayWalker(sourceFile, this.getOptions());
     return this.applyWithWalker(walker);
   }
 }
 
-class ReadonlyArrayInterfaceWalker extends Lint.RuleWalker {
+class ReadonlyArrayWalker extends Lint.RuleWalker {
+
   protected visitTypeReference(node: ts.TypeReferenceNode): void {
     super.visitTypeReference(node);
     if (node.typeName.getText() === "Array") {
