@@ -28,7 +28,7 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 This rule enforces having the `readonly` modifier on all interface members.
 
-You might think that prohibiting the use of `let` and `var` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
+You might think that using `const` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
 
 ```TypeScript
 interface Point { x: number, y: number }
@@ -44,12 +44,23 @@ const point: Point = { x: 23, y: 44 };
 point.x = 99; // <- No object mutation allowed.
 ```
 
-This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1.
+This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
 
 ```TypeScript
 interface Point { readonly x: number, readonly y: number }
 const point: Point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
+```
+
+#### readonly-indexer
+
+This rule enforces all indexers to have the readonly modifier.
+
+```TypeScript
+// NOT OK
+let foo: { [key:string]: number }; 
+// OK
+let foo: { readonly [key:string]: number }; 
 ```
 
 #### readonly-array
