@@ -9,7 +9,8 @@ describe("readonlyInterfaceRule", (): void => {
       interface Foo {
         readonly bar: number,
         readonly zoo(): string
-        readonly loo: Array<string>
+        readonly loo: Array<string>,
+        //readonly <T1>(): Array<T1>
       }
     `;
     TestHelper.assertNoViolation(RULE_NAME, script);
@@ -60,6 +61,13 @@ describe("readonlyInterfaceRule", (): void => {
       }
     ]);
   });
+
+  /*
+   export interface ReportDataAdapter {
+   readonly <TDataResult, TParams>(parameters: TParams, language: string, measureSystem: string): Promise<TDataResult>, //tslint:disable-line
+   }
+
+   */
 
   // it("regular array members should produce violations if readonly-array option is set", (): void => {
   //   const script : string = `

@@ -19,6 +19,15 @@ class ReadonlyInterfaceWalker extends Lint.RuleWalker {
         this.addFailure(this.createFailure(member.getStart(), member.getWidth(), Rule.FAILURE_STRING));
       }
 
+      // interface Foo {
+      //   readonly bar: number,
+      //   readonly zoo: () => string
+      //   readonly loo: Array<string>,
+      //   readonly <T1>(): Array<T1>
+      // }
+      // let f: Foo;
+      // f.zoo = () => "";
+
       // console.log("member.type", (member as any).type);
       //
       // if (member.kind === ts.SyntaxKind.ArrayType) {
