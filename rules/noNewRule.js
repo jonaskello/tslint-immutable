@@ -12,23 +12,23 @@ var Rule = (function (_super) {
         return _super.apply(this, arguments) || this;
     }
     Rule.prototype.apply = function (sourceFile) {
-        var noThisKeywordWalker = new NoThisWalker(sourceFile, this.getOptions());
-        return this.applyWithWalker(noThisKeywordWalker);
+        var noNewKeywordWalker = new NoNewWalker(sourceFile, this.getOptions());
+        return this.applyWithWalker(noNewKeywordWalker);
     };
     return Rule;
 }(Lint.Rules.AbstractRule));
-Rule.FAILURE_STRING = "Unexpected this, use functions not classes.";
+Rule.FAILURE_STRING = "Unexpected new, use functions not classes.";
 exports.Rule = Rule;
-var NoThisWalker = (function (_super) {
-    __extends(NoThisWalker, _super);
-    function NoThisWalker() {
+var NoNewWalker = (function (_super) {
+    __extends(NoNewWalker, _super);
+    function NoNewWalker() {
         return _super.apply(this, arguments) || this;
     }
-    NoThisWalker.prototype.visitNode = function (node) {
-        if (node && node.kind === ts.SyntaxKind.ThisKeyword) {
+    NoNewWalker.prototype.visitNode = function (node) {
+        if (node && node.kind === ts.SyntaxKind.NewKeyword || node.kind === ts.SyntaxKind.NewExpression) {
             this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
         }
         _super.prototype.visitNode.call(this, node);
     };
-    return NoThisWalker;
+    return NoNewWalker;
 }(Lint.RuleWalker));

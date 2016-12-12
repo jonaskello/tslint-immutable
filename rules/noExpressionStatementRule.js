@@ -5,24 +5,24 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var ts = require("typescript");
-var Lint = require("tslint/lib/lint");
+var Lint = require("tslint");
 var Rule = (function (_super) {
     __extends(Rule, _super);
     function Rule() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     Rule.prototype.apply = function (sourceFile) {
         var noExpressionStatementWalker = new NoExpressionStatementWalker(sourceFile, this.getOptions());
         return this.applyWithWalker(noExpressionStatementWalker);
     };
-    Rule.FAILURE_STRING = "Using expressions to cause side-effects not allowed.";
     return Rule;
 }(Lint.Rules.AbstractRule));
+Rule.FAILURE_STRING = "Using expressions to cause side-effects not allowed.";
 exports.Rule = Rule;
 var NoExpressionStatementWalker = (function (_super) {
     __extends(NoExpressionStatementWalker, _super);
     function NoExpressionStatementWalker() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     NoExpressionStatementWalker.prototype.visitNode = function (node) {
         if (node && node.kind === ts.SyntaxKind.ExpressionStatement) {

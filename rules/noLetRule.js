@@ -5,24 +5,24 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var ts = require("typescript");
-var Lint = require("tslint/lib/lint");
+var Lint = require("tslint");
 var Rule = (function (_super) {
     __extends(Rule, _super);
     function Rule() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     Rule.prototype.apply = function (sourceFile) {
         var noLetWalker = new NoLetKeywordWalker(sourceFile, this.getOptions());
         return this.applyWithWalker(noLetWalker);
     };
-    Rule.FAILURE_STRING = "Unexpected let, use const.";
     return Rule;
 }(Lint.Rules.AbstractRule));
+Rule.FAILURE_STRING = "Unexpected let, use const.";
 exports.Rule = Rule;
 var NoLetKeywordWalker = (function (_super) {
     __extends(NoLetKeywordWalker, _super);
     function NoLetKeywordWalker() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     NoLetKeywordWalker.prototype.visitVariableStatement = function (node) {
         if (Lint.isNodeFlagSet(node.declarationList, ts.NodeFlags.Let)) {
