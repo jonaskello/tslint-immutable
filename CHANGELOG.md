@@ -6,8 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.1.1] - 2017-03-29
 ### Fixed
-- Remove vestigial `noMutationRule.js` and `no-mutation` example from README, thanks to @pmlamotte. (see #6)
-
+- Remove vestigial `noMutationRule.js` and `no-mutation` example from README, thanks to [@pmlamotte](https://github.com/pmlamotte). (see [#6](https://github.com/jonaskello/tslint-immutable/pull/6))
 ## [2.1.0] - 2016-12-12
 ### Added
 - `readonly-indexer` rule.
