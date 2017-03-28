@@ -32,7 +32,7 @@
   "scripts": {
     "tsc": "tsc",
     "build": "tsc -p tsconfig.prod.json",
-    "test:unit": "mocha --compilers ts:ts-node/register \"tests/**/*.ts\"",
+    "test:unit": "rm -rf js_out_test && yarn run tsc && mocha --compilers ts:ts-node/register \"tests/**/*.ts\"",
     "test": "nyc --include src/**/*.ts -e '.ts' --r html -r lcov -r text yarn test:unit",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "publish:major": "npm run build && node scripts/publish.js major",
