@@ -195,7 +195,6 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
   "rules": {
     "no-let": true,
     "no-this": true,
-    "no-mutation": true,
     "no-expression-statement": true,
     "no-var-keyword": true
   }
