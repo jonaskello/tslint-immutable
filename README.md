@@ -1,5 +1,10 @@
 # tslint-immutable
 
+[![npm version][version-image]][version-url]
+[![travis build][travis-image]][travis-url]
+[![codecov coverage][codecov-image]][codecov-url]
+[![MIT license][license-image]][license-url]
+
 [TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
 
 > NOTE: tslint-immutable >= 2.0.0 is compatible with tslint >= 4.0.0. For older versions that is compatible with older tslint versions please check the [v1](https://github.com/jonaskello/tslint-immutable/tree/v1) branch.
@@ -200,3 +205,12 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 ## Prior work
 
 This work was originally inspired by [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable).
+
+[version-image]: https://img.shields.io/npm/v/tslint-immutable.svg?style=flat
+[version-url]: https://www.npmjs.com/package/tslint-immutable
+[travis-image]: https://travis-ci.org/jonaskello/tslint-immutable.svg?branch=master&style=flat
+[travis-url]: https://travis-ci.org/jonaskello/tslint-immutable
+[codecov-image]: https://img.shields.io/codecov/c/github/jonaskello/tslint-immutable/master.svg?style=flat
+[codecov-url]: https://codecov.io/gh/jonaskello/tslint-immutable/branch/master
+[license-image]: https://img.shields.io/github/license/jonaskello/tslint-immutable.svg?style=flat
+[license-url]: https://opensource.org/licenses/MIT

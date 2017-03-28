@@ -3,14 +3,6 @@
   "version": "2.1.0",
   "description": "TSLint rules to disable mutation in TypeScript.",
   "main": "index.js",
-  "scripts": {
-    "test": "yarn run tsc && mocha tests/*.ts --require ts-node/register",
-    "tsc": "tsc",
-    "build": "tsc -p tsconfig.prod.json",
-    "publish:major": "npm run build && node scripts/publish.js major",
-    "publish:minor": "npm run build && node scripts/publish.js minor",
-    "publish:patch": "npm run build && node scripts/publish.js patch"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
@@ -27,13 +19,27 @@
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.33",
+    "@types/mocha": "^2.2.40",
     "@types/node": "^6.0.46",
     "chai": "^3.5.0",
-    "mocha": "^2.4.5",
+    "codecov": "^2.1.0",
+    "mocha": "^3.2.0",
+    "nyc": "^10.2.0",
     "shelljs": "^0.7.5",
-    "ts-node": "^1.7.2",
     "tslint": "^4.0.2",
     "typescript": "^2.0.6"
+  },
+  "scripts": {
+    "tsc": "tsc",
+    "build": "tsc -p tsconfig.prod.json",
+    "test:unit": "mocha --compilers ts:ts-node/register \"tests/**/*.ts\"",
+    "test": "nyc --include src/**/*.ts -e '.ts' --r html -r lcov -r text yarn test:unit",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "publish:major": "npm run build && node scripts/publish.js major",
+    "publish:minor": "npm run build && node scripts/publish.js minor",
+    "publish:patch": "npm run build && node scripts/publish.js patch"
+  },
+  "dependencies": {
+    "ts-node": "^3.0.2"
   }
 }

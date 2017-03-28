@@ -4,3 +4,6 @@ thumbs.db
 *.log
 node_modules/
 js_out_test/
+coverage/
+.nyc_output/
+coverage.lcov
