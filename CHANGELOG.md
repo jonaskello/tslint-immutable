@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Upgraded to tslint 5.0.0
 
 ### Added
-- readonly-array now also checks for implicit arrays.
+- `readonly-array` now also checks for implicity declared mutable arrays.
 
 ## [v2.1.1] - 2017-03-29
 ### Fixed
