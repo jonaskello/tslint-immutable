@@ -18,28 +18,16 @@
   },
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.40",
-    "@types/node": "^6.0.46",
-    "chai": "^3.5.0",
-    "codecov": "^2.1.0",
-    "mocha": "^3.2.0",
-    "nyc": "^10.2.0",
     "shelljs": "^0.7.5",
-    "tslint": "^4.0.2",
-    "typescript": "^2.0.6"
+    "tslint": "^5.0.0",
+    "typescript": "^2.2.2"
   },
   "scripts": {
     "tsc": "tsc",
-    "build": "tsc -p tsconfig.prod.json",
-    "test:unit": "rm -rf js_out_test && yarn run tsc && mocha --compilers ts:ts-node/register \"tests/**/*.ts\"",
-    "test": "nyc --exclude tests -e .ts -e .tsx -e .js --r html -r lcov -r text yarn test:unit",
-    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
+    "build": "rm -rf rules && tsc -p tsconfig.json",
+    "test": "yarn build && ./scripts/test-rules.sh",
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
     "publish:patch": "npm run build && node scripts/publish.js patch"
-  },
-  "dependencies": {
-    "ts-node": "^3.0.2"
   }
 }

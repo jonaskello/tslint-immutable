@@ -2,13 +2,13 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
-    "outDir": "js_out_test",
-    "typeRoots" : ["./node_modules/@types"],
-    "types": ["node", "mocha"]
+    "sourceMap": false,
+    "outDir": "rules",
+    "lib": [
+      "es2015"
+    ]
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/*.ts"
   ]
 }

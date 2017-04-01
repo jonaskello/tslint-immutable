@@ -15,7 +15,7 @@ max_line_length = 0
 trim_trailing_whitespace = false
 
 # Indentation for all source files
-[*.{json,js,jsx,ts,tsx,css,html}]
+[*.{json,js,jsx,ts,tsx,css,html,lint}]
 max_line_length = 80
 trim_trailing_whitespace = true
 indent_style = space

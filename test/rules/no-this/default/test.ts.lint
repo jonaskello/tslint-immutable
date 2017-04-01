@@ -1,0 +1,8 @@
+// Should not produce violations
+let x = 0;
+
+// Should produce violations
+this.x = 0;
+~~~~ [failure]
+
+[failure]: Unexpected this, use functions not classes.

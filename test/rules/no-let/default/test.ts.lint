@@ -1,0 +1,9 @@
+var x = 0;
+
+let x = 0;
+~~~ [failure]
+
+for(let x = 0; x < 1;x++);
+    ~~~ [failure]
+
+[failure]: Unexpected let, use const.

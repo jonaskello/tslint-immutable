@@ -1,0 +1,22 @@
+// Interface with readonly modifiers should not produce violations
+interface Foo {
+  readonly bar: number,
+  readonly zoo(): string
+  readonly loo: Array<string>,
+  //readonly <T1>(): Array<T1>
+}
+
+// Indexer type declaration should not produce violations
+let foo: {readonly [key: string]: number};
+
+// Interface members without readonly modifier should produce violations
+interface Foo {
+  bar: number,
+  ~~~~~~~~~~~~ [failure]
+  zoo(): string
+  ~~~~~~~~~~~~~ [failure]
+  loo: Array<string>
+  ~~~~~~~~~~~~~~~~~~ [failure]
+}
+
+[failure]: Interface members must have readonly modifier.

@@ -1,0 +1,6 @@
+{
+  "rulesDirectory": ["../../../../rules"],
+  "rules": {
+    "no-semicolon-interface": true
+  }
+}

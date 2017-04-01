@@ -1,0 +1,8 @@
+  // Should not produce violations
+  let x = 0;
+
+  // Should produce violations
+  let x = new Foo();
+          ~~~~~~~~~ [failure]
+
+[failure]: Unexpected new, use functions not classes.

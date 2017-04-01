@@ -1,0 +1,8 @@
+// Should not produce violations
+const foo: ReadonlyArray<string> = [];
+
+// Should produce violations
+const foo: Array<string> = [];
+           ~~~~~ [failure]
+
+[failure]: Only ReadonlyArray allowed.

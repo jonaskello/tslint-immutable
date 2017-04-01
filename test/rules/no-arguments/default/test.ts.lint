@@ -1,0 +1,6 @@
+var x = 0;
+
+arguments[0];
+~~~~~~~~~ [arguments]
+
+[arguments]: Use of arguments not allowed, name all parameters instead.
