@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-## [v2.1.2] - 2017-04-01
+## [v3.0.0] - 2017-04-02
+### Changed
+- Upgraded to tslint 5.0.0
+
 ### Added
 - readonly-array now also checks for implicit arrays.
 
