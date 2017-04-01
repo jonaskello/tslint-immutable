@@ -6,8 +6,6 @@
 
 [TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
 
-> NOTE: tslint-immutable >= 2.0.0 is compatible with tslint >= 4.0.0. For older versions that is compatible with older tslint versions please check the [v1](https://github.com/jonaskello/tslint-immutable/tree/v1) branch.
-
 ## Background
 
 In some applications it is important to not mutate any data, for example when using Redux to store state in a React application. Moreover immutable data structures has a lot of advantages in general so I want to use them everywhere in my applications. 
@@ -21,6 +19,12 @@ This can be solved by using linting rules. So the aim of this project is to leve
 ## Installing
 
 `npm install tslint-immutable --save-dev`
+
+## Compability
+
+* tslint-immutable >= 2.1.2 is compatible with tslint 5.x.x. 
+* tslint-immutable 2.0.0...2.1.1 is compatible with tslint 4.x.x.
+* tslint-immutable <= 1.0.0 is compatible with tslint 3.x.x.
 
 ## TSLint Rules
 
