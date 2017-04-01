@@ -49,7 +49,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-this` rule.
 
 [Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.2...master
-[v2.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.0...v2.1.2
+[v2.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v1.0.0...v2.0.0

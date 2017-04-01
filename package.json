@@ -25,7 +25,8 @@
   "scripts": {
     "tsc": "tsc",
     "build": "rm -rf rules && tsc -p tsconfig.json",
-    "test": "yarn build && ./scripts/test-rules.sh",
+    "test": "yarn build && yarn test:rules",
+    "test:rules": "./scripts/test-rules.sh",
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
     "publish:patch": "npm run build && node scripts/publish.js patch"
