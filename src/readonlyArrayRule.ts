@@ -25,7 +25,6 @@ class ReadonlyArrayWalker extends Lint.RuleWalker {
     // must have a type spcecified, otherwise it will implicitly be of mutable Array type
     if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
       const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-      const typeNode: any = variableDeclarationNode.type;
       if (!variableDeclarationNode.type) {
         this.addFailure(this.createFailure(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING));
       }

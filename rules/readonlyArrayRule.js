@@ -42,7 +42,6 @@ var ReadonlyArrayWalker = (function (_super) {
         // must have a type spcecified, otherwise it will implicitly be of mutable Array type
         if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
             var variableDeclarationNode = node.parent;
-            var typeNode = variableDeclarationNode.type;
             if (!variableDeclarationNode.type) {
                 this.addFailure(this.createFailure(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING));
             }

@@ -2,16 +2,16 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 
 type Options = {
-  containmentPath:string,
-  allowedExternalFileNames:string[],
-  disallowedInternalFileNames:string[]
+  containmentPath: string,
+  allowedExternalFileNames: string[],
+  disallowedInternalFileNames: string[]
 }
 
 export class Rule extends Lint.Rules.AbstractRule {
   public static FAILURE_STRING = "import outside containment path";
   public static FAILURE_STRING2 = "import of disallowed file within containment path";
 
-  public apply(sourceFile:ts.SourceFile):Lint.RuleFailure[] {
+  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
     return this.applyWithWalker(new ImportsContainmentWalker(sourceFile, this.getOptions()));
   }
 }
@@ -19,12 +19,12 @@ export class Rule extends Lint.Rules.AbstractRule {
 // The walker takes care of all the work.
 class ImportsContainmentWalker extends Lint.RuleWalker {
 
-  public visitImportDeclaration(node:ts.ImportDeclaration) {
+  public visitImportDeclaration(node: ts.ImportDeclaration) {
 
     const myOptions = getMyOptions(this.getOptions());
     if (!myOptions)
       return;
-    const {containmentPath, allowedExternalFileNames, disallowedInternalFileNames}:Options = myOptions;
+    const { containmentPath, allowedExternalFileNames, disallowedInternalFileNames }: Options = myOptions;
 
     const sourceFileRelativePath = getSourceFilePathRelativeToContainmentPath(this.getSourceFile().path, containmentPath);
     // Check if the file resides under the containment path
@@ -69,7 +69,7 @@ class ImportsContainmentWalker extends Lint.RuleWalker {
 
 }
 
-function getSourceFilePathRelativeToContainmentPath(sourceFilePath:string, containmentPath:string):string {
+function getSourceFilePathRelativeToContainmentPath(sourceFilePath: string, containmentPath: string): string | undefined {
 
   // In run-time, the source file path can be a full path from "C:\XXX\YYY\ZZZ"
   // So we just try to match a part of the path with the containment dir
@@ -82,18 +82,18 @@ function getSourceFilePathRelativeToContainmentPath(sourceFilePath:string, conta
     const relativeSourceFilePath = sourceFilePath.substr(indexOfContainmentPath);
     return relativeSourceFilePath;
   }
-  return null;
+  return undefined;
 
 }
 
-function getMyOptions(options:any):Options {
+function getMyOptions(options: any): Options | undefined {
 
-  const myOptions:Options = options[0]; // "src/app";
+  const myOptions: Options = options[0]; // "src/app";
   if (!myOptions)
-    return null;
-  const {containmentPath, allowedExternalFileNames, disallowedInternalFileNames}:Options = myOptions;
+    return undefined;
+  const { containmentPath, allowedExternalFileNames, disallowedInternalFileNames }: Options = myOptions;
   if (!containmentPath)
-    return null;
+    return undefined;
   return {
     containmentPath,
     allowedExternalFileNames: allowedExternalFileNames || [],
@@ -102,10 +102,10 @@ function getMyOptions(options:any):Options {
 
 }
 
-function getImportRelativePath(node:ts.ImportDeclaration):string {
+function getImportRelativePath(node: ts.ImportDeclaration): string | undefined {
 
   if (node.moduleSpecifier && (<any>node.moduleSpecifier).text) {
-    const moduleSpecifierText:string = (<any>node.moduleSpecifier).text;
+    const moduleSpecifierText: string = (<any>node.moduleSpecifier).text;
     if (moduleSpecifierText && moduleSpecifierText.length > 0) {
       // Make sure it is a relative path module reference
       if (moduleSpecifierText.charAt(0) === ".") {
@@ -113,11 +113,11 @@ function getImportRelativePath(node:ts.ImportDeclaration):string {
       }
     }
   }
-  return null;
+  return undefined;
 }
 
 // Calculate how many levels below [path] that [subPath] resides
-function getLevelsBelowPath(path:string, subPath:string):number {
+function getLevelsBelowPath(path: string, subPath: string): number {
 
   const pathParts = path.split("/").length;
   const subPathParts = subPath.split("/").length;
@@ -130,7 +130,7 @@ function getLevelsBelowPath(path:string, subPath:string):number {
 // "../../../file" reaches 3 parent levels up as highest
 // "../../../hello/world/../file" reaches 3 parent levels up as highest
 // "./hello/../../../" reaches 2 parent levels up as highest
-function getHighestParentLevel(relativePath:string):number {
+function getHighestParentLevel(relativePath: string): number {
 
   const parts = relativePath.split("/");
   let highestParentLevel = 0;

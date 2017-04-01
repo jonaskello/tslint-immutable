@@ -20,7 +20,7 @@ class NoLetKeywordWalker extends Lint.RuleWalker {
   }
 
   public visitForStatement(node: ts.ForStatement) {
-    this.handleInitializerNode(node.initializer);
+    this.handleInitializerNode(node.initializer!);
     super.visitForStatement(node);
   }
 

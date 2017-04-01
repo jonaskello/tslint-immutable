@@ -84,15 +84,15 @@ function getSourceFilePathRelativeToContainmentPath(sourceFilePath, containmentP
         var relativeSourceFilePath = sourceFilePath.substr(indexOfContainmentPath);
         return relativeSourceFilePath;
     }
-    return null;
+    return undefined;
 }
 function getMyOptions(options) {
     var myOptions = options[0]; // "src/app";
     if (!myOptions)
-        return null;
+        return undefined;
     var containmentPath = myOptions.containmentPath, allowedExternalFileNames = myOptions.allowedExternalFileNames, disallowedInternalFileNames = myOptions.disallowedInternalFileNames;
     if (!containmentPath)
-        return null;
+        return undefined;
     return {
         containmentPath: containmentPath,
         allowedExternalFileNames: allowedExternalFileNames || [],
@@ -109,7 +109,7 @@ function getImportRelativePath(node) {
             }
         }
     }
-    return null;
+    return undefined;
 }
 // Calculate how many levels below [path] that [subPath] resides
 function getLevelsBelowPath(path, subPath) {
