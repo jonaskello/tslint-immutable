@@ -5,4 +5,8 @@ const foo: ReadonlyArray<string> = [];
 const foo: Array<string> = [];
            ~~~~~ [failure]
 
+// Should warn on implicit mutable array type
+const foo = [1, 2, 3]
+      ~~~ [failure]
+
 [failure]: Only ReadonlyArray allowed.

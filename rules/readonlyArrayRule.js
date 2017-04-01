@@ -36,6 +36,18 @@ var ReadonlyArrayWalker = (function (_super) {
             this.addFailure(this.createFailure(node.typeName.getStart(), node.typeName.getWidth(), Rule.FAILURE_STRING));
         }
     };
+    ReadonlyArrayWalker.prototype.visitArrayLiteralExpression = function (node) {
+        _super.prototype.visitArrayLiteralExpression.call(this, node);
+        // If the array literal is used in a variable declaration, the variable
+        // must have a type spcecified, otherwise it will implicitly be of mutable Array type
+        if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
+            var variableDeclarationNode = node.parent;
+            var typeNode = variableDeclarationNode.type;
+            if (!variableDeclarationNode.type) {
+                this.addFailure(this.createFailure(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING));
+            }
+        }
+    };
     ReadonlyArrayWalker.prototype.visitTypeLiteral = function (node) {
         _super.prototype.visitTypeLiteral.call(this, node);
         // if (node.kind === ts.SyntaxKind.ArrayType) {
