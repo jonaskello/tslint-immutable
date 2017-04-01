@@ -22,9 +22,9 @@ This can be solved by using linting rules. So the aim of this project is to leve
 
 ## Compability
 
-* tslint-immutable >= 2.1.2 is compatible with tslint 5.x.x. 
-* tslint-immutable 2.0.0...2.1.1 is compatible with tslint 4.x.x.
-* tslint-immutable <= 1.0.0 is compatible with tslint 3.x.x.
+* tslint-immutable 3.x.x is compatible with tslint 5.x.x. 
+* tslint-immutable 2.x.x is compatible with tslint 4.x.x.
+* tslint-immutable 1.x.x is compatible with tslint 3.x.x.
 
 ## TSLint Rules
 
