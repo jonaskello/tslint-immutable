@@ -30,6 +30,23 @@ This can be solved by using linting rules. So the aim of this project is to leve
 
 In addition to immutable rules this project also contains a few rules for enforcing a functional style of programming and a few other rules. The following rules are available:
 
+* [Immutability rules](#Immutability-rules)
+  * [readonly-interface](#readonly-interface)
+  * [readonly-indexer](#readonly-indexer)
+  * [readonly-array](#readonly-array)
+  * [no-let](#no-let)
+* [Functional style rules](#Functional-style-rules)
+  * [no-this](#no-this,-no-class,-no-new)
+  * [no-class](#no-this,-no-class,-no-new)
+  * [no-new](#no-this,-no-class,-no-new)
+  * [no-mixed-interface](#no-mixed-interface)
+  * [no-expression-statement](#no-expression-statement)
+* [Other rules](#Other-rules)
+  * [no-arguments](#no-arguments)
+  * [no-label](#no-label)
+  * [no-semicolon-interface](#no-semicolon-interface)
+  * [import-containment](#import-containment)
+
 ### Immutability rules
 
 #### readonly-interface
@@ -91,7 +108,7 @@ const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
-#### no-let 
+#### no-let
 This rule should be combined with tslint's built-in `no-var` rule to enforce that all variables are declared as `const`.
 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
@@ -109,6 +126,8 @@ const SearchResults =
       results.map(result => <li>result</li>) // <- Who needs let?
     }</ul>;
 ```
+
+### Functional style rules
 
 #### no-this, no-class, no-new
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
@@ -141,8 +160,6 @@ const OptimizedMessage = pure(Message);
 const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 ```
 
-### Functional style rules
-
 #### no-mixed-interface
 
 Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.  
@@ -158,10 +175,6 @@ alert('Hello world!')
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
 ### Other rules
-
-#### import-containment
-
-ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
 
 #### no-arguments
 
@@ -188,18 +201,44 @@ inferface Foo {
 }
 ```
 
+#### import-containment
+
+ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
+
 ## Sample Configuration File
 
-Here's a sample TSLint configuration file (tslint.json) that activates all the recommended rules:
+Here's a sample TSLint configuration file (tslint.json) that activates all the rules:
 
 ```json
 {
-  "rulesDirectory": "path/to/tslint-immutable/rules",
+  "rulesDirectory": ["./node_modules/tslint-immutable/rules"],
   "rules": {
+
+    // Immutability rules
+    "readonly-interface": true,
+    "readonly-indexer": true,
+    "readonly-array": true,
     "no-let": true,
+    "no-var-keyword": true, // built-in tslint rule
+
+    // Functional style rules
     "no-this": true,
+    "no-class": true,
+    "no-new": true,
+    "no-mixed-interface": true,
     "no-expression-statement": true,
-    "no-var-keyword": true
+
+    // Other rules
+    "no-arguments": true,
+    "no-label": true,
+    "no-semicolon-interface": true,
+    "import-containment": [ true,
+    {
+      "containmentPath": "path/to/libs",
+      "allowedExternalFileNames": ["index"],
+      "disallowedInternalFileNames": ["index"]
+    }]
+
   }
 }
 ```
