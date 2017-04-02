@@ -209,7 +209,7 @@ ECMAScript modules does not have a concept of a library that can span multiple f
 
 Here's a sample TSLint configuration file (tslint.json) that activates all the rules:
 
-```json
+```javascript
 {
   "rulesDirectory": ["./node_modules/tslint-immutable/rules"],
   "rules": {
