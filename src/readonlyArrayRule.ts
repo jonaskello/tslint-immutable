@@ -18,7 +18,7 @@ function walk(ctx: Lint.WalkContext<void>): void {
     }
     if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node as ts.ArrayLiteralExpression)) {
       const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-      ctx.addFailureAt(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING);
+      ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
     }
     return ts.forEachChild(node, cb);
   }
