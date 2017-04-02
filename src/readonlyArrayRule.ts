@@ -31,11 +31,4 @@ class ReadonlyArrayWalker extends Lint.RuleWalker {
     }
   }
 
-  protected visitTypeLiteral(node: ts.TypeLiteralNode): void {
-    super.visitTypeLiteral(node);
-    // if (node.kind === ts.SyntaxKind.ArrayType) {
-    if (node.kind as number === ts.SyntaxKind.ArrayType) {
-      this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
-    }
-  }
 }

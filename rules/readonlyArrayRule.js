@@ -47,12 +47,5 @@ var ReadonlyArrayWalker = (function (_super) {
             }
         }
     };
-    ReadonlyArrayWalker.prototype.visitTypeLiteral = function (node) {
-        _super.prototype.visitTypeLiteral.call(this, node);
-        // if (node.kind === ts.SyntaxKind.ArrayType) {
-        if (node.kind === ts.SyntaxKind.ArrayType) {
-            this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
-        }
-    };
     return ReadonlyArrayWalker;
 }(Lint.RuleWalker));

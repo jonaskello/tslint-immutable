@@ -5,6 +5,6 @@ set -v
 ./node_modules/.bin/tsc -p .
 
 # Now run the tests
-#./node_modules/.bin/tslint --test test/rules/readonly-array/default
+./node_modules/.bin/tslint --test test/rules/readonly-array/default
 
-find test -type f -name '*.lint' -exec dirname {} \; | sort -u | xargs -n 1 ./node_modules/.bin/tslint --test
+#find test -type f -name '*.lint' -exec dirname {} \; | sort -u | xargs -n 1 ./node_modules/.bin/tslint --test
