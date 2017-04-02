@@ -25,6 +25,7 @@
   "scripts": {
     "tsc": "tsc",
     "build": "rm -rf rules && tsc -p tsconfig.json",
+    "lint": "tslint './src/**/*.ts{,x}'",
     "test": "yarn build && yarn test:rules",
     "test:rules": "./scripts/test-rules.sh",
     "publish:major": "npm run build && node scripts/publish.js major",

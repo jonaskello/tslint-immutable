@@ -1,6 +1,8 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 
+//tslint:disable no-any
+
 type Options = {
   containmentPath: string,
   allowedExternalFileNames: string[],
@@ -104,8 +106,8 @@ function getMyOptions(options: any): Options | undefined {
 
 function getImportRelativePath(node: ts.ImportDeclaration): string | undefined {
 
-  if (node.moduleSpecifier && (<any>node.moduleSpecifier).text) {
-    const moduleSpecifierText: string = (<any>node.moduleSpecifier).text;
+  if (node.moduleSpecifier && (node.moduleSpecifier as any).text) {
+    const moduleSpecifierText: string = (node.moduleSpecifier as any).text;
     if (moduleSpecifierText && moduleSpecifierText.length > 0) {
       // Make sure it is a relative path module reference
       if (moduleSpecifierText.charAt(0) === ".") {
