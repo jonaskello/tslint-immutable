@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 }
 
-function walk(ctx: Lint.WalkContext<void>) {
+function walk(ctx: Lint.WalkContext<void>): void {
   return ts.forEachChild(ctx.sourceFile, cb);
   function cb(node: ts.Node): void {
     if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node as ts.TypeReferenceNode)) {
@@ -23,7 +23,6 @@ function walk(ctx: Lint.WalkContext<void>) {
     return ts.forEachChild(node, cb);
   }
 }
-
 
 function isInvalidArrayTypeReference(node: ts.TypeReferenceNode): boolean {
   if (node.typeName.getText() === "Array") {
