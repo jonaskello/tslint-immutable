@@ -17,35 +17,69 @@ var Rule = (function (_super) {
     function Rule() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    // public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
+    //   const walker = new ReadonlyArrayWalker(sourceFile, this.getOptions());
+    //   return this.applyWithWalker(walker);
+    // }
     Rule.prototype.apply = function (sourceFile) {
-        var walker = new ReadonlyArrayWalker(sourceFile, this.getOptions());
-        return this.applyWithWalker(walker);
+        return this.applyWithFunction(sourceFile, walk);
     };
     return Rule;
 }(Lint.Rules.AbstractRule));
 Rule.FAILURE_STRING = "Only ReadonlyArray allowed.";
 exports.Rule = Rule;
-var ReadonlyArrayWalker = (function (_super) {
-    __extends(ReadonlyArrayWalker, _super);
-    function ReadonlyArrayWalker() {
-        return _super !== null && _super.apply(this, arguments) || this;
+/*
+class ReadonlyArrayWalker extends Lint.RuleWalker {
+
+  protected visitTypeReference(node: ts.TypeReferenceNode): void {
+    super.visitTypeReference(node);
+    if (node.typeName.getText() === "Array") {
+      this.addFailure(this.createFailure(node.typeName.getStart(), node.typeName.getWidth(), Rule.FAILURE_STRING));
     }
-    ReadonlyArrayWalker.prototype.visitTypeReference = function (node) {
-        _super.prototype.visitTypeReference.call(this, node);
-        if (node.typeName.getText() === "Array") {
-            this.addFailure(this.createFailure(node.typeName.getStart(), node.typeName.getWidth(), Rule.FAILURE_STRING));
+  }
+
+  protected visitArrayLiteralExpression(node: ts.ArrayLiteralExpression): void {
+    super.visitArrayLiteralExpression(node);
+    // If the array literal is used in a variable declaration, the variable
+    // must have a type spcecified, otherwise it will implicitly be of mutable Array type
+    if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
+      const variableDeclarationNode = node.parent as ts.VariableDeclaration;
+      if (!variableDeclarationNode.type) {
+        this.addFailure(this.createFailure(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING));
+      }
+    }
+  }
+
+}
+*/
+function walk(ctx) {
+    return ts.forEachChild(ctx.sourceFile, cb);
+    function cb(node) {
+        if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node)) {
+            return ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
         }
-    };
-    ReadonlyArrayWalker.prototype.visitArrayLiteralExpression = function (node) {
-        _super.prototype.visitArrayLiteralExpression.call(this, node);
-        // If the array literal is used in a variable declaration, the variable
-        // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-        if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
+        if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node)) {
+            //return ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
             var variableDeclarationNode = node.parent;
-            if (!variableDeclarationNode.type) {
-                this.addFailure(this.createFailure(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING));
-            }
+            ctx.addFailureAt(variableDeclarationNode.name.getStart(), variableDeclarationNode.name.getWidth(), Rule.FAILURE_STRING);
         }
-    };
-    return ReadonlyArrayWalker;
-}(Lint.RuleWalker));
+        return ts.forEachChild(node, cb);
+    }
+}
+function isInvalidArrayTypeReference(node) {
+    if (node.typeName.getText() === "Array") {
+        return true;
+    }
+    return false;
+}
+function isInvalidArrayLiteralExpression(node) {
+    // If the array literal is used in a variable declaration, the variable
+    // must have a type spcecified, otherwise it will implicitly be of mutable Array type
+    if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
+        var variableDeclarationNode = node.parent;
+        if (!variableDeclarationNode.type) {
+            return true;
+        }
+    }
+    return false;
+}

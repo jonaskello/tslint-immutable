@@ -6,7 +6,7 @@ const foo: ReadonlyArray<string> = [];
 
 // Should fail on Array type in variable declaration (TypeReferenceNode)
 const foo: Array<string> = [];
-           ~~~~~ [failure]
+           ~~~~~~~~~~~~~ [failure]
 
 // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
 const foo = [1, 2, 3]
@@ -17,7 +17,7 @@ const foo = [1, 2, 3]
 // Should fail on Array type in interface (TypeReferenceNode)
 interface Foo {
   bar: Array<string>
-       ~~~~~ [failure]
+       ~~~~~~~~~~~~~ [failure]
 }
 
 // -- Type declaration
@@ -27,18 +27,18 @@ type Foo = ReadonlyArray<string>;
 
 // Should fail on Array type alias (TypeReferenceNode)
 type Foo = Array<string>;
-           ~~~~~ [failure]
+           ~~~~~~~~~~~~~ [failure]
 
 // Should fail on Array as type member (TypeReferenceNode)
 type Foo = {
   bar: Array<string>
-       ~~~~~ [failure]
+       ~~~~~~~~~~~~~ [failure]
 }
 
 // -- Type literal
 
 // Should fail on Array as type literal member (TypeReferenceNode)
-let foo: { bar: Array<string };
-                ~~~~~ [failure]
+let foo: { bar: Array<string> };
+                ~~~~~~~~~~~~~ [failure]
 
 [failure]: Only ReadonlyArray allowed.
