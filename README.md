@@ -109,7 +109,7 @@ points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
 #### no-let
-This rule should be combined with tslint's built-in `no-var` rule to enforce that all variables are declared as `const`.
+This rule should be combined with tslint's built-in `no-var-keyword` rule to enforce that all variables are declared as `const`.
 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
 
