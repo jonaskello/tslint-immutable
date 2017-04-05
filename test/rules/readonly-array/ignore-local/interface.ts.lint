@@ -1,0 +1,29 @@
+// -- Top-level interface declarations
+
+// Should fail on Array type in interface (TypeReferenceNode)
+interface Foo {
+  bar: Array<string>
+       ~~~~~~~~~~~~~ [failure]
+}
+
+// -- Local interface declarations
+
+function foo() {
+
+  // Should not fail on Array type in interface when local (TypeReferenceNode)
+  interface Foo {
+    bar: Array<string>
+  }
+
+}
+
+const foo = () => {
+
+  // Should not fail on Array type in interface when local (TypeReferenceNode)
+  interface Foo {
+    bar: Array<string>
+  }
+
+}
+
+[failure]: Only ReadonlyArray allowed.

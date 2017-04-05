@@ -5,10 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-
 ### Added
-
-### Changed
+- `ignore-local` option added to `readonly-array`.
+- `ignore-prefix` option added to `readonly-array`.
 
 ## [v3.0.0] - 2017-04-02
 ### Changed

@@ -1,0 +1,46 @@
+// -- Top-level variable declarations
+
+// Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+const foo: ReadonlyArray<string> = [];
+
+// Should fail on Array type in variable declaration (TypeReferenceNode)
+const foo: Array<string> = [];
+           ~~~~~~~~~~~~~ [failure]
+
+// Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+const foo = [1, 2, 3]
+      ~~~ [failure]
+
+// -- Local variable declarations
+
+function foo() {
+
+  // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+  const foo: ReadonlyArray<string> = [];
+
+  // Should fail on Array type in variable declaration (TypeReferenceNode)
+  const foo: Array<string> = [];
+             ~~~~~~~~~~~~~ [failure]
+
+  // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+  const foo = [1, 2, 3]
+        ~~~ [failure]
+
+}
+
+const foo = () => {
+
+  // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+  const foo: ReadonlyArray<string> = [];
+
+  // Should fail on Array type in variable declaration (TypeReferenceNode)
+  const foo: Array<string> = [];
+             ~~~~~~~~~~~~~ [failure]
+
+  // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+  const foo = [1, 2, 3]
+        ~~~ [failure]
+
+}
+
+[failure]: Only ReadonlyArray allowed.

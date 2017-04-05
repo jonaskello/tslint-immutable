@@ -1,0 +1,34 @@
+// -- Top-level type literal
+
+// Should fail on Array as type literal member (TypeReferenceNode)
+let foo: { bar: Array<string> };
+                ~~~~~~~~~~~~~ [failure]
+
+// Should not fail on Array as type literal member with prefix (TypeReferenceNode)
+let foo: { mutableBar: Array<string> };
+
+// -- Local type literal
+
+function foo() {
+
+  // Should fail on Array as type literal member (TypeReferenceNode)
+  let foo: { bar: Array<string> };
+                  ~~~~~~~~~~~~~ [failure]
+
+  // Should not fail on Array as type literal member with prefix (TypeReferenceNode)
+  let foo: { mutableBar: Array<string> };
+
+}
+
+const foo = () => {
+
+  // Should fail on Array as type literal member (TypeReferenceNode)
+  let foo: { bar: Array<string> };
+                  ~~~~~~~~~~~~~ [failure]
+
+  // Should not fail on Array as type literal member with prefix (TypeReferenceNode)
+  let foo: { mutableBar: Array<string> };
+
+}
+
+[failure]: Only ReadonlyArray allowed.

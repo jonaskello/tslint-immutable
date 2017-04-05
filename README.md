@@ -55,7 +55,7 @@ This rule enforces having the `readonly` modifier on all interface members.
 
 You might think that using `const` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
 
-```TypeScript
+```typescript
 interface Point { x: number, y: number }
 const point: Point = { x: 23, y: 44 };
 point.x = 99; // This is legal
@@ -63,7 +63,7 @@ point.x = 99; // This is legal
 
 This is why the `readonly-interface` rule exists. This rule prevents you from assigning a value to the result of a member expression.
 
-```TypeScript
+```typescript
 interface Point { readonly x: number, readonly y: number }
 const point: Point = { x: 23, y: 44 };
 point.x = 99; // <- No object mutation allowed.
@@ -71,7 +71,7 @@ point.x = 99; // <- No object mutation allowed.
 
 This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
 
-```TypeScript
+```typescript
 interface Point { readonly x: number, readonly y: number }
 const point: Point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
@@ -81,7 +81,7 @@ const transformedPoint = { ...point, x: 99 };
 
 This rule enforces all indexers to have the readonly modifier.
 
-```TypeScript
+```typescript
 // NOT OK
 let foo: { [key:string]: number }; 
 // OK
@@ -94,7 +94,7 @@ This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
 
 Even if an array is declared with `const` it is still possible to mutate the contents of the array.
 
-```TypeScript
+```typescript
 interface Point { readonly x: number, readonly y: number }
 const points: Array<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // This is legal
@@ -102,10 +102,25 @@ points.push({ x: 1, y: 2 }); // This is legal
 
 Using the readonly-array rule will stop this mutation:
 
-```TypeScript
+```typescript
 interface Point { readonly x: number, readonly y: number }
 const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // Unresolved method push()
+```
+
+Options: 
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+
+Example config:
+```javascript
+"readonly-array": true
+```
+```javascript
+"readonly-array": [true, "ignore-local"]
+```
+```javascript
+"readonly-array": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
 
 #### no-let
@@ -113,13 +128,13 @@ This rule should be combined with tslint's built-in `no-var-keyword` rule to enf
 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
 
-```TypeScript
+```typescript
 let x = 5; // <- Unexpected let or var, use const.
 ```
 
 What about `for` loops? Loops can be replaced with the Array methods like `map`, `filter`, and so on. If you find the built-in JS Array methods lacking, use [ramda](http://ramdajs.com/), or [lodash-fp](https://github.com/lodash/lodash/wiki/FP-Guide).
 
-```TypeScript
+```typescript
 const SearchResults = 
   ({ results }) => 
     <ul>{
@@ -132,7 +147,7 @@ const SearchResults =
 #### no-this, no-class, no-new
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
 
-```TypeScript
+```typescript
 const Message = React.createClass({
   render: function() {
     return <div>{ this.props.message }</div>; // <- no this allowed
@@ -141,13 +156,13 @@ const Message = React.createClass({
 ```
 Instead of creating classes, you should use React 0.14's [Stateless Functional Components](https://medium.com/@joshblack/stateless-components-in-react-0-14-f9798f8b992d#.t5z2fdit6) and save yourself some keystrokes:
 
-```TypeScript
+```typescript
 const Message = ({message}) => <div>{ message }</div>;
 ```
 
 What about lifecycle methods like `shouldComponentUpdate`? We can use the [recompose](https://github.com/acdlite/recompose) library to apply these optimizations to your Stateless Functional Components. The [recompose](https://github.com/acdlite/recompose) library relies on the fact that your Redux state is immutable to efficiently implement shouldComponentUpdate for you.
 
-```TypeScript
+```typescript
 import { pure, onlyUpdateForKeys } from 'recompose';
 
 const Message = ({message}) => <div>{ message }</div>;
@@ -167,7 +182,7 @@ Mixing functions and data properties in the same interface is a sign of object-o
 #### no-expression-statement
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
 
-```TypeScript
+```typescript
 array.push(1)
 alert('Hello world!')
 ```
@@ -188,7 +203,7 @@ Disallows the use of labels, and indirectly also `goto`.
 
 Ensures that interfaces only use commas as separator instead semicolor.
  
-```TypeScript
+```typescript
 // This is NOT ok.
 inferface Foo {
   bar: string;
@@ -204,6 +219,37 @@ inferface Foo {
 #### import-containment
 
 ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
+
+## Options
+
+### Using the `ignore-local` option
+
+> If a tree falls in the woods, does it make a sound?
+> If a pure function mutates some local data in order to produce an immutable return value, is that ok?
+
+The quote above is from the [clojure docs](https://clojure.org/reference/transients). In general, it is more important to enforce immutability for state that is passed in and out of functions than for local state used for internal calculations within a function. For example in Redux, the state going in and out of reducers needs to be immutable while the reducer may be allowed to mutate local state in its calculations in order to achieve higher performance. This is what the `ignore-local` option enables. With this option enabled immutability will be enforced everywhere but in local state.
+
+### Using the `ignore-prefix` option
+
+Some languages are immutable by default but allows you to explicitly declare mutable variables. For example in [reason](https://facebook.github.io/reason/) you can declare mutable record fields like this:
+
+```reason
+type person = {
+  name: string,
+  mutable age: int
+};
+```
+
+Typescript is not immutable by default but it can be if you use this package. So in order to create an escape hatch similar to how it is done in reason the `ignore-mutable` option can be used. For example if you configure it to ignore variables with names that has the prefix "mutable" you can emulate the above example in typescript like this:
+
+```typescript
+type person = {
+  readonly name: string,
+  mutableAge: number // This is OK with ignore-prefix = "mutable"
+};
+```
+
+Yes, variable names like `mutableAge` are ugly, but then again mutation is an ugly business :-).
 
 ## Sample Configuration File
 

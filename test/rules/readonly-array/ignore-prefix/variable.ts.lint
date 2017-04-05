@@ -1,0 +1,64 @@
+// -- Top-level variable declarations
+
+// Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+const foo: ReadonlyArray<string> = [];
+
+// Should fail on Array type in variable declaration (TypeReferenceNode)
+const foo: Array<string> = [];
+           ~~~~~~~~~~~~~ [failure]
+
+// Should not fail on Array type in variable declaration with prefix (TypeReferenceNode)
+const mutableFoo: Array<string> = [];
+
+// Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+const foo = [1, 2, 3]
+      ~~~ [failure]
+
+// Should not fail on implicit Array type in variable declaration with prefix (ArrayLiteralExpression)
+const mutableFoo = [1, 2, 3]
+
+// -- Local variable declarations
+
+function foo() {
+
+  // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+  const foo: ReadonlyArray<string> = [];
+
+  // Should fail on Array type in variable declaration (TypeReferenceNode)
+  const foo: Array<string> = [];
+             ~~~~~~~~~~~~~ [failure]
+
+  // Should not fail on Array type in variable declaration with prefix (TypeReferenceNode)
+  const mutableFoo: Array<string> = [];
+
+  // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+  const foo = [1, 2, 3]
+        ~~~ [failure]
+
+  // Should not fail on implicit Array type in variable declaration with prefix (ArrayLiteralExpression)
+  const mutableFoo = [1, 2, 3]
+
+}
+
+const foo = () => {
+
+  // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+  const foo: ReadonlyArray<string> = [];
+
+  // Should fail on Array type in variable declaration (TypeReferenceNode)
+  const foo: Array<string> = [];
+             ~~~~~~~~~~~~~ [failure]
+
+  // Should not fail on Array type in variable declaration with prefix (TypeReferenceNode)
+  const mutableFoo: Array<string> = [];
+
+  // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+  const foo = [1, 2, 3]
+        ~~~ [failure]
+
+  // Should not fail on implicit Array type in variable declaration with prefix (ArrayLiteralExpression)
+  const mutableFoo = [1, 2, 3]
+
+}
+
+[failure]: Only ReadonlyArray allowed.
