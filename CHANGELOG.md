@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 
+## [v3.1.1] - 2017-04-05
+### Fixed
+- Function parameters are not checked when using ignore-local option, [#13](https://github.com/jonaskello/tslint-immutable/issues/13).
+- Implicit Array type by default value for function parameter is not checked, [#14](https://github.com/jonaskello/tslint-immutable/issues/14).
+
 ## [v3.1.0] - 2017-04-05
 ### Added
 - [`ignore-local`](https://github.com/jonaskello/tslint-immutable#using-the-ignore-local-option) option added to `readonly-array`.
@@ -53,7 +58,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.1...master
+[v3.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.0...v3.1.1
 [v3.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.1...v3.0.0
 [v2.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.1...v2.1.2
