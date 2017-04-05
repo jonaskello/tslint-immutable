@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v3.1.0] - 2017-04-05
 ### Added
-- `ignore-local` option added to `readonly-array`.
-- `ignore-prefix` option added to `readonly-array`.
+- [`ignore-local`](https://github.com/jonaskello/tslint-immutable#using-the-ignore-local-option) option added to `readonly-array`.
+- [`ignore-prefix`](https://github.com/jonaskello/tslint-immutable#using-the-ignore-local-option) option added to `readonly-array`.
 
 ## [v3.0.0] - 2017-04-02
 ### Changed
