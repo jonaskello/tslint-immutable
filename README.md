@@ -20,6 +20,8 @@ This can be solved by using linting rules. So the aim of this project is to leve
 
 `npm install tslint-immutable --save-dev`
 
+See the [example](#sample-configuration-file) tslint.json file for configuration.
+
 ## Compability
 
 * tslint-immutable 3.x.x is compatible with tslint 5.x.x. 
