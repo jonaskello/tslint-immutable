@@ -43,8 +43,7 @@ function walk(ctx) {
     function cb(node) {
         // Skip checking in functions if ignore-local is set
         if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
-            // We still need to check the parameters!
-            // SyntaxList node holds the parameters
+            // We still need to check the parameters which resides in the SyntaxList node
             for (var _i = 0, _a = node.getChildren(ctx.sourceFile); _i < _a.length; _i++) {
                 var child1 = _a[_i];
                 if (child1.kind === ts.SyntaxKind.SyntaxList) {
