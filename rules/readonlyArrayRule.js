@@ -70,11 +70,12 @@ function isInvalidArrayTypeReference(node, ctx) {
 function isInvalidArrayLiteralExpression(node, ctx) {
     // If the array literal is used in a variable declaration, the variable
     // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-    if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
-        var variableDeclarationNode = node.parent;
-        if (!variableDeclarationNode.type) {
+    // It could also be a function parameter that has an array literal as default value
+    if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
+        var parent_1 = node.parent;
+        if (!parent_1.type) {
             if (ctx.options.ignorePrefix &&
-                variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+                parent_1.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
                 return false;
             }
             return true;

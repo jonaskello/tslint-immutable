@@ -64,11 +64,12 @@ function isInvalidArrayTypeReference(node: ts.TypeReferenceNode, ctx: Lint.WalkC
 function isInvalidArrayLiteralExpression(node: ts.ArrayLiteralExpression, ctx: Lint.WalkContext<Options>): boolean {
   // If the array literal is used in a variable declaration, the variable
   // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-  if (node.parent && node.parent.kind === ts.SyntaxKind.VariableDeclaration) {
-    const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-    if (!variableDeclarationNode.type) {
+  // It could also be a function parameter that has an array literal as default value
+  if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
+    const parent = node.parent as ts.VariableDeclaration | ts.ParameterDeclaration;
+    if (!parent.type) {
       if (ctx.options.ignorePrefix &&
-        variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+        parent.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
         return false;
       }
       return true;
