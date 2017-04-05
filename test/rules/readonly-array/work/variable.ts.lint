@@ -1,9 +1,10 @@
-function foo(boo = [1, 2, 3]) {
-             ~~~ [failure]
+function foo(boo: Array<string>, boo = [1, 2, 3]) {
+                  ~~~~~~~~~~~~~ [failure]
+                                 ~~~ [failure]
 }
 
-const foo = (boo = [1, 2, 3]) => {
-             ~~~ [failure]
-}
+//const foo = (boo = [1, 2, 3]) => {
+//             ~~~ [failure]
+//}
 
 [failure]: Only ReadonlyArray allowed.

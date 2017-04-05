@@ -33,18 +33,37 @@ function parseOptions(options: any[]): Options { //tslint:disable-line
 function walk(ctx: Lint.WalkContext<Options>): void {
   return ts.forEachChild(ctx.sourceFile, cb);
   function cb(node: ts.Node): void {
+    // Skip checking in functions if ignore-local is set
     if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
-      // skip checking in functions if ignore-local is set
+      // We still need to check the parameters which resides in the SyntaxList node
+      for (const child1 of node.getChildren(ctx.sourceFile)) {
+        if (child1.kind === ts.SyntaxKind.SyntaxList) {
+          for (const child2 of child1.getChildren(ctx.sourceFile)) {
+            if (child2.kind === ts.SyntaxKind.Parameter) {
+              for (const child3 of child2.getChildren(ctx.sourceFile).filter((child) =>
+                child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference)) {
+                checkNode(child3, ctx);
+              }
+            }
+          }
+        }
+      }
       return;
     }
-    if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node as ts.TypeReferenceNode, ctx)) {
-      ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-    }
-    if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node as ts.ArrayLiteralExpression, ctx)) {
-      const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-      ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
-    }
+    // Check the node
+    checkNode(node, ctx);
+    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
+  }
+}
+
+function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+  if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node as ts.TypeReferenceNode, ctx)) {
+    ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+  }
+  if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node as ts.ArrayLiteralExpression, ctx)) {
+    const variableDeclarationNode = node.parent as ts.VariableDeclaration;
+    ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
   }
 }
 

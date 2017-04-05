@@ -41,18 +41,41 @@ function parseOptions(options) {
 function walk(ctx) {
     return ts.forEachChild(ctx.sourceFile, cb);
     function cb(node) {
+        // Skip checking in functions if ignore-local is set
         if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
-            // skip checking in functions if ignore-local is set
+            // We still need to check the parameters!
+            // SyntaxList node holds the parameters
+            for (var _i = 0, _a = node.getChildren(ctx.sourceFile); _i < _a.length; _i++) {
+                var child1 = _a[_i];
+                if (child1.kind === ts.SyntaxKind.SyntaxList) {
+                    for (var _b = 0, _c = child1.getChildren(ctx.sourceFile); _b < _c.length; _b++) {
+                        var child2 = _c[_b];
+                        if (child2.kind === ts.SyntaxKind.Parameter) {
+                            for (var _d = 0, _e = child2.getChildren(ctx.sourceFile).filter(function (child) {
+                                return child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference;
+                            }); _d < _e.length; _d++) {
+                                var child3 = _e[_d];
+                                checkNode(child3, ctx);
+                            }
+                        }
+                    }
+                }
+            }
             return;
         }
-        if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node, ctx)) {
-            ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-        }
-        if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node, ctx)) {
-            var variableDeclarationNode = node.parent;
-            ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
-        }
+        // Check the node
+        checkNode(node, ctx);
+        // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
         return ts.forEachChild(node, cb);
+    }
+}
+function checkNode(node, ctx) {
+    if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node, ctx)) {
+        ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+    }
+    if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node, ctx)) {
+        var variableDeclarationNode = node.parent;
+        ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
     }
 }
 function isInvalidArrayTypeReference(node, ctx) {
