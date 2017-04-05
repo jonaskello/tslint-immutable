@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+
+## [v3.1.0] - 2017-04-05
+### Added
 - `ignore-local` option added to `readonly-array`.
 - `ignore-prefix` option added to `readonly-array`.
 
@@ -50,7 +53,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.0.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.0...master
+[v3.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.0.0...v3.1.0
 [v3.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.1...v3.0.0
 [v2.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v2.1.0...v2.1.1
