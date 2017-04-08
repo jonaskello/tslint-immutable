@@ -44,22 +44,8 @@ function walk(ctx) {
         // Skip checking in functions if ignore-local is set
         if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
             // We still need to check the parameters which resides in the SyntaxList node
-            for (var _i = 0, _a = node.getChildren(ctx.sourceFile); _i < _a.length; _i++) {
-                var child1 = _a[_i];
-                if (child1.kind === ts.SyntaxKind.SyntaxList) {
-                    for (var _b = 0, _c = child1.getChildren(ctx.sourceFile); _b < _c.length; _b++) {
-                        var child2 = _c[_b];
-                        if (child2.kind === ts.SyntaxKind.Parameter) {
-                            for (var _d = 0, _e = child2.getChildren(ctx.sourceFile).filter(function (child) {
-                                return child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference;
-                            }); _d < _e.length; _d++) {
-                                var child3 = _e[_d];
-                                checkNode(child3, ctx);
-                            }
-                        }
-                    }
-                }
-            }
+            var functionNode = node; //tslint:disable-line
+            checkFunctionNode(functionNode, ctx);
             return;
         }
         // Check the node
@@ -67,6 +53,37 @@ function walk(ctx) {
         // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
         return ts.forEachChild(node, cb);
     }
+}
+function checkFunctionNode(node, ctx) {
+    // Check the parameters
+    for (var _i = 0, _a = node.parameters; _i < _a.length; _i++) {
+        var parameter = _a[_i];
+        // console.log("Function node", parameter.type);
+        if (parameter.type) {
+            checkNode(parameter.type, ctx);
+        }
+        else if (parameter.initializer) {
+            checkNode(parameter.initializer, ctx);
+        }
+    }
+    // Check the return type
+    if (node.type) {
+        checkNode(node.type, ctx);
+    }
+    /*
+      for (const child1 of node.getChildren(ctx.sourceFile)) {
+        if (child1.kind === ts.SyntaxKind.SyntaxList) {
+          for (const child2 of child1.getChildren(ctx.sourceFile)) {
+            if (child2.kind === ts.SyntaxKind.Parameter) {
+              for (const child3 of child2.getChildren(ctx.sourceFile).filter((child) =>
+                child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference)) {
+                checkNode(child3, ctx);
+              }
+            }
+          }
+        }
+      }
+    */
 }
 function checkNode(node, ctx) {
     if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node, ctx)) {

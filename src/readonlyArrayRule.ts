@@ -36,18 +36,8 @@ function walk(ctx: Lint.WalkContext<Options>): void {
     // Skip checking in functions if ignore-local is set
     if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
       // We still need to check the parameters which resides in the SyntaxList node
-      for (const child1 of node.getChildren(ctx.sourceFile)) {
-        if (child1.kind === ts.SyntaxKind.SyntaxList) {
-          for (const child2 of child1.getChildren(ctx.sourceFile)) {
-            if (child2.kind === ts.SyntaxKind.Parameter) {
-              for (const child3 of child2.getChildren(ctx.sourceFile).filter((child) =>
-                child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference)) {
-                checkNode(child3, ctx);
-              }
-            }
-          }
-        }
-      }
+      const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
+      checkFunctionNode(functionNode, ctx);
       return;
     }
     // Check the node
@@ -55,6 +45,26 @@ function walk(ctx: Lint.WalkContext<Options>): void {
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
+}
+
+function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>) {
+
+  // Check the parameters
+  for (const parameter of node.parameters) {
+    // console.log("Function node", parameter.type);
+    if (parameter.type) {
+      checkNode(parameter.type, ctx);
+    }
+    else if (parameter.initializer) {
+      checkNode(parameter.initializer, ctx);
+    }
+  }
+
+  // Check the return type
+  if (node.type) {
+    checkNode(node.type, ctx);
+  }
+
 }
 
 function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>) {
