@@ -8,7 +8,8 @@ interface Foo {
 
 // -- Local interface declarations
 
-function foo() {
+function foo(): Array<string> {
+                ~~~~~~~~~~~~~ [failure]
 
   // Should fail on Array type in interface (TypeReferenceNode)
   interface Foo {
@@ -18,7 +19,8 @@ function foo() {
 
 }
 
-const foo = () => {
+const foo = (): Array<string> => {
+                ~~~~~~~~~~~~~ [failure]
 
   // Should fail on Array type in interface (TypeReferenceNode)
   interface Foo {
