@@ -49,9 +49,9 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-semicolon-interface](#no-semicolon-interface)
   * [import-containment](#import-containment)
 
-### Immutability rules
+## Immutability rules
 
-#### readonly-interface
+### readonly-interface
 
 This rule enforces having the `readonly` modifier on all interface members.
 
@@ -79,7 +79,7 @@ const point: Point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
 ```
 
-#### readonly-indexer
+### readonly-indexer
 
 This rule enforces all indexers to have the readonly modifier.
 
@@ -90,7 +90,7 @@ let foo: { [key:string]: number };
 let foo: { readonly [key:string]: number }; 
 ```
 
-#### readonly-array
+### readonly-array
 
 This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
 
@@ -110,14 +110,14 @@ const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
-##### Has Fixer
+#### Has Fixer
 Yes
 
-##### Options: 
+#### Options
 - [ignore-local](#using-the-ignore-local-option)
 - [ignore-prefix](#using-the-ignore-prefix-option)
 
-##### Example config:
+#### Example config
 ```javascript
 "readonly-array": true
 ```
@@ -128,7 +128,7 @@ Yes
 "readonly-array": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
 
-#### no-let
+### no-let
 This rule should be combined with tslint's built-in `no-var-keyword` rule to enforce that all variables are declared as `const`.
 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
@@ -147,9 +147,9 @@ const SearchResults =
     }</ul>;
 ```
 
-### Functional style rules
+## Functional style rules
 
-#### no-this, no-class, no-new
+### no-this, no-class, no-new
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
 
 ```typescript
@@ -180,11 +180,11 @@ const OptimizedMessage = pure(Message);
 const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 ```
 
-#### no-mixed-interface
+### no-mixed-interface
 
 Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.  
 
-#### no-expression-statement
+### no-expression-statement
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
 
 ```typescript
@@ -194,17 +194,17 @@ alert('Hello world!')
 
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
-### Other rules
+## Other rules
 
-#### no-arguments
+### no-arguments
 
 Disallows use of the `arguments` keyword.
 
-#### no-label
+### no-label
 
 Disallows the use of labels, and indirectly also `goto`.
 
-#### no-semicolon-interface
+### no-semicolon-interface
 
 Ensures that interfaces only use commas as separator instead semicolor.
  
@@ -221,7 +221,7 @@ inferface Foo {
 }
 ```
 
-#### import-containment
+### import-containment
 
 ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
 
