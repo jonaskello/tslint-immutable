@@ -71,20 +71,27 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
     || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
-    // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
-    if (ctx.options.ignorePrefix) {
-      if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration
-        || node.parent.kind === ts.SyntaxKind.PropertySignature
-        || node.parent.kind === ts.SyntaxKind.TypeAliasDeclaration
-        || node.parent.kind === ts.SyntaxKind.Parameter)) {
-        const variableDeclarationNode = node.parent as ts.VariableDeclaration | ts.PropertySignature | ts.TypeAliasDeclaration | ts.ParameterDeclaration;
-        if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-          return;
-        }
-      }
+    if (node.parent && shouldIgnorePrefix(node.parent, ctx)) {
+      return;
     }
     ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
   }
+}
+
+function shouldIgnorePrefix(node: ts.Node, ctx: Lint.WalkContext<Options>): boolean {
+  // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
+  if (ctx.options.ignorePrefix) {
+    if (node && (node.kind === ts.SyntaxKind.VariableDeclaration
+      || node.kind === ts.SyntaxKind.PropertySignature
+      || node.kind === ts.SyntaxKind.TypeAliasDeclaration
+      || node.kind === ts.SyntaxKind.Parameter)) {
+      const variableDeclarationNode = node as ts.VariableDeclaration | ts.PropertySignature | ts.TypeAliasDeclaration | ts.ParameterDeclaration;
+      if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function checkArrayLiteralExpression(node: ts.Node, ctx: Lint.WalkContext<Options>) {
