@@ -43,13 +43,14 @@ function walk(ctx) {
     function cb(node) {
         // Skip checking in functions if ignore-local is set
         if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
-            // We still need to check the parameters which resides in the SyntaxList node
+            // We still need to check the parameters and return type
             var functionNode = node; //tslint:disable-line
             checkFunctionNode(functionNode, ctx);
             return;
         }
         // Check the node
-        checkNode(node, ctx);
+        checkArrayTypeReference(node, ctx);
+        checkArrayLiteralExpression(node, ctx);
         // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
         return ts.forEachChild(node, cb);
     }
@@ -58,67 +59,88 @@ function checkFunctionNode(node, ctx) {
     // Check the parameters
     for (var _i = 0, _a = node.parameters; _i < _a.length; _i++) {
         var parameter = _a[_i];
-        // console.log("Function node", parameter.type);
         if (parameter.type) {
-            checkNode(parameter.type, ctx);
+            // ArrayTypeReference
+            checkArrayTypeReference(parameter.type, ctx);
         }
         else if (parameter.initializer) {
-            checkNode(parameter.initializer, ctx);
+            // ArrayLiteral
+            checkArrayLiteralExpression(parameter.initializer, ctx);
         }
     }
     // Check the return type
     if (node.type) {
-        checkNode(node.type, ctx);
+        checkArrayTypeReference(node.type, ctx);
     }
-    /*
-      for (const child1 of node.getChildren(ctx.sourceFile)) {
-        if (child1.kind === ts.SyntaxKind.SyntaxList) {
-          for (const child2 of child1.getChildren(ctx.sourceFile)) {
-            if (child2.kind === ts.SyntaxKind.Parameter) {
-              for (const child3 of child2.getChildren(ctx.sourceFile).filter((child) =>
-                child.kind === ts.SyntaxKind.ArrayLiteralExpression || child.kind === ts.SyntaxKind.TypeReference)) {
-                checkNode(child3, ctx);
-              }
-            }
-          }
-        }
-      }
-    */
-}
-function checkNode(node, ctx) {
-    if (node.kind === ts.SyntaxKind.TypeReference && isInvalidArrayTypeReference(node, ctx)) {
-        ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-    }
-    if (node.kind === ts.SyntaxKind.ArrayLiteralExpression && isInvalidArrayLiteralExpression(node, ctx)) {
-        var variableDeclarationNode = node.parent;
-        ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
+    else if (node.body) {
+        // No explicit return type, check the body for return statements
+        checkFunctionBody(node.body, ctx);
     }
 }
-function isInvalidArrayTypeReference(node, ctx) {
-    if (node.typeName.getText(ctx.sourceFile) === "Array") {
-        if (ctx.options.ignorePrefix) {
-            var variableDeclarationNode = node.parent;
-            if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-                return false;
-            }
-        }
-        return true;
+function checkFunctionBody(node, ctx) {
+    return ts.forEachChild(node, cb);
+    function cb(node) {
+        // Check for invalid return type
+        checkReturnStatement(node, ctx);
+        // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+        return ts.forEachChild(node, cb);
     }
-    return false;
 }
-function isInvalidArrayLiteralExpression(node, ctx) {
-    // If the array literal is used in a variable declaration, the variable
-    // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-    // It could also be a function parameter that has an array literal as default value
-    if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
-        var parent_1 = node.parent;
-        if (!parent_1.type) {
-            if (ctx.options.ignorePrefix &&
-                parent_1.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-                return false;
-            }
-            return true;
+function checkReturnStatement(node, ctx) {
+    if (node.kind === ts.SyntaxKind.ReturnStatement) {
+        var returnNode = node;
+        if (returnNode.expression && returnNode.expression.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+            ctx.addFailureAtNode(returnNode, Rule.FAILURE_STRING);
         }
     }
-    return false;
 }
+function checkArrayTypeReference(node, ctx) {
+    if (node.kind === ts.SyntaxKind.TypeReference) {
+        var typeRefNode = node;
+        if (typeRefNode.typeName.getText(ctx.sourceFile) === "Array") {
+            if (ctx.options.ignorePrefix) {
+                var variableDeclarationNode = node.parent;
+                if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+                    return;
+                }
+            }
+            ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+        }
+        return;
+    }
+}
+function checkArrayLiteralExpression(node, ctx) {
+    if (node.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+        // If the array literal is used in a variable declaration, the variable
+        // must have a type spcecified, otherwise it will implicitly be of mutable Array type
+        // It could also be a function parameter that has an array literal as default value
+        if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
+            var parent_1 = node.parent;
+            if (!parent_1.type) {
+                if (ctx.options.ignorePrefix &&
+                    parent_1.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+                    return;
+                }
+                var variableDeclarationNode = node.parent;
+                ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
+            }
+        }
+        return;
+    }
+}
+// function isInvalidArrayLiteralExpression(node: ts.ArrayLiteralExpression, ctx: Lint.WalkContext<Options>): boolean {
+//   // If the array literal is used in a variable declaration, the variable
+//   // must have a type spcecified, otherwise it will implicitly be of mutable Array type
+//   // It could also be a function parameter that has an array literal as default value
+//   if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
+//     const parent = node.parent as ts.VariableDeclaration | ts.ParameterDeclaration;
+//     if (!parent.type) {
+//       if (ctx.options.ignorePrefix &&
+//         parent.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+//         return false;
+//       }
+//       return true;
+//     }
+//   }
+//   return false;
+// }

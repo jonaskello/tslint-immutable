@@ -28,4 +28,34 @@ const foo = (): Array<string> => {
 
 }
 
+function foo() {
+
+  // Should fail on implicit Array return type
+  return [1, 2, 3];
+  ~~~~~~~~~~~~~~~~~ [failure]
+
+}
+
+const foo = () => {
+
+  // Should fail on implicit Array return type
+  return [1, 2, 3];
+  ~~~~~~~~~~~~~~~~~ [failure]
+
+}
+
+function foo(): ReadonlyArray<number> {
+
+  // Should not fail on explicit ReadonlyArray return type
+  return [1, 2, 3];
+
+}
+
+const foo = (): ReadonlyArray<number> => {
+
+  // Should not fail on explicit ReadonlyArray return type
+  return [1, 2, 3];
+
+}
+
 [failure]: Only ReadonlyArray allowed.

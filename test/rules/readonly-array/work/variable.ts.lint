@@ -1,5 +1,6 @@
-function foo(a: string, b: Array<string>): Array<string> {
-                           ~~~~~~~~~~~~~ [failure]
-                                           ~~~~~~~~~~~~~ [failure]
+function foo() {
+  return [1, 2, 3];
+  ~~~~~~~~~~~~~~~~~ [failure]
 }
+
 [failure]: Only ReadonlyArray allowed.

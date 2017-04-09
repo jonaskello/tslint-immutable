@@ -28,7 +28,6 @@ function foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
   // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
   const foo = [1, 2, 3]
         ~~~ [failure]
-
 }
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
