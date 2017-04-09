@@ -1,5 +1,5 @@
-let x: Foo<Array<string>>;
-           ~~~~~~~~~~~~~ [failure]
+function foo(boo = [1, 2, 3])
+             ~~~ [failure]
 
 
 [failure]: Only ReadonlyArray allowed.

@@ -37,26 +37,27 @@ function walk(ctx: Lint.WalkContext<Options>): void {
     if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
       // We still need to check the parameters and return type
       const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
-      checkFunctionNode(functionNode, ctx);
+      checkIgnoreLocalFunctionNode(functionNode, ctx);
       return;
     }
     // Check the node
     checkArrayTypeOrReference(node, ctx);
-    checkArrayLiteralExpression(node, ctx);
+    // checkArrayLiteralExpression(node, ctx);
+    checkVariableOrParameterImplicitType(node, ctx);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
 }
 
-function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>) {
+function checkIgnoreLocalFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>) {
 
   // Check the parameters
   for (const parameter of node.parameters) {
     if (parameter.type) {
       checkArrayTypeOrReference(parameter.type, ctx);
     }
-    else if (parameter.initializer) {
-      checkArrayLiteralExpression(parameter.initializer, ctx);
+    else {
+      checkVariableOrParameterImplicitType(parameter, ctx);
     }
   }
 
@@ -78,13 +79,30 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
   }
 }
 
+function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+
+  if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
+    // The initializer is used to set and implicit type
+    const varOrParamNode = node as ts.VariableDeclaration | ts.ParameterDeclaration;
+    if (shouldIgnorePrefix(node, ctx)) {
+      return;
+    }
+    if (!varOrParamNode.type) {
+      if (varOrParamNode.initializer && varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+        ctx.addFailureAtNode(varOrParamNode.name, Rule.FAILURE_STRING);
+      }
+    }
+  }
+
+}
+
 function shouldIgnorePrefix(node: ts.Node, ctx: Lint.WalkContext<Options>): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
   if (ctx.options.ignorePrefix) {
     if (node && (node.kind === ts.SyntaxKind.VariableDeclaration
+      || node.kind === ts.SyntaxKind.Parameter
       || node.kind === ts.SyntaxKind.PropertySignature
-      || node.kind === ts.SyntaxKind.TypeAliasDeclaration
-      || node.kind === ts.SyntaxKind.Parameter)) {
+      || node.kind === ts.SyntaxKind.TypeAliasDeclaration)) {
       const variableDeclarationNode = node as ts.VariableDeclaration | ts.PropertySignature | ts.TypeAliasDeclaration | ts.ParameterDeclaration;
       if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
         return true;
@@ -92,23 +110,4 @@ function shouldIgnorePrefix(node: ts.Node, ctx: Lint.WalkContext<Options>): bool
     }
   }
   return false;
-}
-
-function checkArrayLiteralExpression(node: ts.Node, ctx: Lint.WalkContext<Options>) {
-  if (node.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-    // If the array literal is used in a variable declaration, the variable
-    // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-    // It could also be a function parameter that has an array literal as default value
-    if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
-      const parent = node.parent as ts.VariableDeclaration | ts.ParameterDeclaration;
-      if (!parent.type) {
-        if (ctx.options.ignorePrefix &&
-          parent.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-          return;
-        }
-        const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-        ctx.addFailureAtNode(variableDeclarationNode.name, Rule.FAILURE_STRING);
-      }
-    }
-  }
 }
