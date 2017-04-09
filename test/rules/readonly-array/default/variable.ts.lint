@@ -11,6 +11,10 @@ const foo: Array<string> = [];
 const foo = [1, 2, 3]
       ~~~ [failure]
 
+// Should fail on Array type being used as template param
+let x: Foo<Array<string>>;
+           ~~~~~~~~~~~~~ [failure]
+
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)

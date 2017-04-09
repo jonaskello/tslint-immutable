@@ -255,6 +255,28 @@ type person = {
 
 Yes, variable names like `mutableAge` are ugly, but then again mutation is an ugly business :-).
 
+## Recommended built-in rules
+
+# [no-var-keyword](https://palantir.github.io/tslint/rules/no-var-keyword/)
+
+Without this rule, it is still possible to create `var` variables that are mutable.
+
+# [typedef](https://palantir.github.io/tslint/rules/typedef/) with call-signature option
+
+For performance reasons, tslint-immutable does not check implicit return types. So for example this function will return an mutable array but will not be detected (see [#18]()https://github.com/jonaskello/tslint-immutable/issues/18 for more info):
+
+```javascript
+function foo() {
+  return [1, 2, 3];
+}
+```
+
+To avoid this situation you can enable the built in typedef rule like this:
+
+`"typedef": [true, "call-signature"]`
+
+Now the above function is forced to declare the return type becomes this and will be detected.
+
 ## Sample Configuration File
 
 Here's a sample TSLint configuration file (tslint.json) that activates all the rules:
@@ -264,12 +286,15 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
   "rulesDirectory": ["./node_modules/tslint-immutable/rules"],
   "rules": {
 
+    // Recommended built-in rules
+    "no-var-keyword": true,
+    "typedef": [true, "call-signature"],
+
     // Immutability rules
     "readonly-interface": true,
     "readonly-indexer": true,
     "readonly-array": true,
     "no-let": true,
-    "no-var-keyword": true, // built-in tslint rule
 
     // Functional style rules
     "no-this": true,

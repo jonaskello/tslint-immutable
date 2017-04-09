@@ -72,27 +72,6 @@ function checkFunctionNode(node, ctx) {
     if (node.type) {
         checkArrayTypeReference(node.type, ctx);
     }
-    else if (node.body) {
-        // No explicit return type, check the body for return statements
-        checkFunctionBody(node.body, ctx);
-    }
-}
-function checkFunctionBody(node, ctx) {
-    return ts.forEachChild(node, cb);
-    function cb(node) {
-        // Check for invalid return type
-        checkReturnStatement(node, ctx);
-        // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-        return ts.forEachChild(node, cb);
-    }
-}
-function checkReturnStatement(node, ctx) {
-    if (node.kind === ts.SyntaxKind.ReturnStatement) {
-        var returnNode = node;
-        if (returnNode.expression && returnNode.expression.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-            ctx.addFailureAtNode(returnNode, Rule.FAILURE_STRING);
-        }
-    }
 }
 function checkArrayTypeReference(node, ctx) {
     if (node.kind === ts.SyntaxKind.TypeReference) {
@@ -128,19 +107,3 @@ function checkArrayLiteralExpression(node, ctx) {
         return;
     }
 }
-// function isInvalidArrayLiteralExpression(node: ts.ArrayLiteralExpression, ctx: Lint.WalkContext<Options>): boolean {
-//   // If the array literal is used in a variable declaration, the variable
-//   // must have a type spcecified, otherwise it will implicitly be of mutable Array type
-//   // It could also be a function parameter that has an array literal as default value
-//   if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration || node.parent.kind === ts.SyntaxKind.Parameter)) {
-//     const parent = node.parent as ts.VariableDeclaration | ts.ParameterDeclaration;
-//     if (!parent.type) {
-//       if (ctx.options.ignorePrefix &&
-//         parent.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-//         return false;
-//       }
-//       return true;
-//     }
-//   }
-//   return false;
-// }

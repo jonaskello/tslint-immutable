@@ -67,30 +67,7 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
   if (node.type) {
     checkArrayTypeReference(node.type, ctx);
   }
-  else if (node.body) {
-    // No explicit return type, check the body for return statements
-    checkFunctionBody(node.body, ctx);
-  }
 
-}
-
-function checkFunctionBody(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
-  return ts.forEachChild(node, cb);
-  function cb(node: ts.Node): void {
-    // Check for invalid return type
-    checkReturnStatement(node, ctx);
-    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-    return ts.forEachChild(node, cb);
-  }
-}
-
-function checkReturnStatement(node: ts.Node, ctx: Lint.WalkContext<Options>) {
-  if (node.kind === ts.SyntaxKind.ReturnStatement) {
-    const returnNode = node as ts.ReturnStatement;
-    if (returnNode.expression && returnNode.expression.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-      ctx.addFailureAtNode(returnNode, Rule.FAILURE_STRING);
-    }
-  }
 }
 
 function checkArrayTypeReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {
