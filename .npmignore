@@ -1,9 +1,11 @@
 .idea/
 thumbs.db
 *.log
-js_out_test/
-src/
-tests/
 scripts/
+src/
+test/
+.editorconfig
+.gitignore
+.travis.yml
 tsconfig.json
-tsconfig.prod.json
+tsint.json
