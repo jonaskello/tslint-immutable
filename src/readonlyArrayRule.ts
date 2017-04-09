@@ -125,7 +125,23 @@ function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkConte
     }
     if (!varOrParamNode.type) {
       if (varOrParamNode.initializer && varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-        return createInvalidNode(varOrParamNode.name);
+        const length = varOrParamNode.name.getWidth(ctx.sourceFile);
+        const nameText = varOrParamNode.name.getText(ctx.sourceFile);
+        let typeArgument = "any";
+        // Not sure it is a good idea to guess what the element types are...
+        // const arrayLiteralNode = varOrParamNode.initializer as ts.ArrayLiteralExpression;
+        // if (arrayLiteralNode.elements.length > 0) {
+        //   const element = arrayLiteralNode.elements[0];
+        //   if (element.kind === ts.SyntaxKind.NumericLiteral) {
+        //     typeArgument = "number";
+        //   } else if (element.kind === ts.SyntaxKind.StringLiteral) {
+        //     typeArgument = "string";
+        //   } else if (element.kind === ts.SyntaxKind.TrueKeyword || element.kind === ts.SyntaxKind.FalseKeyword) {
+        //     typeArgument = "boolean";
+        //   }
+        // }
+        return createInvalidNode(varOrParamNode.name,
+          new Lint.Replacement(varOrParamNode.name.end - length, length, `${nameText}: ReadonlyArray<${typeArgument}>`));
       }
     }
   }
