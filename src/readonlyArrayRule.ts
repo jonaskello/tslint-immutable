@@ -14,8 +14,17 @@ const OPTION_IGNORE_LOCAL = "ignore-local";
 const OPTION_IGNORE_PREFIX = "ignore-prefix";
 
 interface Options {
-  ignoreLocal: boolean,
-  ignorePrefix: string | undefined,
+  readonly ignoreLocal: boolean,
+  readonly ignorePrefix: string | undefined,
+}
+
+interface InvalidNode {
+  readonly node: ts.Node,
+  readonly replacement: Lint.Replacement | undefined,
+}
+
+function createInvalidNode(node: ts.Node, replacement?: Lint.Replacement): InvalidNode {
+  return { node, replacement };
 }
 
 function parseOptions(options: any[]): Options { //tslint:disable-line
@@ -48,19 +57,19 @@ function walk(ctx: Lint.WalkContext<Options>): void {
   }
 }
 
-function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
+function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>): InvalidNode | undefined {
   return checkArrayTypeOrReference(node, ctx) || checkVariableOrParameterImplicitType(node, ctx);
 }
 
-function reportInvalidNode(node: ts.Node | undefined, ctx: Lint.WalkContext<Options>): void {
-  if (node) {
-    ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+function reportInvalidNode(invalidNode: InvalidNode | undefined, ctx: Lint.WalkContext<Options>): void {
+  if (invalidNode) {
+    ctx.addFailureAtNode(invalidNode.node, Rule.FAILURE_STRING, invalidNode.replacement);
   }
 }
 
-function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): ReadonlyArray<ts.Node> {
+function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): ReadonlyArray<InvalidNode> {
 
-  const invalidNodes: Array<ts.Node> = [];
+  const invalidNodes: Array<InvalidNode> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map((p) => p.type ? p.type : p)) {
@@ -82,19 +91,19 @@ function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.
 
 }
 
-function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
+function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>): InvalidNode | undefined {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
     || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
     if (node.parent && shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
       return undefined;
     }
-    return node;
+    return createInvalidNode(node);
   }
   return undefined;
 }
 
-function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
+function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>): InvalidNode | undefined {
 
   if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
     // The initializer is used to set and implicit type
@@ -104,7 +113,7 @@ function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkConte
     }
     if (!varOrParamNode.type) {
       if (varOrParamNode.initializer && varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-        return varOrParamNode.name;
+        return createInvalidNode(varOrParamNode.name);
       }
     }
   }
