@@ -263,7 +263,7 @@ Without this rule, it is still possible to create `var` variables that are mutab
 
 ### [typedef](https://palantir.github.io/tslint/rules/typedef/) with call-signature option
 
-For performance reasons, tslint-immutable does not check implicit return types. So for example this function will return an mutable array but will not be detected (see [#18]()https://github.com/jonaskello/tslint-immutable/issues/18 for more info):
+For performance reasons, tslint-immutable does not check implicit return types. So for example this function will return an mutable array but will not be detected (see [#18](https://github.com/jonaskello/tslint-immutable/issues/18) for more info):
 
 ```javascript
 function foo() {
