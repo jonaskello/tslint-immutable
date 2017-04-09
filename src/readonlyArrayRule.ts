@@ -48,6 +48,7 @@ function walk(ctx: Lint.WalkContext<Options>): void {
       const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
       const invalidNodes = checkIgnoreLocalFunctionNode(functionNode, ctx);
       invalidNodes.forEach((n) => reportInvalidNode(n, ctx));
+      // Now skip this whole branch
       return;
     }
     // Check the node
@@ -98,7 +99,18 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
     if (node.parent && shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
       return undefined;
     }
-    return createInvalidNode(node);
+    let typeArgument: string = "T";
+    if (node.kind === ts.SyntaxKind.ArrayType) {
+      const typeNode = node as ts.ArrayTypeNode;
+      typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
+    } else if (node.kind === ts.SyntaxKind.TypeReference) {
+      const typeNode = node as ts.TypeReferenceNode;
+      if (typeNode.typeArguments) {
+        typeArgument = typeNode.typeArguments[0].getFullText(ctx.sourceFile).trim();
+      }
+    }
+    const length = node.getWidth(ctx.sourceFile);
+    return createInvalidNode(node, new Lint.Replacement(node.end - length, length, `ReadonlyArray<${typeArgument}>`));
   }
   return undefined;
 }
