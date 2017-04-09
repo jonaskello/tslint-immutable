@@ -42,23 +42,22 @@ function walk(ctx: Lint.WalkContext<Options>): void {
     }
     // Check the node
     checkArrayTypeReference(node, ctx);
+    checkArrayType(node, ctx);
     checkArrayLiteralExpression(node, ctx);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
 }
 
-
 function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>) {
 
   // Check the parameters
   for (const parameter of node.parameters) {
     if (parameter.type) {
-      // ArrayTypeReference
       checkArrayTypeReference(parameter.type, ctx);
+      checkArrayType(parameter.type, ctx);
     }
     else if (parameter.initializer) {
-      // ArrayLiteral
       checkArrayLiteralExpression(parameter.initializer, ctx);
     }
   }
@@ -68,6 +67,19 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
     checkArrayTypeReference(node.type, ctx);
   }
 
+}
+
+function checkArrayType(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+  if (node.kind === ts.SyntaxKind.ArrayType) {
+    if (ctx.options.ignorePrefix) {
+      const variableDeclarationNode = node.parent as ts.VariableDeclaration;
+      if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+        return;
+      }
+    }
+    ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+    return;
+  }
 }
 
 function checkArrayTypeReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {

@@ -22,9 +22,10 @@ let x: Foo<Array<string>>;
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
-function foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
+function foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3], soo: number[]) {
                   ~~~~~~~~~~~~~ [failure]
                                                              ~~~ [failure]
+                                                                                   ~~~~~~~~ [failure]
 
   // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
   const foo: ReadonlyArray<string> = [];
@@ -39,9 +40,10 @@ function foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
 }
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
-const foo = (bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) => {
+const foo = (bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3], soo: number[]) => {
                   ~~~~~~~~~~~~~ [failure]
                                                              ~~~ [failure]
+                                                                                   ~~~~~~~~ [failure]
 
   // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
   const foo: ReadonlyArray<string> = [];
