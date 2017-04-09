@@ -318,6 +318,15 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 }
 ```
 
+## How to contribute
+
+For new features file an issue. For bugs, file an issue and optionally file a PR with a failing test. Tests are really easy to do, you just have to edit the `*.ts.lint` files under the test directory. Read more here about [tslint testing](https://palantir.github.io/tslint/develop/testing-rules/). 
+
+## How to develop
+
+To execute the tests run `yarn test`.
+To release a new package version run `yarn publish:patch`, `yarn publish:minor`, or `yarn publish:major`.
+
 ## Prior work
 
 This work was originally inspired by [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable).
