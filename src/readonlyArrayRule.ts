@@ -41,8 +41,7 @@ function walk(ctx: Lint.WalkContext<Options>): void {
       return;
     }
     // Check the node
-    checkArrayTypeReference(node, ctx);
-    checkArrayType(node, ctx);
+    checkArrayTypeOrReference(node, ctx);
     checkArrayLiteralExpression(node, ctx);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
@@ -54,8 +53,7 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
   // Check the parameters
   for (const parameter of node.parameters) {
     if (parameter.type) {
-      checkArrayTypeReference(parameter.type, ctx);
-      checkArrayType(parameter.type, ctx);
+      checkArrayTypeOrReference(parameter.type, ctx);
     }
     else if (parameter.initializer) {
       checkArrayLiteralExpression(parameter.initializer, ctx);
@@ -64,14 +62,15 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
 
   // Check the return type
   if (node.type) {
-    checkArrayTypeReference(node.type, ctx);
-    checkArrayType(node.type, ctx);
+    checkArrayTypeOrReference(node.type, ctx);
   }
 
 }
 
-function checkArrayType(node: ts.Node, ctx: Lint.WalkContext<Options>) {
-  if (node.kind === ts.SyntaxKind.ArrayType) {
+function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+  // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
+  if (node.kind === ts.SyntaxKind.ArrayType
+  || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
     if (ctx.options.ignorePrefix) {
       const variableDeclarationNode = node.parent as ts.VariableDeclaration;
       if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
@@ -79,22 +78,6 @@ function checkArrayType(node: ts.Node, ctx: Lint.WalkContext<Options>) {
       }
     }
     ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-    return;
-  }
-}
-
-function checkArrayTypeReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {
-  if (node.kind === ts.SyntaxKind.TypeReference) {
-    const typeRefNode = node as ts.TypeReferenceNode;
-    if (typeRefNode.typeName.getText(ctx.sourceFile) === "Array") {
-      if (ctx.options.ignorePrefix) {
-        const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-        if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-          return;
-        }
-      }
-      ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-    }
     return;
   }
 }
