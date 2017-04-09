@@ -78,7 +78,6 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
       }
     }
     ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
-    return;
   }
 }
 
@@ -98,6 +97,5 @@ function checkArrayLiteralExpression(node: ts.Node, ctx: Lint.WalkContext<Option
         ctx.addFailureAtNode(variableDeclarationNode.name, Rule.FAILURE_STRING);
       }
     }
-    return;
   }
 }
