@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.2.0] - 2017-04-10
+### Fixed
+- readonly-array does not check shorthand syntax in return types with ignore-local option [#21](https://github.com/jonaskello/tslint-immutable/issues/21)
+
+### Added
+- Fixer for the `readonly-array` rule.
+
 ## [v3.1.2] - 2017-04-09
 ### Fixed
 - readonly-array does not check return type when ignore-local is enabled [#16](https://github.com/jonaskello/tslint-immutable/issues/16)
@@ -65,7 +72,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.2...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.2.0...master
+[v3.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.2...v3.2.0
 [v3.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.1...v3.1.2
 [v3.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.0...v3.1.1
 [v3.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.0.0...v3.1.0

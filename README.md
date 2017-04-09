@@ -110,11 +110,14 @@ const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
-Options: 
+##### Has Fixer
+Yes
+
+##### Options: 
 - [ignore-local](#using-the-ignore-local-option)
 - [ignore-prefix](#using-the-ignore-prefix-option)
 
-Example config:
+##### Example config:
 ```javascript
 "readonly-array": true
 ```
