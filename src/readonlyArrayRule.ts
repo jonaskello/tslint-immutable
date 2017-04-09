@@ -65,6 +65,7 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
   // Check the return type
   if (node.type) {
     checkArrayTypeReference(node.type, ctx);
+    checkArrayType(node.type, ctx);
   }
 
 }
