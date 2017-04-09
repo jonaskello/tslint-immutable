@@ -70,11 +70,17 @@ function checkFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx:
 function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
-  || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
+    || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
+    // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
     if (ctx.options.ignorePrefix) {
-      const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-      if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
-        return;
+      if (node.parent && (node.parent.kind === ts.SyntaxKind.VariableDeclaration
+        || node.parent.kind === ts.SyntaxKind.PropertySignature
+        || node.parent.kind === ts.SyntaxKind.TypeAliasDeclaration
+        || node.parent.kind === ts.SyntaxKind.Parameter)) {
+        const variableDeclarationNode = node.parent as ts.VariableDeclaration | ts.PropertySignature | ts.TypeAliasDeclaration | ts.ParameterDeclaration;
+        if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+          return;
+        }
       }
     }
     ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
