@@ -101,7 +101,7 @@ function checkArrayLiteralExpression(node, ctx) {
                     return;
                 }
                 var variableDeclarationNode = node.parent;
-                ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
+                ctx.addFailureAtNode(variableDeclarationNode.name, Rule.FAILURE_STRING);
             }
         }
         return;

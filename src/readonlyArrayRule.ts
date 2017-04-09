@@ -99,7 +99,7 @@ function checkArrayLiteralExpression(node: ts.Node, ctx: Lint.WalkContext<Option
           return;
         }
         const variableDeclarationNode = node.parent as ts.VariableDeclaration;
-        ctx.addFailureAt(variableDeclarationNode.name.getStart(ctx.sourceFile), variableDeclarationNode.name.getWidth(ctx.sourceFile), Rule.FAILURE_STRING);
+        ctx.addFailureAtNode(variableDeclarationNode.name, Rule.FAILURE_STRING);
       }
     }
     return;
