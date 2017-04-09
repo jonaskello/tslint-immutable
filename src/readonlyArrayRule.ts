@@ -37,7 +37,8 @@ function walk(ctx: Lint.WalkContext<Options>): void {
     if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
       // We still need to check the parameters and return type
       const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
-      checkIgnoreLocalFunctionNode(functionNode, ctx);
+      const invalidNodes = checkIgnoreLocalFunctionNode(functionNode, ctx);
+      invalidNodes.forEach((n) => reportInvalidNode(n, ctx));
       return;
     }
     // Check the node
@@ -57,17 +58,27 @@ function reportInvalidNode(node: ts.Node | undefined, ctx: Lint.WalkContext<Opti
   }
 }
 
-function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): void {
+function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): ReadonlyArray<ts.Node> {
+
+  const invalidNodes: Array<ts.Node> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map((p) => p.type ? p.type : p)) {
-    reportInvalidNode(checkNode(n, ctx), ctx);
+    const invalidNode = checkNode(n, ctx);
+    if (invalidNode) {
+      invalidNodes.push(invalidNode);
+    }
   }
 
   // Check the return type
   if (functionNode.type) {
-    reportInvalidNode(checkNode(functionNode.type, ctx), ctx);
+    const invalidNode = checkNode(functionNode.type, ctx);
+    if (invalidNode) {
+      invalidNodes.push(invalidNode);
+    }
   }
+
+  return invalidNodes;
 
 }
 
