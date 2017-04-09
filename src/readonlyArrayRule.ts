@@ -70,7 +70,7 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
     || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
-    if (node.parent && shouldIgnorePrefix(node.parent, ctx)) {
+    if (node.parent && shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
       return;
     }
     ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
@@ -82,7 +82,7 @@ function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkConte
   if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
     // The initializer is used to set and implicit type
     const varOrParamNode = node as ts.VariableDeclaration | ts.ParameterDeclaration;
-    if (shouldIgnorePrefix(node, ctx)) {
+    if (shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return;
     }
     if (!varOrParamNode.type) {
@@ -94,15 +94,15 @@ function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkConte
 
 }
 
-function shouldIgnorePrefix(node: ts.Node, ctx: Lint.WalkContext<Options>): boolean {
+function shouldIgnorePrefix(node: ts.Node, options: Options, sourceFile: ts.SourceFile): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
-  if (ctx.options.ignorePrefix) {
+  if (options.ignorePrefix) {
     if (node && (node.kind === ts.SyntaxKind.VariableDeclaration
       || node.kind === ts.SyntaxKind.Parameter
       || node.kind === ts.SyntaxKind.PropertySignature
       || node.kind === ts.SyntaxKind.TypeAliasDeclaration)) {
       const variableDeclarationNode = node as ts.VariableDeclaration | ts.PropertySignature | ts.TypeAliasDeclaration | ts.ParameterDeclaration;
-      if (variableDeclarationNode.name.getText(ctx.sourceFile).substr(0, ctx.options.ignorePrefix.length) === ctx.options.ignorePrefix) {
+      if (variableDeclarationNode.name.getText(sourceFile).substr(0, options.ignorePrefix.length) === options.ignorePrefix) {
         return true;
       }
     }
