@@ -12,7 +12,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 
 class SemicolonInterfaceWalker extends Lint.RuleWalker {
 
-  public visitInterfaceDeclaration(node: ts.InterfaceDeclaration) {
+  public visitInterfaceDeclaration(node: ts.InterfaceDeclaration): void {
     const sourceFile = this.getSourceFile();
     for (const member of node.members) {
       const children = member.getChildren(sourceFile);

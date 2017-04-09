@@ -22,7 +22,7 @@ function parseOptions(options: any[]): Options { //tslint:disable-line
   const ignoreLocal = options.indexOf(OPTION_IGNORE_LOCAL) !== -1;
   let ignorePrefix: string | undefined;
   for (const o of options) {
-    if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] != null) {
+    if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] !== null) { //tslint:disable-line
       ignorePrefix = o[OPTION_IGNORE_PREFIX];
       break;
     }
@@ -41,34 +41,32 @@ function walk(ctx: Lint.WalkContext<Options>): void {
       return;
     }
     // Check the node
-    checkArrayTypeOrReference(node, ctx);
-    // checkArrayLiteralExpression(node, ctx);
-    checkVariableOrParameterImplicitType(node, ctx);
+    checkNode(node, ctx);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
 }
 
-function checkIgnoreLocalFunctionNode(node: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>) {
+function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
+  checkArrayTypeOrReference(node, ctx);
+  checkVariableOrParameterImplicitType(node, ctx);
+}
 
-  // Check the parameters
-  for (const parameter of node.parameters) {
-    if (parameter.type) {
-      checkArrayTypeOrReference(parameter.type, ctx);
-    }
-    else {
-      checkVariableOrParameterImplicitType(parameter, ctx);
-    }
+function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): void {
+
+  // Check either the parameter's explicit type if it has one, or itself for implict type
+  for (const n of functionNode.parameters.map((p) => p.type ? p.type : p)) {
+    checkNode(n, ctx);
   }
 
   // Check the return type
-  if (node.type) {
-    checkArrayTypeOrReference(node.type, ctx);
+  if (functionNode.type) {
+    checkNode(functionNode.type, ctx);
   }
 
 }
 
-function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
     || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
@@ -79,7 +77,7 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>
   }
 }
 
-function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>) {
+function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
 
   if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
     // The initializer is used to set and implicit type

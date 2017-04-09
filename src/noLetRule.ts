@@ -11,7 +11,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class NoLetKeywordWalker extends Lint.RuleWalker {
-  public visitVariableStatement(node: ts.VariableStatement) {
+  public visitVariableStatement(node: ts.VariableStatement): void {
     if (Lint.isNodeFlagSet(node.declarationList, ts.NodeFlags.Let)) {
       this.addFailure(this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING));
     }
@@ -19,22 +19,22 @@ class NoLetKeywordWalker extends Lint.RuleWalker {
     super.visitVariableStatement(node);
   }
 
-  public visitForStatement(node: ts.ForStatement) {
+  public visitForStatement(node: ts.ForStatement): void {
     this.handleInitializerNode(node.initializer!);
     super.visitForStatement(node);
   }
 
-  public visitForInStatement(node: ts.ForInStatement) {
+  public visitForInStatement(node: ts.ForInStatement): void {
     this.handleInitializerNode(node.initializer);
     super.visitForInStatement(node);
   }
 
-  public visitForOfStatement(node: ts.ForOfStatement) {
+  public visitForOfStatement(node: ts.ForOfStatement): void {
     this.handleInitializerNode(node.initializer);
     super.visitForOfStatement(node);
   }
 
-  private handleInitializerNode(node: ts.VariableDeclarationList | ts.Expression) {
+  private handleInitializerNode(node: ts.VariableDeclarationList | ts.Expression): void {
     if (node && node.kind === ts.SyntaxKind.VariableDeclarationList &&
       (Lint.isNodeFlagSet(node, ts.NodeFlags.Let))) {
       this.addFailure(this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING));

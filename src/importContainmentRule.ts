@@ -6,8 +6,8 @@ import * as Lint from "tslint";
 type Options = {
   containmentPath: string,
   allowedExternalFileNames: string[],
-  disallowedInternalFileNames: string[]
-}
+  disallowedInternalFileNames: string[],
+};
 
 export class Rule extends Lint.Rules.AbstractRule {
   public static FAILURE_STRING = "import outside containment path";
@@ -21,18 +21,19 @@ export class Rule extends Lint.Rules.AbstractRule {
 // The walker takes care of all the work.
 class ImportsContainmentWalker extends Lint.RuleWalker {
 
-  public visitImportDeclaration(node: ts.ImportDeclaration) {
+  public visitImportDeclaration(node: ts.ImportDeclaration): void {
 
     const myOptions = getMyOptions(this.getOptions());
-    if (!myOptions)
+    if (!myOptions) {
       return;
+    }
     const { containmentPath, allowedExternalFileNames, disallowedInternalFileNames }: Options = myOptions;
 
     const sourceFileRelativePath = getSourceFilePathRelativeToContainmentPath(this.getSourceFile().path, containmentPath);
     // Check if the file resides under the containment path
     if (sourceFileRelativePath) {
       // Remove the file name to get the path
-      const sourceDirRelativePath = sourceFileRelativePath.substring(0, sourceFileRelativePath.lastIndexOf('/'));
+      const sourceDirRelativePath = sourceFileRelativePath.substring(0, sourceFileRelativePath.lastIndexOf("/"));
       // Check that it is a sub directory under the containment path
       if (sourceDirRelativePath.length > containmentPath.length) {
 
@@ -42,7 +43,7 @@ class ImportsContainmentWalker extends Lint.RuleWalker {
         const importRelativePath = getImportRelativePath(node);
         if (importRelativePath) {
           // Get the file name being imported
-          const importFileName = importRelativePath.substring(importRelativePath.lastIndexOf('/') + 1);
+          const importFileName = importRelativePath.substring(importRelativePath.lastIndexOf("/") + 1);
           // Get how many levels below the containment path the file resides
           const levelsBelowPath = getLevelsBelowPath(containmentPath, sourceDirRelativePath);
           // Get how many levels up the module reference reaches
@@ -50,16 +51,19 @@ class ImportsContainmentWalker extends Lint.RuleWalker {
           // Check if the module reference reaches outside the containment path
           if (highestParentLevel >= levelsBelowPath) {
             // Relative import paths are not allowed to reach up to the containment path
-            //throw Error("sourceDirPath: " + sourceDirRelativePath + ", importRelativePath: " + importRelativePath + ", highestParentLevel: " + highestParentLevel + ", levelsBelowPath: " + levelsBelowPath + ", sourceFileName" + sourceFileName);
+            //throw Error("sourceDirPath: " + sourceDirRelativePath + ", importRelativePath: "
+            //+ importRelativePath + ", highestParentLevel: " + highestParentLevel + ", levelsBelowPath: " +
+            //levelsBelowPath + ", sourceFileName" + sourceFileName);
             // create a failure at the current position
-            if (allowedExternalFileNames.indexOf(importFileName) === -1)
+            if (allowedExternalFileNames.indexOf(importFileName) === -1) {
               this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
-          }
-          else {
+            }
+          } else {
             // Relative import paths that are not reaching up to the containment path
             // are not allowed to import certain file names
-            if (disallowedInternalFileNames.indexOf(importFileName) !== -1)
+            if (disallowedInternalFileNames.indexOf(importFileName) !== -1) {
               this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING2));
+            }
           }
         }
       }
@@ -91,11 +95,13 @@ function getSourceFilePathRelativeToContainmentPath(sourceFilePath: string, cont
 function getMyOptions(options: any): Options | undefined {
 
   const myOptions: Options = options[0]; // "src/app";
-  if (!myOptions)
+  if (!myOptions) {
     return undefined;
+  }
   const { containmentPath, allowedExternalFileNames, disallowedInternalFileNames }: Options = myOptions;
-  if (!containmentPath)
+  if (!containmentPath) {
     return undefined;
+  }
   return {
     containmentPath,
     allowedExternalFileNames: allowedExternalFileNames || [],

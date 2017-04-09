@@ -11,7 +11,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class PropertyInterfaceWalker extends Lint.RuleWalker {
-  public visitInterfaceDeclaration(node: ts.InterfaceDeclaration) {
+  public visitInterfaceDeclaration(node: ts.InterfaceDeclaration): void {
     // Extract 'kind' from all members to a list of numbers.
     const memberKinds: number[] = node.members.map((m) => m.kind);
 
