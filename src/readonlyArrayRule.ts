@@ -41,56 +41,63 @@ function walk(ctx: Lint.WalkContext<Options>): void {
       return;
     }
     // Check the node
-    checkNode(node, ctx);
+    reportInvalidNode(checkNode(node, ctx), ctx);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
 }
 
-function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
-  checkArrayTypeOrReference(node, ctx);
-  checkVariableOrParameterImplicitType(node, ctx);
+function checkNode(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
+  return checkArrayTypeOrReference(node, ctx) || checkVariableOrParameterImplicitType(node, ctx);
+}
+
+function reportInvalidNode(node: ts.Node | undefined, ctx: Lint.WalkContext<Options>): void {
+  if (node) {
+    ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+  }
 }
 
 function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction, ctx: Lint.WalkContext<Options>): void {
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map((p) => p.type ? p.type : p)) {
-    checkNode(n, ctx);
+    reportInvalidNode(checkNode(n, ctx), ctx);
   }
 
   // Check the return type
   if (functionNode.type) {
-    checkNode(functionNode.type, ctx);
+    reportInvalidNode(checkNode(functionNode.type, ctx), ctx);
   }
 
 }
 
-function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
+function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (node.kind === ts.SyntaxKind.ArrayType
     || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
     if (node.parent && shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
-      return;
+      return undefined;
     }
-    ctx.addFailureAtNode(node, Rule.FAILURE_STRING);
+    return node;
   }
+  return undefined;
 }
 
-function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>): void {
+function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Options>): ts.Node | undefined {
 
   if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
     // The initializer is used to set and implicit type
     const varOrParamNode = node as ts.VariableDeclaration | ts.ParameterDeclaration;
     if (shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-      return;
+      return undefined;
     }
     if (!varOrParamNode.type) {
       if (varOrParamNode.initializer && varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
-        ctx.addFailureAtNode(varOrParamNode.name, Rule.FAILURE_STRING);
+        return varOrParamNode.name;
       }
     }
   }
+  return undefined;
 
 }
 
