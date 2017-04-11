@@ -19,6 +19,12 @@ const foo: number[] = [1, 2, 3];
 let x: Foo<Array<string>>;
            ~~~~~~~~~~~~~ [failure]
 
+// Should fail on nested type arguments
+let x: Array<Array<Array<string>>>;
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+             ~~~~~~~~~~~~~~~~~~~~ [failure]
+                   ~~~~~~~~~~~~~ [failure]
+
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
