@@ -43,7 +43,8 @@ function walk(ctx: Lint.WalkContext<Options>): void {
   return ts.forEachChild(ctx.sourceFile, cb);
   function cb(node: ts.Node): void {
     // Skip checking in functions if ignore-local is set
-    if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration || node.kind === ts.SyntaxKind.ArrowFunction)) {
+    if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration
+      || node.kind === ts.SyntaxKind.ArrowFunction || node.kind === ts.SyntaxKind.FunctionExpression)) {
       // We still need to check the parameters and return type
       const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
       const invalidNodes = checkIgnoreLocalFunctionNode(functionNode, ctx);

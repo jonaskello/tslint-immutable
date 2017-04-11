@@ -54,4 +54,10 @@ const foo = (): ReadonlyArray<number> => {
 
 }
 
+// Should fail inside function
+const foo = function (): string {
+  let bar: Array<string>;
+           ~~~~~~~~~~~~~ [failure]
+};
+
 [failure]: Only ReadonlyArray allowed.
