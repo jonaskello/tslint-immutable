@@ -2,4 +2,4 @@
 thumbs.db
 *.log
 node_modules/
-rules/
+/rules/
