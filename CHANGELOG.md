@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.3.0] - 2017-05-09
+### Fixed
+- ignore-local does not work for function assigned to const [#23](https://github.com/jonaskello/tslint-immutable/issues/23)
+
+### Added
+- Add default tslint json. Thanks to [@yonbeastie](https://github.com/yonbeastie). (see [#26](https://github.com/jonaskello/tslint-immutable/pull/26))
+
 ## [v3.2.0] - 2017-04-10
 ### Fixed
 - readonly-array does not check shorthand syntax in return types with ignore-local option [#21](https://github.com/jonaskello/tslint-immutable/issues/21)
@@ -72,7 +79,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.2.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.0...master
+[v3.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.2.0...v3.3.0
 [v3.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.2...v3.2.0
 [v3.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.1...v3.1.2
 [v3.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.1.0...v3.1.1
