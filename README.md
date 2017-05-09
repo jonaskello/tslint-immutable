@@ -8,7 +8,7 @@
 
 ## Background
 
-In some applications it is important to not mutate any data, for example when using Redux to store state in a React application. Moreover immutable data structures has a lot of advantages in general so I want to use them everywhere in my applications. 
+In some applications it is important to not mutate any data, for example when using Redux to store state in a React application. Moreover immutable data structures has a lot of advantages in general so I want to use them everywhere in my applications.
 
 I originally used [immutablejs](https://github.com/facebook/immutable-js/) for this purpose. It is a really nice library but I found it had some drawbacks. Specifically when debugging it was hard to see the structure, creating JSON was not straightforward, and passing parameters to other libraries required converting to regular mutable arrays and objects. The [seamless-immutable](https://github.com/rtfeldman/seamless-immutable) project seems to have the same conclusions and they use regular objects and arrays and check for immutability at run-time. This solves all the aformentioned drawbacks but introduces a new drawback of only being enforced at run-time. (Altough you loose the structural sharing feature of immutablejs with this solution so you would have to consider if that is something you need).
 
@@ -24,7 +24,7 @@ See the [example](#sample-configuration-file) tslint.json file for configuration
 
 ## Compability
 
-* tslint-immutable 3.x.x is compatible with tslint 5.x.x. 
+* tslint-immutable 3.x.x is compatible with tslint 5.x.x.
 * tslint-immutable 2.x.x is compatible with tslint 4.x.x.
 * tslint-immutable 1.x.x is compatible with tslint 3.x.x.
 
@@ -85,9 +85,9 @@ This rule enforces all indexers to have the readonly modifier.
 
 ```typescript
 // NOT OK
-let foo: { [key:string]: number }; 
+let foo: { [key:string]: number };
 // OK
-let foo: { readonly [key:string]: number }; 
+let foo: { readonly [key:string]: number };
 ```
 
 ### readonly-array
@@ -140,8 +140,8 @@ let x = 5; // <- Unexpected let or var, use const.
 What about `for` loops? Loops can be replaced with the Array methods like `map`, `filter`, and so on. If you find the built-in JS Array methods lacking, use [ramda](http://ramdajs.com/), or [lodash-fp](https://github.com/lodash/lodash/wiki/FP-Guide).
 
 ```typescript
-const SearchResults = 
-  ({ results }) => 
+const SearchResults =
+  ({ results }) =>
     <ul>{
       results.map(result => <li>result</li>) // <- Who needs let?
     }</ul>;
@@ -207,7 +207,7 @@ Disallows the use of labels, and indirectly also `goto`.
 ### no-semicolon-interface
 
 Ensures that interfaces only use commas as separator instead semicolor.
- 
+
 ```typescript
 // This is NOT ok.
 inferface Foo {
@@ -286,7 +286,9 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 
 ```javascript
 {
-  "rulesDirectory": ["./node_modules/tslint-immutable/rules"],
+  "extends": [
+    "tslint-immutable"
+  ],
   "rules": {
 
     // Recommended built-in rules
@@ -323,7 +325,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 
 ## How to contribute
 
-For new features file an issue. For bugs, file an issue and optionally file a PR with a failing test. Tests are really easy to do, you just have to edit the `*.ts.lint` files under the test directory. Read more here about [tslint testing](https://palantir.github.io/tslint/develop/testing-rules/). 
+For new features file an issue. For bugs, file an issue and optionally file a PR with a failing test. Tests are really easy to do, you just have to edit the `*.ts.lint` files under the test directory. Read more here about [tslint testing](https://palantir.github.io/tslint/develop/testing-rules/).
 
 ## How to develop
 
