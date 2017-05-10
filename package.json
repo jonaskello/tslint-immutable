@@ -2,7 +2,7 @@
   "name": "tslint-immutable",
   "version": "3.3.0",
   "description": "TSLint rules to disable mutation in TypeScript.",
-  "main": "tslint-immutable.js",
+  "main": "tslint-immutable.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
