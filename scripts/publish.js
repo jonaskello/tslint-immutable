@@ -13,7 +13,7 @@ execCommand(`yarn run build`);
 execCommand(`yarn run test:rules`);
 execCommand(`git push`);
 execCommand(`git push --tags`);
-execCommand(`npm publish`);
+execCommand(`yarn publish`);
 
 function execCommand(command) {
     const result = shell.exec(command);
