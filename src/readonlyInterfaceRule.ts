@@ -21,10 +21,13 @@ function checkInterfaceDeclaration(node: ts.Node, ctx: Lint.WalkContext<Shared.O
     const interfaceDeclarationNode = node as ts.InterfaceDeclaration;
     const invalidNodes: Array<Shared.InvalidNode> = [];
     for (const member of interfaceDeclarationNode.members) {
-      if (!(member.modifiers && member.modifiers.filter((m) => m.kind === ts.SyntaxKind.ReadonlyKeyword).length > 0)) {
-        const length = member.getWidth(ctx.sourceFile);
-        const memberName = member.name;
-        invalidNodes.push(Shared.createInvalidNode(member, new Lint.Replacement(node.end - length, length, `readonly ${memberName}`)));
+      // readonly modifier is only allowed for PropertySignature and IndexSignature
+      if (member.kind === ts.SyntaxKind.PropertySignature || member.kind === ts.SyntaxKind.IndexSignature) {
+        if (!(member.modifiers && member.modifiers.filter((m) => m.kind === ts.SyntaxKind.ReadonlyKeyword).length > 0)) {
+          const length = member.getWidth(ctx.sourceFile);
+          const memberName = member.name;
+          invalidNodes.push(Shared.createInvalidNode(member, new Lint.Replacement(node.end - length, length, `readonly ${memberName}`)));
+        }
       }
     }
     return invalidNodes;
