@@ -1,15 +1,21 @@
 // Interface with readonly modifiers should not produce violations
 interface Foo {
-  readonly bar: number,
-  readonly loo: Array<string>,
+  readonly a: number,
+  readonly b: Array<string>,
+  readonly c: () => string,
+  readonly [key: string]: string
 }
 
 // PropertySignature and IndexSignature members without readonly modifier should produce violations
 interface Foo {
-  bar: number,
-  ~~~~~~~~~~~~ [failure]
-  [key: string]: string
-  ~~~~~~~~~~~~~~~~~~~~~ [failure]
+  a: number,
+  ~~~~~~~~~~ [failure]
+  b: Array<string>,
+  ~~~~~~~~~~~~~~~~~ [failure]
+  c: () => string,
+  ~~~~~~~~~~~~~~~~[failure]
+  [key: string]: string,
+  ~~~~~~~~~~~~~~~~~~~~~~ [failure]
 }
 
 // CallSignature and MethodSignature cannot have readonly modifiers and should not produce violations
