@@ -1,5 +1,6 @@
-function foo(boo = [1, 2, 3])
-             ~~~ [failure]
+// Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+const foo = [1, 2, 3]
+      ~~~ [failure]
 
 
 [failure]: Only ReadonlyArray allowed.
