@@ -1,7 +1,7 @@
-  // Should not produce violations
+  // Should not produce failures
   let x = 0;
 
-  // Should produce violations
+  // Should produce failures
   let x = new Foo();
           ~~~~~~~~~ [failure]
 

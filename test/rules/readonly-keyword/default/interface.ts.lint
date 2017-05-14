@@ -3,7 +3,8 @@ interface Foo {
   readonly a: number,
   readonly b: Array<string>,
   readonly c: () => string,
-  readonly [key: string]: string
+  readonly d: { readonly [key: string]: string },
+  readonly [key: string]: string,
 }
 
 // PropertySignature and IndexSignature members without readonly modifier should produce failures
@@ -14,8 +15,23 @@ interface Foo {
   ~~~~~~~~~~~~~~~~~ [failure]
   c: () => string,
   ~~~~~~~~~~~~~~~~[failure]
+  d: { readonly [key: string]: string },
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
   [key: string]: string,
   ~~~~~~~~~~~~~~~~~~~~~~ [failure]
+  // Also verify that nested members are checked
+  readonly d: {
+    a: number,
+    ~~~~~~~~~~ [failure]
+    b: Array<string>,
+    ~~~~~~~~~~~~~~~~~ [failure]
+    c: () => string,
+    ~~~~~~~~~~~~~~~~[failure]
+    d: { readonly [key: string]: string },
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+    [key: string]: string,
+    ~~~~~~~~~~~~~~~~~~~~~~ [failure]
+  }
 }
 
 // CallSignature and MethodSignature cannot have readonly modifiers and should not produce failures
@@ -24,7 +40,4 @@ export interface Zoo {
   foo(): void
 }
 
-// Indexer type declaration should not produce failures
-let foo: {readonly [key: string]: number};
-
-[failure]: Interface members must have readonly modifier.
+[failure]: A readonly modifier is required.

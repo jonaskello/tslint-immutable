@@ -1,9 +1,9 @@
-  // Should not produce violations
+  // Should not produce failures
 interface Foo {
   bar: string,
   zoo: number,
 }
-  // Should produce violations
+  // Should produce failures
 interface Foo {
   bar: string;
   ~~~~~~~~~~~~ [failure]

@@ -1,21 +1,21 @@
-// Only properties should not produce violations
+// Only properties should not produce failures
 interface Foo {
   bar: string,
   zoo: number,
 }
 
-// Only functions should not produce violations
+// Only functions should not produce failures
 interface Foo {
   bar(): string,
   zoo(): number,
 }
 
-// Only indexer should not produce violations
+// Only indexer should not produce failures
 interface Foo {
   [key: string]: string,
 }
 
-// Mixing properties and functions should produce violations
+// Mixing properties and functions should produce failures
 interface Foo {
   bar: string,
   zoo(): number,

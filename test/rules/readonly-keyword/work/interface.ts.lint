@@ -1,0 +1,6 @@
+// Interface with readonly modifiers should not produce failures
+interface Foo {
+  readonly d: { readonly [key: string]: string }
+}
+
+[failure]: A readonly modifier is required.

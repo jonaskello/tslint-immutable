@@ -33,6 +33,7 @@ See the [example](#sample-configuration-file) tslint.json file for configuration
 In addition to immutable rules this project also contains a few rules for enforcing a functional style of programming and a few other rules. The following rules are available:
 
 * [Immutability rules](#immutability-rules)
+  * [readonly-keyword](#readonly-keyword)
   * [readonly-interface](#readonly-interface)
   * [readonly-indexer](#readonly-indexer)
   * [readonly-array](#readonly-array)
@@ -51,9 +52,11 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 ## Immutability rules
 
-### readonly-interface
+### readonly-keyword
 
-This rule enforces having the `readonly` modifier on all interface members.
+This rule enforces use of the `readonly` modifier. The `readonly` modifier can appear on property signatures and index signatures. 
+
+Below is some information about the `readonly` modifier and the benefits of using it:
 
 You might think that using `const` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
 
@@ -63,7 +66,7 @@ const point: Point = { x: 23, y: 44 };
 point.x = 99; // This is legal
 ```
 
-This is why the `readonly-interface` rule exists. This rule prevents you from assigning a value to the result of a member expression.
+This is why the `readonly` modifier exists. It prevents you from assigning a value to the result of a member expression.
 
 ```typescript
 interface Point { readonly x: number, readonly y: number }
@@ -71,7 +74,7 @@ const point: Point = { x: 23, y: 44 };
 point.x = 99; // <- No object mutation allowed.
 ```
 
-This rule is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However this rule has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
+This is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However the `readonly` modifier has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
 
 ```typescript
 interface Point { readonly x: number, readonly y: number }
@@ -79,20 +82,53 @@ const point: Point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
 ```
 
-### readonly-indexer
-
-This rule enforces all indexers to have the readonly modifier.
+Note that you can also use object spread when destructuring to [delete keys](http://stackoverflow.com/questions/35342355/remove-data-from-nested-objects-without-mutating/35676025#35676025) in an object:
 
 ```typescript
-// NOT OK
-let foo: { [key:string]: number };
-// OK
+let { [action.id]: deletedItem, ...rest } = state;
+```
+
+The `readonly` modifier also works on indexers:
+
+```typescript
 let foo: { readonly [key:string]: number };
 ```
+
+#### Has Fixer
+Yes
+
+#### Options
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+
+#### Example config
+```javascript
+"readonly-keyword": true
+```
+```javascript
+"readonly-keyword": [true, "ignore-local"]
+```
+```javascript
+"readonly-keyword": [true, "ignore-local", {"ignore-prefix": "mutable"}]
+```
+
+### readonly-interface
+
+> **NOTE: This rule is deprecated and will be removed in the next major release. Please use the `readonly-keyword` rule instead.**
+
+This rule enforces having the `readonly` modifier on all interface members.
+
+### readonly-indexer
+
+> **NOTE: This rule is deprecated and will be removed in the next major release. Please use the `readonly-keyword` rule instead.**
+
+This rule enforces all indexers to have the `readonly` modifier.
 
 ### readonly-array
 
 This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
+
+Below is some information about the `ReadonlyArray<T>` type and the benefits of using it:
 
 Even if an array is declared with `const` it is still possible to mutate the contents of the array.
 
@@ -102,7 +138,7 @@ const points: Array<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // This is legal
 ```
 
-Using the readonly-array rule will stop this mutation:
+Using the `ReadonlyArray<T>` type will stop this mutation:
 
 ```typescript
 interface Point { readonly x: number, readonly y: number }

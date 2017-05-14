@@ -1,7 +1,7 @@
-// Indexer with readonly modifier should not produce violations
+// Indexer with readonly modifier should not produce failures
 let foo: {readonly [key: string]: number};
 
-// Indexer without readonly modifier should produce violations
+// Indexer without readonly modifier should produce failures
 let foo: {[key: string]: number};
           ~~~~~~~~~~~~~~~~~~~~~ [failure]
 
