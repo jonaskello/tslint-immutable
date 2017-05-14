@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.4.2] - 2017-05-14
+### Added
+- Notice in readme about deprecrating the `no-new` rule. 
+
+### Deprecated
+- The `no-new` rule. See [#2](https://github.com/jonaskello/tslint-immutable/issues/2) for background.
+
 ## [v3.4.1] - 2017-05-14
 ### Added
 - Note in readme about moving the "other" rules. The `no-argument`, `no-label`, `no-semicolon-interface`, and `import containtment` rules are moving to [tslint-divid](https://github.com/jonaskello/tslint-divid). See  [#19](https://github.com/jonaskello/tslint-immutable/issues/19) for more information.
@@ -101,7 +108,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.1...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.2...master
+[v3.4.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.1...v3.4.2
 [v3.4.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.0...v3.4.1
 [v3.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.2...v3.4.0
 [v3.3.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.1...v3.3.2

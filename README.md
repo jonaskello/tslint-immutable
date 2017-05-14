@@ -185,7 +185,13 @@ const SearchResults =
 
 ## Functional style rules
 
-### no-this, no-class, no-new
+### no-new
+
+> **NOTE: This rule is deprecated and will be removed in the next major release. Please see background in [#2](https://github.com/jonaskello/tslint-immutable/issues/2).**
+
+This rule disallows the use of the `new` keyword.
+
+### no-this, no-class
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
 
 ```typescript
