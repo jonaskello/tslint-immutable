@@ -332,8 +332,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     "typedef": [true, "call-signature"],
 
     // Immutability rules
-    "readonly-interface": true,
-    "readonly-indexer": true,
+    "readonly-keyword": true,
     "readonly-array": true,
     "no-let": true,
 
