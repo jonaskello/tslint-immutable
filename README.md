@@ -234,13 +234,19 @@ This rule checks that the value of an expression is assigned to a variable and t
 
 ### no-arguments
 
+> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
+
 Disallows use of the `arguments` keyword.
 
 ### no-label
 
+> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
+
 Disallows the use of labels, and indirectly also `goto`.
 
 ### no-semicolon-interface
+
+> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
 
 Ensures that interfaces only use commas as separator instead semicolor.
 
@@ -258,6 +264,8 @@ inferface Foo {
 ```
 
 ### import-containment
+
+> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
 
 ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
 
@@ -342,17 +350,6 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     "no-new": true,
     "no-mixed-interface": true,
     "no-expression-statement": true,
-
-    // Other rules
-    "no-arguments": true,
-    "no-label": true,
-    "no-semicolon-interface": true,
-    "import-containment": [ true,
-    {
-      "containmentPath": "path/to/libs",
-      "allowedExternalFileNames": ["index"],
-      "disallowedInternalFileNames": ["index"]
-    }]
 
   }
 }
