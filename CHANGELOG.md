@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.4.0] - 2017-05-14
+### Added
+- New rule `readonly-keyword`, to replace `readonly-interface` and `readonly-indexer` [#31](https://github.com/jonaskello/tslint-immutable/issues/31)
+
+### Deprecated
+- The `readonly-interface`, and `readonly-indexer` rules are deprecated and will be removed in the next major release. Please use the `readonly-keyword` rule instead.
+
 ## [v3.3.2] - 2017-05-13
 ### Fixed
 - Functions in interfaces cannot have readonly specified but are still checked [#28](https://github.com/jonaskello/tslint-immutable/issues/28)
@@ -87,7 +94,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.2...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.0...master
+[v3.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.2...v3.4.0
 [v3.3.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.1...v3.3.2
 [v3.3.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.0...v3.3.1
 [v3.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.2.0...v3.3.0
