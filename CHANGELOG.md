@@ -118,7 +118,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.2...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.0...master
+[v4.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.2...v4.0.0
 [v3.4.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.1...v3.4.2
 [v3.4.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.0...v3.4.1
 [v3.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.3.2...v3.4.0
