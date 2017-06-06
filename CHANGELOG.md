@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0.0] - 2017-06-06
+### Removed
+- `readonly-interface` rule. This rule is replaced by the `readonly-keyword` rule. 
+- `readonly-indexer` rule. This rule is replaced by the `readonly-keyword` rule. 
+- `no-new` rule. Please see background in [#2](https://github.com/jonaskello/tslint-immutable/issues/2).
+- `no-arguments` rule. This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package.
+- `no-label` rule. This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package.
+- `no-semicolon-interface` rule. This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package.
+- `import-containment` rule. This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package.
+
 ## [v3.4.2] - 2017-05-14
 ### Added
 - Notice in readme about deprecrating the `no-new` rule. 

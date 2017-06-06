@@ -1,6 +1,0 @@
-var x = 0;
-
-mylabel:
-~~~~~~~~ [failure]
-
-[failure]: Do not use labels.

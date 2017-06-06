@@ -34,21 +34,13 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 * [Immutability rules](#immutability-rules)
   * [readonly-keyword](#readonly-keyword)
-  * [readonly-interface](#readonly-interface)
-  * [readonly-indexer](#readonly-indexer)
   * [readonly-array](#readonly-array)
   * [no-let](#no-let)
 * [Functional style rules](#functional-style-rules)
   * [no-this](#no-this-no-class)
   * [no-class](#no-this-no-class)
-  * [no-new](#no-new)
   * [no-mixed-interface](#no-mixed-interface)
   * [no-expression-statement](#no-expression-statement)
-* [Other rules](#other-rules)
-  * [no-arguments](#no-arguments)
-  * [no-label](#no-label)
-  * [no-semicolon-interface](#no-semicolon-interface)
-  * [import-containment](#import-containment)
 
 ## Immutability rules
 
@@ -112,18 +104,6 @@ Yes
 "readonly-keyword": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
 
-### readonly-interface
-
-> **NOTE: This rule is deprecated and will be removed in the next major release. Please use the `readonly-keyword` rule instead.**
-
-This rule enforces having the `readonly` modifier on all interface members.
-
-### readonly-indexer
-
-> **NOTE: This rule is deprecated and will be removed in the next major release. Please use the `readonly-keyword` rule instead.**
-
-This rule enforces all indexers to have the `readonly` modifier.
-
 ### readonly-array
 
 This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
@@ -185,12 +165,6 @@ const SearchResults =
 
 ## Functional style rules
 
-### no-new
-
-> **NOTE: This rule is deprecated and will be removed in the next major release. Please see background in [#2](https://github.com/jonaskello/tslint-immutable/issues/2).**
-
-This rule disallows the use of the `new` keyword.
-
 ### no-this, no-class
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
 
@@ -235,45 +209,6 @@ alert('Hello world!')
 ```
 
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
-
-## Other rules
-
-### no-arguments
-
-> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
-
-Disallows use of the `arguments` keyword.
-
-### no-label
-
-> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
-
-Disallows the use of labels, and indirectly also `goto`.
-
-### no-semicolon-interface
-
-> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
-
-Ensures that interfaces only use commas as separator instead semicolor.
-
-```typescript
-// This is NOT ok.
-inferface Foo {
-  bar: string;
-  zoo(): number;
-}
-// This is ok.
-inferface Foo {
-  bar: string,
-  zoo(): number,
-}
-```
-
-### import-containment
-
-> **NOTE: This rule has been moved to the [tslint-divid](https://www.npmjs.com/package/tslint-divid) package and will be removed from this package in the next major release.**
-
-ECMAScript modules does not have a concept of a library that can span multiple files and share internal members. If you have a set of files that forms an library, and they need to be able to call each other internally without exposing members to other files outside the library set, this rule can be useful.
 
 ## Options
 

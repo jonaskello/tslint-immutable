@@ -1,8 +1,0 @@
-// Indexer with readonly modifier should not produce failures
-let foo: {readonly [key: string]: number};
-
-// Indexer without readonly modifier should produce failures
-let foo: {[key: string]: number};
-          ~~~~~~~~~~~~~~~~~~~~~ [failure]
-
-[failure]: Indexers must be have readonly modifier.
