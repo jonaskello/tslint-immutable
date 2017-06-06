@@ -288,7 +288,6 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     // Functional style rules
     "no-this": true,
     "no-class": true,
-    "no-new": true,
     "no-mixed-interface": true,
     "no-expression-statement": true,
 
