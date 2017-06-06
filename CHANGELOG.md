@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.0.1] - 2017-06-06
+### Fixed
+- Invalid default tslint config (it included the removed rules).
+
 ## [v4.0.0] - 2017-06-06
 ### Removed
 - `readonly-interface` rule. This rule is replaced by the `readonly-keyword` rule. 
@@ -118,7 +122,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.1...master
+[v4.0.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.0...v4.0.1
 [v4.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.2...v4.0.0
 [v3.4.2]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.1...v3.4.2
 [v3.4.1]: https://github.com/jonaskello/tslint-immutable/compare/v3.4.0...v3.4.1

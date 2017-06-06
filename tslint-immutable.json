@@ -1,18 +1,12 @@
 {
   "rulesDirectory": "./rules",
   "rules": {
-    "import-containment": false,
-    "no-arguments": false,
-    "no-class": false,
-    "no-expression-statement": false,
-    "no-label": false,
-    "no-let": false,
-    "no-mixed-interface": false,
-    "no-new": false,
-    "no-semicolon-interface": false,
-    "no-this": false,
+    "readonly-keyword": false,
     "readonly-array": false,
-    "readonly-indexer": false,
-    "readonly-interface": false
+    "no-let": false,
+    "no-this": false,
+    "no-class": false,
+    "no-mixed-interface": false,
+    "no-expression-statement": false
   }
 }
