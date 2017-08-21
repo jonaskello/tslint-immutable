@@ -7,6 +7,7 @@
     "no-this": false,
     "no-class": false,
     "no-mixed-interface": false,
-    "no-expression-statement": false
+    "no-expression-statement": false,
+    "no-object-mutation": false
   }
 }

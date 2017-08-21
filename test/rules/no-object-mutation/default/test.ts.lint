@@ -1,0 +1,80 @@
+const x = {a: 1};
+
+// Disallowed object mutation patterns
+
+x.foo = 'bar';
+~~~~~~~~~~~~~ [failure]
+
+x['foo'] = 'bar';
+~~~~~~~~~~~~~~~~ [failure]
+
+x.a += 1;
+~~~~~~~~ [failure]
+
+x.a -= 1;
+~~~~~~~~ [failure]
+
+x.a *= 1;
+~~~~~~~~ [failure]
+
+x.a **= 1;
+~~~~~~~~~ [failure]
+
+x.a /= 1;
+~~~~~~~~ [failure]
+
+x.a %= 1;
+~~~~~~~~ [failure]
+
+x.a <<= 1;
+~~~~~~~~~ [failure]
+
+x.a >>= 1;
+~~~~~~~~~ [failure]
+
+x.a >>>= 1;
+~~~~~~~~~~ [failure]
+
+x.a &= 1;
+~~~~~~~~ [failure]
+
+x.a |= 1;
+~~~~~~~~ [failure]
+
+x.a ^= 1;
+~~~~~~~~ [failure]
+
+delete x.a;
+~~~~~~~~~~ [failure]
+
+delete x['a'];
+~~~~~~~~~~~~~ [failure]
+
+x.a++;
+~~~~~ [failure]
+
+x.a--;
+~~~~~ [failure]
+
+++x.a;
+~~~~~ [failure]
+
+--x.a;
+~~~~~ [failure]
+
+if (x.a = 2) {}
+    ~~~~~~~ [failure]
+
+if (x.a++) {}
+    ~~~~~ [failure]
+
+
+// Non-mutating patterns that we shouldn't catch
+
+const y = x.a;
+const z = x['a'];
+if (x.a && y.a) {}
+const w = ~x.a;
+if (!x.a) {}
+
+[failure]: Modifying properties of existing object not allowed.
