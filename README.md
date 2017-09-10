@@ -84,7 +84,7 @@ let { [action.id]: deletedItem, ...rest } = state;
 The `readonly` modifier also works on indexers:
 
 ```typescript
-let foo: { readonly [key: string]: number } = { "a": 1, "b": 2 };
+const foo: { readonly [key: string]: number } = { "a": 1, "b": 2 };
 foo["a"] = 3; // Error: Index signature only permits reading
 ```
 
