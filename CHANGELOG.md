@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.2.0] - 2017-09-14
+### Added
+- New option `ignore-prefix` for the `no-expression-statement` rule. See [#39](https://github.com/jonaskello/tslint-immutable/issues/39) for background. Thanks to [@algesten](https://github.com/algesten) for this option! (See PR [#42](https://github.com/jonaskello/tslint-immutable/pull/42))
+
 ## [v4.1.0] - 2017-08-21
 ### Added
-- New rule `no-object-mutation`. See [#36](https://github.com/jonaskello/tslint-immutable/pull/36) for background. Thanks to [@miangraham](https://github.com/miangraham) for this rule! (See PR [#37](https://github.com/jonaskello/tslint-immutable/pull/37))
+- New rule `no-object-mutation`. See [#36](https://github.com/jonaskello/tslint-immutable/issues/36) for background. Thanks to [@miangraham](https://github.com/miangraham) for this rule! (See PR [#37](https://github.com/jonaskello/tslint-immutable/pull/37))
 
 ## [v4.0.2] - 2017-07-16
 ### Added
@@ -130,7 +134,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.1.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.0...master
+[v4.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.2...v4.1.0
 [v4.0.2]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.1...v4.0.2
 [v4.0.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.0...v4.0.1
