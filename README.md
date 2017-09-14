@@ -222,6 +222,23 @@ alert('Hello world!')
 
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
+#### Options
+- [ignore-prefix](#using-the-ignore-prefix-option-with-no-expression-statement)
+
+#### Example config
+
+```javascript
+"no-expression-statement": true
+```
+
+```javascript
+"no-expression-statement": [true, {"ignore-prefix": "console."}]
+```
+
+```javascript
+"no-expression-statement": [true, {"ignore-prefix": ["console.log", "console.error"]}]
+```
+
 ## Options
 
 ### Using the `ignore-local` option
@@ -254,6 +271,25 @@ type person = {
 ```
 
 Yes, variable names like `mutableAge` are ugly, but then again mutation is an ugly business :-).
+
+### Using the `ignore-prefix` option with `no-expression-statement`
+
+Expression statements typically cause side effects, however not all side effects are undesirable. One example of a helpful side effect is logging. To not get warning of every log statement, we can configure the linter to ignore well known expression statement prefixes.
+
+One such prefix could be `console.`, which would cover both these cases:
+
+```typescript
+const doSomething(arg:string) => {
+  if (arg) {
+    console.log("Argument is", arg);
+  } else {
+    console.warn("Argument is empty!");
+  }
+  return `Hello ${arg}`;
+}
+```
+
+
 
 ## Recommended built-in rules
 
