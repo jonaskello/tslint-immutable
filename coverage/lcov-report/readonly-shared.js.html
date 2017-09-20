@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for readonly-shared.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> readonly-shared.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>45/45</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">92.59% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>25/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>8/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>44/44</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">158x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1833x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1818x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1818x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1833x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">264x</span>
+<span class="cline-any cline-yes">114x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-yes">105x</span>
+<span class="cline-any cline-yes">41x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">223x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * This file has code that is shared for all the readonly rules.
+ * It supports the options for ignore-local and ignore-prefix which all readonly rules have.
+ * The rules ony need to provide a checker function.
+ */
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ts = require("typescript");
+var OPTION_IGNORE_LOCAL = "ignore-local";
+var OPTION_IGNORE_PREFIX = "ignore-prefix";
+function createInvalidNode(node, replacement) {
+    return { node: node, replacement: replacement };
+}
+exports.createInvalidNode = createInvalidNode;
+function parseOptions(options) {
+    var ignoreLocal = options.indexOf(OPTION_IGNORE_LOCAL) !== -1;
+    var ignorePrefix;
+    for (var _i = 0, options_1 = options; _i &lt; options_1.length; _i++) {
+        var o = options_1[_i];
+        if (typeof o === "object" &amp;&amp; o[OPTION_IGNORE_PREFIX] !== null) {
+            ignorePrefix = o[OPTION_IGNORE_PREFIX];
+            break;
+        }
+    }
+    return { ignoreLocal: ignoreLocal, ignorePrefix: ignorePrefix };
+}
+exports.parseOptions = parseOptions;
+function walk(ctx, checkNode, failureString) {
+    return ts.forEachChild(ctx.sourceFile, cb);
+    function cb(node) {
+        // Skip checking in functions if ignore-local is set
+        if (ctx.options.ignoreLocal &amp;&amp; (node.kind === ts.SyntaxKind.FunctionDeclaration
+            || node.kind === ts.SyntaxKind.ArrowFunction || node.kind === ts.SyntaxKind.FunctionExpression)) {
+            // We still need to check the parameters and return type
+            var functionNode = node; //tslint:disable-line
+            var invalidNodes = checkIgnoreLocalFunctionNode(functionNode, ctx, checkNode);
+            // invalidNodes.forEach((n) =&gt; reportInvalidNodes(n, ctx, failureString));
+            reportInvalidNodes(invalidNodes, ctx, failureString);
+            // Now skip this whole branch
+            return;
+        }
+        // Check the node
+        reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
+        // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+        return ts.forEachChild(node, cb);
+    }
+}
+exports.walk = walk;
+function reportInvalidNodes(invalidNodes, ctx, failureString) {
+    invalidNodes.forEach(function (invalidNode) { return ctx.addFailureAtNode(invalidNode.node, failureString, invalidNode.replacement); });
+}
+exports.reportInvalidNodes = reportInvalidNodes;
+function checkIgnoreLocalFunctionNode(functionNode, ctx, checkNode) {
+    var invalidNodes = [];
+    // Check either the parameter's explicit type if it has one, or itself for implict type
+    for (var _i = 0, _a = functionNode.parameters.map(function (p) { return p.type ? p.type : p; }); _i &lt; _a.length; _i++) {
+        var n = _a[_i];
+        var invalidCheckNodes = checkNode(n, ctx);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (invalidCheckNodes) {
+            invalidNodes = invalidNodes.concat.apply(invalidNodes, invalidCheckNodes);
+        }
+    }
+    // Check the return type
+    if (functionNode.type) {
+        var invalidCheckNodes = checkNode(functionNode.type, ctx);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (invalidCheckNodes) {
+            invalidNodes = invalidNodes.concat.apply(invalidNodes, invalidCheckNodes);
+        }
+    }
+    return invalidNodes;
+}
+exports.checkIgnoreLocalFunctionNode = checkIgnoreLocalFunctionNode;
+function shouldIgnorePrefix(node, options, sourceFile) {
+    // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
+    if (options.ignorePrefix) {
+        if (node &amp;&amp; (node.kind === ts.SyntaxKind.VariableDeclaration
+            || node.kind === ts.SyntaxKind.Parameter
+            || node.kind === ts.SyntaxKind.PropertySignature
+            || node.kind === ts.SyntaxKind.TypeAliasDeclaration)) {
+            var variableDeclarationNode = node;
+            if (variableDeclarationNode.name.getText(sourceFile).substr(0, options.ignorePrefix.length) === options.ignorePrefix) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+exports.shouldIgnorePrefix = shouldIgnorePrefix;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Sep 21 2017 00:15:06 GMT+0200 (CEST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>

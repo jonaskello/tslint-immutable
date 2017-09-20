@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
+    "nyc": "^11.2.1",
     "shelljs": "^0.7.5",
     "tslint": "^5.1.0",
     "typescript": "^2.2.2"
@@ -27,7 +28,9 @@
     "build": "rm -rf rules && tsc -p tsconfig.json",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "yarn build && yarn test:rules",
-    "test:rules": "./scripts/test-rules.sh",
+    "test:rules2": "./scripts/test-rules.sh",
+    "test:rules": "tslint --test test/rules/**/*",
+    "coverage": "rm -rf coverage .nyc_output && nyc yarn test",
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
     "publish:patch": "npm run build && node scripts/publish.js patch"

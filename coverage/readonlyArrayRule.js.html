@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for readonlyArrayRule.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> readonlyArrayRule.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">92% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>46/50</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80.49% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>33/41</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">83.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>10/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">95.74% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>45/47</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1000x</span>
+<span class="cline-any cline-yes">1000x</span>
+<span class="cline-any cline-yes">1000x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1000x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">920x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1000x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">89x</span>
+<span class="cline-any cline-yes">89x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">81x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">976x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
+var __extends = (this &amp;&amp; this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        (<span class="branch-1 cbranch-no" title="branch not covered" >{ __proto__: [] } instanceof Array </span>&amp;&amp; <span class="fstat-no" title="function not covered" ><span class="branch-2 cbranch-no" title="branch not covered" >fu</span>nction (d, b) { <span class="cstat-no" title="statement not covered" >d.__proto__ = b; </span>})</span> ||
+<span class="fstat-no" title="function not covered" ><span class="branch-3 cbranch-no" title="branch not covered" >        fu</span>nction (d, b) { <span class="cstat-no" title="statement not covered" >for (var p in b) <span class="cstat-no" title="statement not covered" >if (b.hasOwnProperty(p)) <span class="cstat-no" title="statement not covered" >d[p] = b[p]; </span></span></span>};</span>
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? <span class="branch-0 cbranch-no" title="branch not covered" >Object.create(b) </span>: (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ts = require("typescript");
+var Lint = require("tslint");
+var Shared = require("./readonly-shared");
+var Rule = (function (_super) {
+    __extends(Rule, _super);
+    function Rule() {
+        return _super !== null &amp;&amp; _super.apply(this, arguments) || this;
+    }
+    Rule.prototype.apply = function (sourceFile) {
+        return this.applyWithFunction(sourceFile, function (ctx) { return Shared.walk(ctx, checkNode, "Only ReadonlyArray allowed."); }, Shared.parseOptions(this.ruleArguments));
+    };
+    return Rule;
+}(Lint.Rules.AbstractRule));
+exports.Rule = Rule;
+function checkNode(node, ctx) {
+    var explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
+    var implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
+    return explicitTypeFailures.concat(implicitTypeFailures);
+}
+function checkArrayTypeOrReference(node, ctx) {
+    // We need to check both shorthand syntax "number[]" and type reference "Array&lt;number&gt;"
+    if (node.kind === ts.SyntaxKind.ArrayType
+        || (node.kind === ts.SyntaxKind.TypeReference &amp;&amp; node.typeName.getText(ctx.sourceFile) === "Array")) {
+        if (node.parent &amp;&amp; Shared.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
+            return [];
+        }
+        var typeArgument = "T";
+        if (node.kind === ts.SyntaxKind.ArrayType) {
+            var typeNode = node;
+            typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
+        }
+        else <span class="missing-if-branch" title="else path not taken" >E</span>if (node.kind === ts.SyntaxKind.TypeReference) {
+            var typeNode = node;
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (typeNode.typeArguments) {
+                typeArgument = typeNode.typeArguments[0].getFullText(ctx.sourceFile).trim();
+            }
+        }
+        var length_1 = node.getWidth(ctx.sourceFile);
+        return [Shared.createInvalidNode(node, new Lint.Replacement(node.end - length_1, length_1, "ReadonlyArray&lt;" + typeArgument + "&gt;"))];
+    }
+    return [];
+}
+function checkVariableOrParameterImplicitType(node, ctx) {
+    if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
+        // The initializer is used to set and implicit type
+        var varOrParamNode = node;
+        if (Shared.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+            return [];
+        }
+        if (!varOrParamNode.type) {
+            if (varOrParamNode.initializer &amp;&amp; varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+                var length_2 = varOrParamNode.name.getWidth(ctx.sourceFile);
+                var nameText = varOrParamNode.name.getText(ctx.sourceFile);
+                var typeArgument = "any";
+                // Not sure it is a good idea to guess what the element types are...
+                // const arrayLiteralNode = varOrParamNode.initializer as ts.ArrayLiteralExpression;
+                // if (arrayLiteralNode.elements.length &gt; 0) {
+                //   const element = arrayLiteralNode.elements[0];
+                //   if (element.kind === ts.SyntaxKind.NumericLiteral) {
+                //     typeArgument = "number";
+                //   } else if (element.kind === ts.SyntaxKind.StringLiteral) {
+                //     typeArgument = "string";
+                //   } else if (element.kind === ts.SyntaxKind.TrueKeyword || element.kind === ts.SyntaxKind.FalseKeyword) {
+                //     typeArgument = "boolean";
+                //   }
+                // }
+                return [Shared.createInvalidNode(varOrParamNode.name, new Lint.Replacement(varOrParamNode.name.end - length_2, length_2, nameText + ": ReadonlyArray&lt;" + typeArgument + "&gt;"))];
+            }
+        }
+    }
+    return [];
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Sep 21 2017 00:15:06 GMT+0200 (CEST)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>
