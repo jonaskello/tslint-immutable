@@ -51,9 +51,24 @@ const foo = (bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) =>
 
 }
 
-// -- Inside class: Local variable declarations
+// -- Inside class
 
 class Foo {
+
+  // -- Class-level variable declarations
+
+  // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
+  const foo: ReadonlyArray<string> = [];
+
+  // Should fail on Array type in variable declaration (TypeReferenceNode)
+  const foo: Array<string> = [];
+             ~~~~~~~~~~~~~ [failure]
+
+  // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
+  const foo = [1, 2, 3]
+        ~~~ [failure]
+
+  // -- Class level functions: Local variable declarations
 
   // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
   foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
