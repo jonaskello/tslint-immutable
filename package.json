@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "nyc": "^11.2.1",
     "shelljs": "^0.7.5",
     "tslint": "^5.1.0",
@@ -31,6 +32,7 @@
     "test:rules2": "./scripts/test-rules.sh",
     "test:rules": "tslint --test test/rules/**/*",
     "coverage": "rm -rf coverage .nyc_output && nyc yarn test",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
     "publish:patch": "npm run build && node scripts/publish.js patch"
