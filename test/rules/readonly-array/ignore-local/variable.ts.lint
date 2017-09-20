@@ -72,8 +72,8 @@ class Foo {
 
   // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
   foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
-                    ~~~~~~~~~~~~~ [failure]
-                                                              ~~~ [failure]
+           ~~~~~~~~~~~~~ [failure]
+                                                      ~~~ [failure]
 
     // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
     const foo: ReadonlyArray<string> = [];
