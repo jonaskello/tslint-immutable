@@ -12,7 +12,7 @@ execCommand(`yarn verify`);
 execCommand(`npm version ${semverType}`);
 execCommand(`git push`);
 execCommand(`git push --tags`);
-execCommand(`yarn publish`);
+execCommand(`npm publish`);
 
 function execCommand(command) {
   const result = shell.exec(command);
