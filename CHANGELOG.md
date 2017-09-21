@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.2.1] - 2017-09-21
 ## Fixed
 - The readonly-array rule with ignore-local option does not work within `class`. See [45](https://github.com/jonaskello/tslint-immutable/issues/45).
 
@@ -137,7 +138,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.0...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...master
+[v4.2.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.0...v4.2.1
 [v4.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.2...v4.1.0
 [v4.0.2]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.1...v4.0.2
