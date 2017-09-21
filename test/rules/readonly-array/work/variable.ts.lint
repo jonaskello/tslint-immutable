@@ -1,6 +1,13 @@
-// Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
-const foo = [1, 2, 3]
-      ~~~ [failure]
 
+class Foo {
+
+  foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
+           ~~~~~~~~~~~~~ [failure]
+                                                      ~~~ [failure]
+
+    const foo: Array<string> = [];
+  }
+
+}
 
 [failure]: Only ReadonlyArray allowed.

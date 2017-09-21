@@ -42,7 +42,8 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Shared.O
 
 function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Shared.Options>): ReadonlyArray<Shared.InvalidNode> {
 
-  if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter) {
+  if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter
+    || node.kind === ts.SyntaxKind.PropertyDeclaration) {
     // The initializer is used to set and implicit type
     const varOrParamNode = node as ts.VariableDeclaration | ts.ParameterDeclaration;
     if (Shared.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
