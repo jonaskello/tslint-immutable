@@ -7,10 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
-  "keywords": [
-    "tslint",
-    "immutability"
-  ],
+  "keywords": ["tslint", "immutability"],
   "author": "Jonas Kello",
   "license": "Apache-2.0",
   "bugs": {
@@ -28,7 +25,8 @@
     "tsc": "tsc",
     "build": "rm -rf rules && tsc -p tsconfig.json",
     "lint": "tslint './src/**/*.ts{,x}'",
-    "test": "tslint --test test/rules/**/*",
+    "test2": "tslint --test test/rules/**/*",
+    "test": "tslint --test test/rules/no-let/*",
     "verify": "yarn build && yarn lint && yarn coverage",
     "coverage": "rm -rf coverage .nyc_output && nyc yarn test",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",

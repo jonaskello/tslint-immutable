@@ -11,16 +11,12 @@ for(let x = 0; x < 1;x++);
 
 function foo() {
   let x;
-  ~~~~~~ [failure]
   let x = 0;
-  ~~~~~~~~~~ [failure]
 }
 
 const foo = () => {
   let x;
-  ~~~~~~ [failure]
   let x = 0;
-  ~~~~~~~~~~ [failure]
 }
 
 class Foo {
@@ -32,9 +28,7 @@ class Foo {
 
   foo() {
     let x;
-    ~~~~~~ [failure]
     let x = 0;
-    ~~~~~~~~~~ [failure]
   }
 
 }
