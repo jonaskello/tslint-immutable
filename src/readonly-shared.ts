@@ -45,9 +45,10 @@ export function walk(ctx: Lint.WalkContext<Options>, checkNode: CheckNodeFunctio
   function cb(node: ts.Node): void {
     // Skip checking in functions if ignore-local is set
     if (ctx.options.ignoreLocal && (node.kind === ts.SyntaxKind.FunctionDeclaration
-      || node.kind === ts.SyntaxKind.ArrowFunction || node.kind === ts.SyntaxKind.FunctionExpression)) {
+      || node.kind === ts.SyntaxKind.ArrowFunction || node.kind === ts.SyntaxKind.FunctionExpression
+      || node.kind === ts.SyntaxKind.MethodDeclaration)) {
       // We still need to check the parameters and return type
-      const functionNode: ts.FunctionDeclaration | ts.ArrowFunction = node as any; //tslint:disable-line
+      const functionNode: ts.FunctionDeclaration | ts.ArrowFunction | ts.MethodDeclaration = node as any; //tslint:disable-line
       const invalidNodes = checkIgnoreLocalFunctionNode(functionNode, ctx, checkNode);
       // invalidNodes.forEach((n) => reportInvalidNodes(n, ctx, failureString));
       reportInvalidNodes(invalidNodes, ctx, failureString);
@@ -65,7 +66,7 @@ export function reportInvalidNodes(invalidNodes: ReadonlyArray<InvalidNode>, ctx
   invalidNodes.forEach((invalidNode) => ctx.addFailureAtNode(invalidNode.node, failureString, invalidNode.replacement));
 }
 
-export function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction,
+export function checkIgnoreLocalFunctionNode(functionNode: ts.FunctionDeclaration | ts.ArrowFunction | ts.MethodDeclaration,
   ctx: Lint.WalkContext<Options>, checkNode: CheckNodeFunction): ReadonlyArray<InvalidNode> {
 
   let invalidNodes: Array<InvalidNode> = [];
