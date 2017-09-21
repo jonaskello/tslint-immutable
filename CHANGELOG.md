@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## Fixed
+- The readonly-array rule with ignore-local option does not work within `class`. See [45](https://github.com/jonaskello/tslint-immutable/issues/45).
+
 ## [v4.2.0] - 2017-09-14
 ### Added
 - New option `ignore-prefix` for the `no-expression-statement` rule. See [#39](https://github.com/jonaskello/tslint-immutable/issues/39) for background. Thanks to [@algesten](https://github.com/algesten) for this option! (See PR [#42](https://github.com/jonaskello/tslint-immutable/pull/42))
