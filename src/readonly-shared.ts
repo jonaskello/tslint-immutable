@@ -31,11 +31,12 @@ export function createInvalidNode(
   return { node, replacement };
 }
 
+//tslint:disable-next-line
 export function parseOptions(options: any[]): Options {
-  //tslint:disable-line
   const ignoreLocal = options.indexOf(OPTION_IGNORE_LOCAL) !== -1;
   let ignorePrefix: string | undefined;
   for (const o of options) {
+    //tslint:disable-next-line
     if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] !== null) {
       //tslint:disable-line
       ignorePrefix = o[OPTION_IGNORE_PREFIX];
