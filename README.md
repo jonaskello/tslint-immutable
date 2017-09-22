@@ -177,6 +177,24 @@ x.a += 1; // <- Modifying properties of existing object not allowed.
 delete x.a; // <- Modifying properties of existing object not allowed.
 ```
 
+#### Has Fixer
+Yes
+
+#### Options
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+
+#### Example config
+```javascript
+"no-let": true
+```
+```javascript
+"no-let": [true, "ignore-local"]
+```
+```javascript
+"no-let": [true, "ignore-local", {"ignore-prefix": "mutable"}]
+```
+
 ## Functional style rules
 
 ### no-this, no-class
