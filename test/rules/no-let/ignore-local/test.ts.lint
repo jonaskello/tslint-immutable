@@ -21,10 +21,9 @@ const foo = () => {
 
 class Foo {
 
-  let x;
-  ~~~~~~ [failure]
-  let x = 0;
-  ~~~~~~~~~~ [failure]
+  // Class members do not use let
+  x;
+  x = 0;
 
   foo() {
     let x;

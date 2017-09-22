@@ -1,0 +1,12 @@
+
+class Foo {
+
+  x = 0;
+
+  foo() {
+    let x;
+  }
+
+}
+
+[failure]: Unexpected let, use const instead.

@@ -18,7 +18,7 @@ function checkNode(
   ctx: Lint.WalkContext<Shared.Options>
 ): ReadonlyArray<Shared.InvalidNode> {
   const variableStatementFailures = chectVariableStatement(node, ctx);
-  const forStatementsFailures = checkForStatements(node, ctx);
+  const forStatementsFailures = checkForStatements(node);
   return [...variableStatementFailures, ...forStatementsFailures];
 }
 
@@ -60,10 +60,7 @@ function chectVariableStatement(
   // super.visitVariableStatement(node);
 }
 
-function checkForStatements(
-  node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+function checkForStatements(node: ts.Node): ReadonlyArray<Shared.InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
     node.kind === ts.SyntaxKind.ForInStatement ||
@@ -76,14 +73,13 @@ function checkForStatements(
     if (forStatmentNode.initializer === undefined) {
       return [];
     }
-    return handleInitializerNode(forStatmentNode.initializer, ctx);
+    return handleInitializerNode(forStatmentNode.initializer);
   }
   return [];
 }
 
 function handleInitializerNode(
-  node: ts.ForInitializer,
-  ctx: Lint.WalkContext<Shared.Options>
+  node: ts.ForInitializer
 ): ReadonlyArray<Shared.InvalidNode> {
   if (
     node &&
