@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- New options `ignore-local`, and `ignore-prefix` for the `no-let` rule. See [#32](https://github.com/jonaskello/tslint-immutable/issues/39), also requested in [#43](https://github.com/jonaskello/tslint-immutable/issues/43). See PR [#48](https://github.com/jonaskello/tslint-immutable/pull/48).
 
 ## [v4.2.1] - 2017-09-21
 ## Fixed

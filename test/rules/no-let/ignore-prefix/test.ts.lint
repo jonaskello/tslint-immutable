@@ -4,6 +4,11 @@ let x;
 let x = 0;
     ~~~~~ [failure]
 
+
+let mutableX;
+let mutableX = 0;
+
+
 for(let x = 0; x < 1;x++);
         ~~~~~ [failure]
 
@@ -17,11 +22,25 @@ for(let x in y);
 for(let x of y);
         ~ [failure]
 
+for(let mutableX = 0; x < 1;x++);
+
+for(let mutableX = 0, y = 0; x < 1;x++);
+                      ~~~~~ [failure]
+
+for(let mutableX = 0, mutableY = 0; x < 1;x++);
+
+for(let mutableX in y);
+
+for(let mutableX of y);
+
+
 function foo() {
   let x;
       ~ [failure]
   let x = 0;
       ~~~~~ [failure]
+  let mutableX;
+  let mutableX = 0;
 }
 
 const foo = () => {
@@ -29,6 +48,8 @@ const foo = () => {
       ~ [failure]
   let x = 0;
       ~~~~~ [failure]
+  let mutableX;
+  let mutableX = 0;
 }
 
 class Foo {
@@ -42,6 +63,8 @@ class Foo {
         ~ [failure]
     let x = 0;
         ~~~~~ [failure]
+    let mutableX;
+    let mutableX = 0;
   }
 
 }

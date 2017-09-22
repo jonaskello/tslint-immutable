@@ -166,6 +166,24 @@ const SearchResults =
     }</ul>;
 ```
 
+#### Has Fixer
+Yes
+
+#### Options
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+
+#### Example config
+```javascript
+"no-let": true
+```
+```javascript
+"no-let": [true, "ignore-local"]
+```
+```javascript
+"no-let": [true, "ignore-local", {"ignore-prefix": "mutable"}]
+```
+
 ### no-object-mutation
 This rule prohibits syntax that mutates existing objects via assignment to or deletion of their properties. While requiring the `readonly` modifier forces declared types to be immutable, it won't stop assignment into or modification of untyped objects or external types declared under different rules. Forbidding forms like `a.b = 'c'` is one way to plug this hole. Inspired by the no-mutation rule of [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable).
 

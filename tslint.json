@@ -5,12 +5,7 @@
     "no-namespace": true,
     "no-reference": true,
     "no-var-requires": true,
-    "typedef": [
-      true,
-      "call-signature",
-      "parameter",
-      "property-declaration"
-    ],
+    "typedef": [true, "call-signature", "parameter", "property-declaration"],
     "typedef-whitespace": [
       true,
       {
@@ -56,34 +51,19 @@
     "triple-equals": true,
     "use-isnan": true,
     "eofline": true,
-    "indent": [
-      true,
-      "spaces"
-    ],
-    "max-file-line-count": [
-      true,
-      500
-    ],
-    "max-line-length": [
-      true,
-      160
-    ],
+    "indent": [true, "spaces"],
+    "max-file-line-count": [true, 500],
+    "max-line-length": [true, 160],
     "no-default-export": true,
     "no-mergeable-namespace": true,
     "no-require-imports": true,
-    "align": [
-      true,
-      "statements"
-    ],
-    "arrow-parens": true,
+    "align": [true, "statements"],
+    "arrow-parens": false,
     "class-name": true,
     "jsdoc-format": true,
     "new-parens": true,
     "no-angle-bracket-type-assertion": true,
-    "no-consecutive-blank-lines": [
-      true,
-      1
-    ],
+    "no-consecutive-blank-lines": [true, 1],
     "no-parameter-properties": true,
     // "object-literal-key-quotes": [
     //   true,
@@ -98,21 +78,9 @@
       "check-whitespace"
     ],
     "one-variable-per-declaration": [true],
-    "quotemark": [
-      true,
-      "double",
-      "avoid-escape"
-    ],
-    "semicolon": [
-      true,
-      "always",
-      "ignore-interfaces"
-    ],
-    "variable-name": [
-      true,
-      "ban-keywords",
-      "check-format"
-    ],
+    "quotemark": [true, "double", "avoid-escape"],
+    "semicolon": [true, "always", "ignore-interfaces"],
+    "variable-name": [true, "ban-keywords", "check-format"],
     "whitespace": [
       true,
       "check-branch",

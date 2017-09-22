@@ -1,0 +1,5 @@
+for(let x = 0, y = 0; x < 1;x++);
+        ~~~~~ [failure]
+               ~~~~~ [failure]
+
+[failure]: Unexpected let, use const instead.
