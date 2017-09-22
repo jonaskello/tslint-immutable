@@ -18,7 +18,7 @@ function checkNode(
   ctx: Lint.WalkContext<Shared.Options>
 ): ReadonlyArray<Shared.InvalidNode> {
   const variableStatementFailures = chectVariableStatement(node, ctx);
-  const forStatementsFailures = checkForStatements(node);
+  const forStatementsFailures = checkForStatements(node, ctx);
   return [...variableStatementFailures, ...forStatementsFailures];
 }
 
@@ -27,40 +27,39 @@ function chectVariableStatement(
   ctx: Lint.WalkContext<Shared.Options>
 ): ReadonlyArray<Shared.InvalidNode> {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
-    if (
-      node.parent &&
-      Shared.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
-    ) {
-      return [];
-    }
     const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
-    if (
-      Lint.isNodeFlagSet(
-        variableStatementNode.declarationList,
-        ts.NodeFlags.Let
-      )
-    ) {
-      return [
-        Shared.createInvalidNode(
-          variableStatementNode,
-          new Lint.Replacement(0, "let".length, "const")
-        )
-      ];
-    }
+    return checkDeclarationList(variableStatementNode.declarationList, ctx);
+
+    // if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
+    //   // It is a let declaration, now check each variable that is declared
+    //   const invalidVariableDeclarationNodes = [];
+    //   for (const variableDeclarationNode of declarationList.declarations) {
+    //     if (
+    //       !Shared.shouldIgnorePrefix(
+    //         variableDeclarationNode,
+    //         ctx.options,
+    //         ctx.sourceFile
+    //       )
+    //     ) {
+    //       invalidVariableDeclarationNodes.push(
+    //         Shared.createInvalidNode(
+    //           variableDeclarationNode,
+    //           new Lint.Replacement(0, "let".length, "const")
+    //         )
+    //       );
+    //     }
+    //   }
+    //   return invalidVariableDeclarationNodes;
+    // }
   }
 
   return [];
-
-  // if (Lint.isNodeFlagSet(node.declarationList, ts.NodeFlags.Let)) {
-  //   this.addFailure(
-  //     this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING)
-  //   );
-  // }
-
-  // super.visitVariableStatement(node);
 }
 
-function checkForStatements(node: ts.Node): ReadonlyArray<Shared.InvalidNode> {
+function checkForStatements(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Shared.Options>
+): ReadonlyArray<Shared.InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
     node.kind === ts.SyntaxKind.ForInStatement ||
@@ -70,84 +69,49 @@ function checkForStatements(node: ts.Node): ReadonlyArray<Shared.InvalidNode> {
       | ts.ForStatement
       | ts.ForInStatement
       | ts.ForOfStatement;
-    if (forStatmentNode.initializer === undefined) {
-      return [];
-    }
-    return handleInitializerNode(forStatmentNode.initializer);
-  }
-  return [];
-}
-
-function handleInitializerNode(
-  node: ts.ForInitializer
-): ReadonlyArray<Shared.InvalidNode> {
-  if (
-    node &&
-    node.kind === ts.SyntaxKind.VariableDeclarationList &&
-    Lint.isNodeFlagSet(node, ts.NodeFlags.Let)
-  ) {
-    // this.addFailure(
-    //   this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING)
-    // );
-
-    return [
-      Shared.createInvalidNode(
-        node,
-        new Lint.Replacement(0, "let".length, "const")
-      )
-    ];
-  }
-  return [];
-}
-
-/*
-export class Rule extends Lint.Rules.AbstractRule {
-  public static FAILURE_STRING = "Unexpected let, use const.";
-
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    const noLetWalker = new NoLetKeywordWalker(sourceFile, this.getOptions());
-    return this.applyWithWalker(noLetWalker);
-  }
-}
-
-class NoLetKeywordWalker extends Lint.RuleWalker {
-  public visitVariableStatement(node: ts.VariableStatement): void {
-    if (Lint.isNodeFlagSet(node.declarationList, ts.NodeFlags.Let)) {
-      this.addFailure(
-        this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING)
-      );
-    }
-
-    super.visitVariableStatement(node);
-  }
-
-  public visitForStatement(node: ts.ForStatement): void {
-    this.handleInitializerNode(node.initializer!);
-    super.visitForStatement(node);
-  }
-
-  public visitForInStatement(node: ts.ForInStatement): void {
-    this.handleInitializerNode(node.initializer);
-    super.visitForInStatement(node);
-  }
-
-  public visitForOfStatement(node: ts.ForOfStatement): void {
-    this.handleInitializerNode(node.initializer);
-    super.visitForOfStatement(node);
-  }
-
-  private handleInitializerNode(
-    node: ts.VariableDeclarationList | ts.Expression
-  ): void {
     if (
-      node &&
-      node.kind === ts.SyntaxKind.VariableDeclarationList &&
-      Lint.isNodeFlagSet(node, ts.NodeFlags.Let)
+      forStatmentNode.initializer &&
+      forStatmentNode.initializer.kind ===
+        ts.SyntaxKind.VariableDeclarationList &&
+      Lint.isNodeFlagSet(forStatmentNode.initializer, ts.NodeFlags.Let)
     ) {
-      this.addFailure(
-        this.createFailure(node.getStart(), "let".length, Rule.FAILURE_STRING)
-      );
+      const declarationList = forStatmentNode.initializer as ts.VariableDeclarationList;
+      // return [
+      //   Shared.createInvalidNode(
+      //     forInitializerNode,
+      //     new Lint.Replacement(0, "let".length, "const")
+      //   )
+      // ];
+      return checkDeclarationList(declarationList, ctx);
     }
   }
+  return [];
 }
-*/
+
+function checkDeclarationList(
+  declarationList: ts.VariableDeclarationList,
+  ctx: Lint.WalkContext<Shared.Options>
+): ReadonlyArray<Shared.InvalidNode> {
+  if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
+    // It is a let declaration, now check each variable that is declared
+    const invalidVariableDeclarationNodes = [];
+    for (const variableDeclarationNode of declarationList.declarations) {
+      if (
+        !Shared.shouldIgnorePrefix(
+          variableDeclarationNode,
+          ctx.options,
+          ctx.sourceFile
+        )
+      ) {
+        invalidVariableDeclarationNodes.push(
+          Shared.createInvalidNode(
+            variableDeclarationNode,
+            new Lint.Replacement(0, "let".length, "const")
+          )
+        );
+      }
+    }
+    return invalidVariableDeclarationNodes;
+  }
+  return [];
+}
