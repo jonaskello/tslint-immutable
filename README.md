@@ -48,7 +48,7 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 ### readonly-keyword
 
-This rule enforces use of the `readonly` modifier. The `readonly` modifier can appear on property signatures and index signatures. 
+This rule enforces use of the `readonly` modifier. The `readonly` modifier can appear on property signatures in interfaces, property declarations in classes, and index signatures. 
 
 Below is some information about the `readonly` modifier and the benefits of using it:
 

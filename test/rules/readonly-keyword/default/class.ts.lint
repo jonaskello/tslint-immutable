@@ -1,7 +1,7 @@
 class Foo {
 
   foo: number;
-  ~~~ [failure]
+  ~~~~~~~~~~~~ [failure]
 
 }
 

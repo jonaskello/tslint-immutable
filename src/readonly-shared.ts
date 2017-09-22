@@ -138,6 +138,7 @@ export function shouldIgnorePrefix(
       (node.kind === ts.SyntaxKind.VariableDeclaration ||
         node.kind === ts.SyntaxKind.Parameter ||
         node.kind === ts.SyntaxKind.PropertySignature ||
+        node.kind === ts.SyntaxKind.PropertyDeclaration ||
         node.kind === ts.SyntaxKind.TypeAliasDeclaration)
     ) {
       const variableDeclarationNode = node as
