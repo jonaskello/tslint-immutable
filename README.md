@@ -309,13 +309,15 @@ const doSomething(arg:string) => {
 }
 ```
 
-
-
 ## Recommended built-in rules
 
 ### [no-var-keyword](https://palantir.github.io/tslint/rules/no-var-keyword/)
 
 Without this rule, it is still possible to create `var` variables that are mutable.
+
+### [no-parameter-reassignment](https://palantir.github.io/tslint/rules/no-parameter-reassignment/)
+
+Without this rule, function parameters are mutable.
 
 ### [typedef](https://palantir.github.io/tslint/rules/typedef/) with call-signature option
 
@@ -346,6 +348,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 
     // Recommended built-in rules
     "no-var-keyword": true,
+    "no-parameter-reassignment": true,
     "typedef": [true, "call-signature"],
 
     // Immutability rules
