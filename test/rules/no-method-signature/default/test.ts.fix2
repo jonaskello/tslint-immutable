@@ -1,8 +1,0 @@
-interface Foo {
-  bar: (a: number, b: string) => number;
-}
-
-type Foo2 = {
-  bar: (a: number, b: string) => number
-}
-

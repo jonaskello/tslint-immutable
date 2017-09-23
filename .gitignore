@@ -2,6 +2,5 @@
 thumbs.db
 *.log
 node_modules/
-/rules/
 /coverage/
 /.nyc_output
