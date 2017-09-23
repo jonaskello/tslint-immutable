@@ -398,7 +398,8 @@ This work was originally inspired by [eslint-plugin-immutable](https://github.co
 [version-url]: https://www.npmjs.com/package/tslint-immutable
 [travis-image]: https://travis-ci.org/jonaskello/tslint-immutable.svg?branch=master&style=flat
 [travis-url]: https://travis-ci.org/jonaskello/tslint-immutable
-[coveralls-image]: https://coveralls.io/repos/github/jonaskello/tslint-immutable/badge.svg
-[coveralls-url]: https://coveralls.io/github/jonaskello/tslint-immutable
+[coveralls-image]: https://coveralls.io/repos/github/jonaskello/tslint-immutable/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/github/jonaskello/tslint-immutable?branch=master
 [license-image]: https://img.shields.io/github/license/jonaskello/tslint-immutable.svg?style=flat
 [license-url]: https://opensource.org/licenses/MIT
+
