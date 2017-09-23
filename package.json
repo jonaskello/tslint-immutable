@@ -1,13 +1,16 @@
 {
   "name": "tslint-immutable",
-  "version": "4.2.1",
+  "version": "4.3.0",
   "description": "TSLint rules to disable mutation in TypeScript.",
   "main": "tslint-immutable.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
-  "keywords": ["tslint", "immutability"],
+  "keywords": [
+    "tslint",
+    "immutability"
+  ],
   "author": "Jonas Kello",
   "license": "Apache-2.0",
   "bugs": {
