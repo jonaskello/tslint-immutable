@@ -43,6 +43,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-class](#no-this-no-class)
   * [no-mixed-interface](#no-mixed-interface)
   * [no-expression-statement](#no-expression-statement)
+* [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
 
