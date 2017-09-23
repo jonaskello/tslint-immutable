@@ -200,7 +200,7 @@ delete x.a; // <- Modifying properties of existing object not allowed.
 ### no-method-signature
 There are two ways function members can be declared in an interface or type alias:
 
-```
+```typescript
 interface Zoo {
   foo(): string, // MethodSignature, cannot have readonly modifier
   readonly bar: () => string, // PropertySignature
