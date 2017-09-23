@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [v4.3.0] - 2017-09-23
 ### Fixed
 - The readonly-keyword rule now properly checks for `readonly` modifier of `class` property declarations. See [#49](https://github.com/jonaskello/tslint-immutable/issues/49) and PR [#50](https://github.com/jonaskello/tslint-immutable/pull/50).
 
@@ -145,7 +147,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `no-mutation` rule.
 - `no-this` rule.
 
-[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...master
+[Unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.3.0...master
+[v4.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...v4.3.0
 [v4.2.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.0...v4.2.1
 [v4.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.1.0...v4.2.0
 [v4.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.0.2...v4.1.0
