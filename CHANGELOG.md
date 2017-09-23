@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - New options `ignore-local`, and `ignore-prefix` for the `no-let` rule. See [#32](https://github.com/jonaskello/tslint-immutable/issues/39), also requested in [#43](https://github.com/jonaskello/tslint-immutable/issues/43). See PR [#48](https://github.com/jonaskello/tslint-immutable/pull/48).
+- Added tslint core rule [no-parameter-reassignment](https://palantir.github.io/tslint/rules/no-parameter-reassignment/) as [recommended](https://github.com/jonaskello/tslint-immutable#no-parameter-reassignment) in the README.
 
 ## [v4.2.1] - 2017-09-21
 ### Fixed
