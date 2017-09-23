@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The readonly-keyword rule now properly checks for `readonly` modifier of `class` property declarations. See [49](https://github.com/jonaskello/tslint-immutable/issues/49) and PR [#50](https://github.com/jonaskello/tslint-immutable/pull/50).
 
 ### Added
+- New rule [no-method-signature](https://github.com/jonaskello/tslint-immutable#no-method-signature). See [#30](https://github.com/jonaskello/tslint-immutable/issues/30) and PR in [#51](https://github.com/jonaskello/tslint-immutable/pull/51).
 - New options `ignore-local`, and `ignore-prefix` for the `no-let` rule. See [#32](https://github.com/jonaskello/tslint-immutable/issues/39), also requested in [#43](https://github.com/jonaskello/tslint-immutable/issues/43). See PR [#48](https://github.com/jonaskello/tslint-immutable/pull/48).
 - Added tslint core rule [no-parameter-reassignment](https://palantir.github.io/tslint/rules/no-parameter-reassignment/) as [recommended](https://github.com/jonaskello/tslint-immutable#no-parameter-reassignment) in the README.
 
