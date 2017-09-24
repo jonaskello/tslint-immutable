@@ -7,12 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
-  "keywords": [
-    "tslint",
-    "immutability"
-  ],
+  "keywords": ["tslint", "immutability"],
   "author": "Jonas Kello",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jonaskello/tslint-immutable/issues"
   },
