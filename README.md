@@ -387,7 +387,10 @@ For new features file an issue. For bugs, file an issue and optionally file a PR
 
 ## How to develop
 
-To execute the tests run `yarn test`.
+To execute the tests first run `yarn build` and then run `yarn test`. 
+
+While working on the code you can run `yarn test:work`. This script also builds before running the tests. To run a subset of the tests, change the path for `yarn test:work` in `package.json.
+
 To release a new package version run `yarn publish:patch`, `yarn publish:minor`, or `yarn publish:major`.
 
 ## Prior work
