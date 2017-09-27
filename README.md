@@ -197,6 +197,20 @@ x.a += 1; // <- Modifying properties of existing object not allowed.
 delete x.a; // <- Modifying properties of existing object not allowed.
 ```
 
+#### Has Fixer
+No
+
+#### Options
+- [ignore-prefix](#using-the-ignore-prefix-option)
+
+#### Example config
+```javascript
+"no-object-mutation": true
+```
+```javascript
+"no-object-mutation": [true, {"ignore-prefix": "mutable"}]
+```
+
 ### no-method-signature
 There are two ways function members can be declared in an interface or type alias:
 
