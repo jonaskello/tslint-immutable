@@ -13,12 +13,18 @@ export class Rule extends Lint.Rules.AbstractRule {
 class PropertyInterfaceWalker extends Lint.RuleWalker {
   public visitInterfaceDeclaration(node: ts.InterfaceDeclaration): void {
     // Extract 'kind' from all members to a list of numbers.
-    const memberKinds: number[] = node.members.map((m) => m.kind);
+    const memberKinds: number[] = node.members.map(m => m.kind);
 
     // Check so all members of a node have the same kind,
     const unUniqueMember: number = uniqIndex(memberKinds);
     if (unUniqueMember !== -1) {
-      this.addFailure(this.createFailure(node.members[unUniqueMember].getStart(), node.members[unUniqueMember].getWidth(), Rule.FAILURE_STRING));
+      this.addFailure(
+        this.createFailure(
+          node.members[unUniqueMember].getStart(),
+          node.members[unUniqueMember].getWidth(),
+          Rule.FAILURE_STRING
+        )
+      );
     }
 
     super.visitInterfaceDeclaration(node);
@@ -33,7 +39,9 @@ function uniqIndex(list: number[]): number {
   let i = 0;
   let lastItem: number | undefined = undefined;
   for (let item of list) {
-    if (lastItem !== undefined && lastItem !== item) { return i; }
+    if (lastItem !== undefined && lastItem !== item) {
+      return i;
+    }
     i++;
     lastItem = item;
   }

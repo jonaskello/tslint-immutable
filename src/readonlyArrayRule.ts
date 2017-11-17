@@ -6,22 +6,37 @@ export class Rule extends Lint.Rules.AbstractRule {
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
     return this.applyWithFunction(
       sourceFile,
-      (ctx: Lint.WalkContext<Shared.Options>) => Shared.walk(ctx, checkNode, "Only ReadonlyArray allowed."),
-      Shared.parseOptions(this.ruleArguments));
+      (ctx: Lint.WalkContext<Shared.Options>) =>
+        Shared.walk(ctx, checkNode, "Only ReadonlyArray allowed."),
+      Shared.parseOptions(this.ruleArguments)
+    );
   }
 }
 
-function checkNode(node: ts.Node, ctx: Lint.WalkContext<Shared.Options>): ReadonlyArray<Shared.InvalidNode> {
+function checkNode(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Shared.Options>
+): ReadonlyArray<Shared.InvalidNode> {
   const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
   const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
   return explicitTypeFailures.concat(implicitTypeFailures);
 }
 
-function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Shared.Options>): ReadonlyArray<Shared.InvalidNode> {
+function checkArrayTypeOrReference(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Shared.Options>
+): ReadonlyArray<Shared.InvalidNode> {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
-  if (node.kind === ts.SyntaxKind.ArrayType
-    || (node.kind === ts.SyntaxKind.TypeReference && (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array")) {
-    if (node.parent && Shared.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)) {
+  if (
+    node.kind === ts.SyntaxKind.ArrayType ||
+    (node.kind === ts.SyntaxKind.TypeReference &&
+      (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) ===
+        "Array")
+  ) {
+    if (
+      node.parent &&
+      Shared.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+    ) {
       return [];
     }
     let typeArgument: string = "T";
@@ -31,26 +46,47 @@ function checkArrayTypeOrReference(node: ts.Node, ctx: Lint.WalkContext<Shared.O
     } else if (node.kind === ts.SyntaxKind.TypeReference) {
       const typeNode = node as ts.TypeReferenceNode;
       if (typeNode.typeArguments) {
-        typeArgument = typeNode.typeArguments[0].getFullText(ctx.sourceFile).trim();
+        typeArgument = typeNode.typeArguments[0]
+          .getFullText(ctx.sourceFile)
+          .trim();
       }
     }
     const length = node.getWidth(ctx.sourceFile);
-    return [Shared.createInvalidNode(node, new Lint.Replacement(node.end - length, length, `ReadonlyArray<${typeArgument}>`))];
+    return [
+      Shared.createInvalidNode(
+        node,
+        new Lint.Replacement(
+          node.end - length,
+          length,
+          `ReadonlyArray<${typeArgument}>`
+        )
+      )
+    ];
   }
   return [];
 }
 
-function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkContext<Shared.Options>): ReadonlyArray<Shared.InvalidNode> {
-
-  if (node.kind === ts.SyntaxKind.VariableDeclaration || node.kind === ts.SyntaxKind.Parameter
-    || node.kind === ts.SyntaxKind.PropertyDeclaration) {
+function checkVariableOrParameterImplicitType(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Shared.Options>
+): ReadonlyArray<Shared.InvalidNode> {
+  if (
+    node.kind === ts.SyntaxKind.VariableDeclaration ||
+    node.kind === ts.SyntaxKind.Parameter ||
+    node.kind === ts.SyntaxKind.PropertyDeclaration
+  ) {
     // The initializer is used to set and implicit type
-    const varOrParamNode = node as ts.VariableDeclaration | ts.ParameterDeclaration;
+    const varOrParamNode = node as
+      | ts.VariableDeclaration
+      | ts.ParameterDeclaration;
     if (Shared.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return [];
     }
     if (!varOrParamNode.type) {
-      if (varOrParamNode.initializer && varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression) {
+      if (
+        varOrParamNode.initializer &&
+        varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression
+      ) {
         const length = varOrParamNode.name.getWidth(ctx.sourceFile);
         const nameText = varOrParamNode.name.getText(ctx.sourceFile);
         let typeArgument = "any";
@@ -66,11 +102,18 @@ function checkVariableOrParameterImplicitType(node: ts.Node, ctx: Lint.WalkConte
         //     typeArgument = "boolean";
         //   }
         // }
-        return [Shared.createInvalidNode(varOrParamNode.name,
-          new Lint.Replacement(varOrParamNode.name.end - length, length, `${nameText}: ReadonlyArray<${typeArgument}>`))];
+        return [
+          Shared.createInvalidNode(
+            varOrParamNode.name,
+            new Lint.Replacement(
+              varOrParamNode.name.end - length,
+              length,
+              `${nameText}: ReadonlyArray<${typeArgument}>`
+            )
+          )
+        ];
       }
     }
   }
   return [];
-
 }

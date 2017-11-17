@@ -11,12 +11,16 @@ export class Rule extends Lint.Rules.AbstractRule {
 }
 
 class NoThisWalker extends Lint.RuleWalker {
-
   public visitNode(node: ts.Node): void {
     if (node && node.kind === ts.SyntaxKind.ThisKeyword) {
-      this.addFailure(this.createFailure(node.getStart(), node.getWidth(), Rule.FAILURE_STRING));
+      this.addFailure(
+        this.createFailure(
+          node.getStart(),
+          node.getWidth(),
+          Rule.FAILURE_STRING
+        )
+      );
     }
     super.visitNode(node);
   }
-
 }
