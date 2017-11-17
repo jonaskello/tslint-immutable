@@ -19,7 +19,10 @@
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
   "devDependencies": {
     "coveralls": "^2.13.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^5.0.0",
     "nyc": "^11.2.1",
+    "prettier": "1.8.2",
     "shelljs": "^0.7.5",
     "tslint": "^5.1.0",
     "typescript": "^2.2.2"
@@ -36,5 +39,12 @@
     "publish:major": "npm run build && node scripts/publish.js major",
     "publish:minor": "npm run build && node scripts/publish.js minor",
     "publish:patch": "npm run build && node scripts/publish.js patch"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "tslint",
+    "*.{ts,tsx,json,css}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
