@@ -3,6 +3,7 @@
 [![npm version][version-image]][version-url]
 [![travis build][travis-image]][travis-url]
 [![Coverage Status][coveralls-image]][coveralls-url]
+[![code style: prettier][prettier-image]][prettier-url]
 [![MIT license][license-image]][license-url]
 
 [TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
@@ -419,4 +420,5 @@ This work was originally inspired by [eslint-plugin-immutable](https://github.co
 [coveralls-url]: https://coveralls.io/github/jonaskello/tslint-immutable?branch=master
 [license-image]: https://img.shields.io/github/license/jonaskello/tslint-immutable.svg?style=flat
 [license-url]: https://opensource.org/licenses/MIT
-
+[prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat
+[prettier-url]: https://github.com/prettier/prettier
