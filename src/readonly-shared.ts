@@ -154,8 +154,8 @@ export function shouldIgnorePrefix(
           return true;
         }
       } else if(Array.isArray(ignorePrefix)) {
-        for(let prefix of ignorePrefix) {
-          if(text.substr(0, prefix.length) === prefix) {
+        for (let prefix of ignorePrefix) {
+          if (text.substr(0, prefix.length) === prefix) {
             return true;
           }
         }
