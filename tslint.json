@@ -1,5 +1,7 @@
 {
+  "rulesDirectory": ["tslint-plugin-prettier"],
   "rules": {
+    "prettier": true,
     "no-any": true,
     "no-internal-module": true,
     "no-namespace": true,
