@@ -148,7 +148,6 @@ export function shouldIgnorePrefix(
         | ts.ParameterDeclaration;
       const text = variableDeclarationNode.name.getText(sourceFile);
       const ignorePrefix = options.ignorePrefix;
-      
       if (typeof ignorePrefix === "string") {
         if (text.substr(0, ignorePrefix.length) === ignorePrefix) {
           return true;
