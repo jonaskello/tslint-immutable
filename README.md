@@ -51,7 +51,7 @@ In addition to immutable rules this project also contains a few rules for enforc
 
 ### readonly-keyword
 
-This rule enforces use of the `readonly` modifier. The `readonly` modifier can appear on property signatures in interfaces, property declarations in classes, and index signatures. 
+This rule enforces use of the `readonly` modifier. The `readonly` modifier can appear on property signatures in interfaces, property declarations in classes, and index signatures.
 
 Below is some information about the `readonly` modifier and the benefits of using it:
 
@@ -97,6 +97,8 @@ Yes
 
 #### Options
 - [ignore-local](#using-the-ignore-local-option)
+- [ignore-class](#using-the-ignore-class-option)
+- [ignore-interface](#using-the-ignore-interface-option)
 - [ignore-prefix](#using-the-ignore-prefix-option)
 
 #### Example config
@@ -259,7 +261,7 @@ const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 
 ### no-mixed-interface
 
-Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.  
+Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.
 
 ### no-expression-statement
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
@@ -298,6 +300,12 @@ This rule checks that the value of an expression is assigned to a variable and t
 The quote above is from the [clojure docs](https://clojure.org/reference/transients). In general, it is more important to enforce immutability for state that is passed in and out of functions than for local state used for internal calculations within a function. For example in Redux, the state going in and out of reducers needs to be immutable while the reducer may be allowed to mutate local state in its calculations in order to achieve higher performance. This is what the `ignore-local` option enables. With this option enabled immutability will be enforced everywhere but in local state. Function parameters are not considered local state so they will still be checked.
 
 Note that using this option can lead to more imperative code in functions so use with care!
+
+### Using the `ignore-class` option
+Doesn't check for `readonly` in classes.
+
+### Using the `ignore-interface` option
+Doesn't check for `readonly` in interfaces.
 
 ### Using the `ignore-prefix` option
 
@@ -402,9 +410,9 @@ For new features file an issue. For bugs, file an issue and optionally file a PR
 
 ## How to develop
 
-To execute the tests first run `yarn build` and then run `yarn test`. 
+To execute the tests first run `yarn build` and then run `yarn test`.
 
-While working on the code you can run `yarn test:work`. This script also builds before running the tests. To run a subset of the tests, change the path for `yarn test:work` in `package.json.
+While working on the code you can run `yarn test:work`. This script also builds before running the tests. To run a subset of the tests, change the path for `yarn test:work` in `package.json`.
 
 To release a new package version run `yarn publish:patch`, `yarn publish:minor`, or `yarn publish:major`.
 
