@@ -8,6 +8,8 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 
 const OPTION_IGNORE_LOCAL = "ignore-local";
+const OPTION_IGNORE_CLASS = "ignore-class";
+const OPTION_IGNORE_INTERFACE = "ignore-interface";
 const OPTION_IGNORE_PREFIX = "ignore-prefix";
 
 export interface CheckNodeFunction {
@@ -16,6 +18,8 @@ export interface CheckNodeFunction {
 
 export interface Options {
   readonly ignoreLocal: boolean;
+  readonly ignoreClass: boolean;
+  readonly ignoreInterface: boolean;
   readonly ignorePrefix: string | undefined;
 }
 
@@ -34,6 +38,8 @@ export function createInvalidNode(
 //tslint:disable-next-line
 export function parseOptions(options: any[]): Options {
   const ignoreLocal = options.indexOf(OPTION_IGNORE_LOCAL) !== -1;
+  const ignoreClass = options.indexOf(OPTION_IGNORE_CLASS) !== -1;
+  const ignoreInterface = options.indexOf(OPTION_IGNORE_INTERFACE) !== -1;
   let ignorePrefix: string | undefined;
   for (const o of options) {
     //tslint:disable-next-line
@@ -43,7 +49,7 @@ export function parseOptions(options: any[]): Options {
       break;
     }
   }
-  return { ignoreLocal, ignorePrefix };
+  return { ignoreLocal, ignoreClass, ignoreInterface, ignorePrefix };
 }
 
 export function walk(
@@ -76,6 +82,17 @@ export function walk(
       // Now skip this whole branch
       return;
     }
+
+    // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
+    if (
+      (ctx.options.ignoreClass &&
+        node.kind === ts.SyntaxKind.PropertyDeclaration) ||
+      (ctx.options.ignoreInterface &&
+        node.kind === ts.SyntaxKind.PropertySignature)
+    ) {
+      return;
+    }
+
     // Check the node
     reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
