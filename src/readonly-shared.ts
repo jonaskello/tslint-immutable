@@ -163,12 +163,18 @@ export function shouldIgnorePrefix(
         | ts.PropertySignature
         | ts.TypeAliasDeclaration
         | ts.ParameterDeclaration;
-      if (
-        variableDeclarationNode.name
-          .getText(sourceFile)
-          .substr(0, options.ignorePrefix.length) === options.ignorePrefix
-      ) {
-        return true;
+      const text = variableDeclarationNode.name.getText(sourceFile);
+      const ignorePrefix = options.ignorePrefix;
+      if (typeof ignorePrefix === "string") {
+        if (text.substr(0, ignorePrefix.length) === ignorePrefix) {
+          return true;
+        }
+      } else if (Array.isArray(ignorePrefix)) {
+        for (let prefix of ignorePrefix) {
+          if (text.substr(0, prefix.length) === prefix) {
+            return true;
+          }
+        }
       }
     }
   }
