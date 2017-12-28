@@ -414,6 +414,8 @@ To execute the tests first run `yarn build` and then run `yarn test`.
 
 While working on the code you can run `yarn test:work`. This script also builds before running the tests. To run a subset of the tests, change the path for `yarn test:work` in `package.json`.
 
+Please review the [tslint performance tips](https://palantir.github.io/tslint/develop/custom-rules/performance-tips.html) in order to write rules that run efficiently at run-time. For example, note that using `SyntaxWalker` or any subclass thereof like `RuleWalker` is inefficient. Note that tslint requires the use of `class` as an entrypoint, but you can make a very small class that inherits from `AbstractRule` which directly calls `this.applyWithFunction` and from there you can switch to using a more functional programming style.
+
 To release a new package version run `yarn publish:patch`, `yarn publish:minor`, or `yarn publish:major`.
 
 ## Prior work
