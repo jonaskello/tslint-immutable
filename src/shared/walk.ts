@@ -1,7 +1,8 @@
 /**
- * This file has code that is shared for all the readonly rules.
- * It supports the options for ignore-local and ignore-prefix which all readonly rules have.
- * The rules ony need to provide a checker function.
+ * This file has functions that enable walking the nodes
+ * and just providing a CheckNodeFunction that returns invalid
+ * nodes. It enables a more functional style of programming rules
+ * using the CheckNodeFunction as an expression that returns errors.
  */
 
 import * as ts from "typescript";
@@ -47,7 +48,7 @@ export function walk<TOptions>(
   }
 }
 
-export function reportInvalidNodes<TOptions>(
+function reportInvalidNodes<TOptions>(
   invalidNodes: ReadonlyArray<InvalidNode>,
   ctx: Lint.WalkContext<TOptions>,
   failureString: string

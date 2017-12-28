@@ -1,13 +1,10 @@
 /**
- * This file has code that is shared for all the readonly rules.
- * It supports the options for ignore-local and ignore-prefix which all readonly rules have.
- * The rules ony need to provide a checker function.
+ * This file has code that is shared for all the ignore options.
  */
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared";
-import { CheckNodeFunction } from "./shared";
+import * as Walk from "./walk";
 
 const OPTION_IGNORE_LOCAL = "ignore-local";
 const OPTION_IGNORE_CLASS = "ignore-class";
@@ -39,8 +36,8 @@ export function parseOptions(options: any[]): Options {
 }
 
 export function checkNodeWithIgnore(
-  checkNode: CheckNodeFunction<Options>
-): CheckNodeFunction<Options> {
+  checkNode: Walk.CheckNodeFunction<Options>
+): Walk.CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
     // Skip checking in functions if ignore-local is set
     if (
@@ -80,15 +77,15 @@ export function checkNodeWithIgnore(
   };
 }
 
-export function checkIgnoreLocalFunctionNode(
+function checkIgnoreLocalFunctionNode(
   functionNode:
     | ts.FunctionDeclaration
     | ts.ArrowFunction
     | ts.MethodDeclaration,
   ctx: Lint.WalkContext<Options>,
-  checkNode: Shared.CheckNodeFunction<Options>
-): ReadonlyArray<Shared.InvalidNode> {
-  let myInvalidNodes: Array<Shared.InvalidNode> = [];
+  checkNode: Walk.CheckNodeFunction<Options>
+): ReadonlyArray<Walk.InvalidNode> {
+  let myInvalidNodes: Array<Walk.InvalidNode> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {

@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared-readonly";
-import { createInvalidNode, CheckNodeResult, walk } from "./shared";
+import * as Shared from "./shared/ignore-options";
+import { createInvalidNode, CheckNodeResult, walk } from "./shared/walk";
 
 const FAILURE_STRING = "Only the same kind of members allowed in interfaces.";
 

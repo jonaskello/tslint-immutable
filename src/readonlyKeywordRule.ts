@@ -1,12 +1,12 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared-readonly";
+import * as Shared from "./shared/ignore-options";
 import {
   InvalidNode,
   createInvalidNode,
   CheckNodeResult,
   walk
-} from "./shared";
+} from "./shared/walk";
 
 /**
  * This rule checks that the readonly keyword is used in all PropertySignature and
