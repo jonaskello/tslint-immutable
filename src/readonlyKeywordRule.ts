@@ -15,8 +15,8 @@ import {
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   IgnoreOptions.checkNodeWithIgnore(checkNode),
-  IgnoreOptions.parseOptions,
-  "A readonly modifier is required."
+  "A readonly modifier is required.",
+  IgnoreOptions.parseOptions
 );
 
 function checkNode(

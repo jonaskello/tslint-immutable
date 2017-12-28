@@ -10,8 +10,8 @@ import {
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   IgnoreOptions.checkNodeWithIgnore(checkNode),
-  IgnoreOptions.parseOptions,
-  "Only the same kind of members allowed in interfaces."
+  "Only the same kind of members allowed in interfaces.",
+  IgnoreOptions.parseOptions
 );
 
 function checkNode(

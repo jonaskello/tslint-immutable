@@ -11,8 +11,8 @@ import {
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   IgnoreOptions.checkNodeWithIgnore(checkNode),
-  IgnoreOptions.parseOptions,
-  "Only ReadonlyArray allowed."
+  "Only ReadonlyArray allowed.",
+  IgnoreOptions.parseOptions
 );
 
 function checkNode(

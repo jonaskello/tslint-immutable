@@ -50,9 +50,9 @@ export function walk<TOptions>(
 
 export function createCheckNodeRule<TOptions>(
   checkNode: CheckNodeFunction<TOptions>,
+  failureString: string,
   // tslint:disable-next-line:no-any
-  parseOptions: (ruleArguments: any[]) => TOptions,
-  failureString: string
+  parseOptions: (ruleArguments: any[]) => TOptions = () => ({} as any)
   // tslint:disable-next-line:no-any
 ): any {
   return class Rule extends Lint.Rules.AbstractRule {
