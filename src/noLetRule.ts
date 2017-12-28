@@ -1,31 +1,23 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared/ignore-options";
+import * as IgnoreOptions from "./shared/ignore-options";
 import {
   InvalidNode,
   createInvalidNode,
   CheckNodeResult,
-  walk
-} from "./shared/walk";
+  createCheckNodeRule
+} from "./shared/check-node";
 
-export class Rule extends Lint.Rules.AbstractRule {
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(
-      sourceFile,
-      (ctx: Lint.WalkContext<Shared.Options>) =>
-        walk(
-          ctx,
-          Shared.checkNodeWithIgnore(checkNode),
-          "Unexpected let, use const instead."
-        ),
-      Shared.parseOptions(this.ruleArguments)
-    );
-  }
-}
+// tslint:disable-next-line:variable-name
+export const Rule = createCheckNodeRule(
+  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  IgnoreOptions.parseOptions,
+  "Unexpected let, use const instead."
+);
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): CheckNodeResult {
   const variableStatementFailures = chectVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
@@ -36,7 +28,7 @@ function checkNode(
 
 function chectVariableStatement(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
@@ -47,7 +39,7 @@ function chectVariableStatement(
 
 function checkForStatements(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
@@ -73,7 +65,7 @@ function checkForStatements(
 
 function checkDeclarationList(
   declarationList: ts.VariableDeclarationList,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
     // It is a let declaration, now check each variable that is declared
@@ -87,7 +79,7 @@ function checkDeclarationList(
     let addFix = true;
     for (const variableDeclarationNode of declarationList.declarations) {
       if (
-        !Shared.shouldIgnorePrefix(
+        !IgnoreOptions.shouldIgnorePrefix(
           variableDeclarationNode,
           ctx.options,
           ctx.sourceFile

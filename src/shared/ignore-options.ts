@@ -4,7 +4,7 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Walk from "./walk";
+import * as CheckNode from "./check-node";
 
 const OPTION_IGNORE_LOCAL = "ignore-local";
 const OPTION_IGNORE_CLASS = "ignore-class";
@@ -36,8 +36,8 @@ export function parseOptions(options: any[]): Options {
 }
 
 export function checkNodeWithIgnore(
-  checkNode: Walk.CheckNodeFunction<Options>
-): Walk.CheckNodeFunction<Options> {
+  checkNode: CheckNode.CheckNodeFunction<Options>
+): CheckNode.CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
     // Skip checking in functions if ignore-local is set
     if (
@@ -83,9 +83,9 @@ function checkIgnoreLocalFunctionNode(
     | ts.ArrowFunction
     | ts.MethodDeclaration,
   ctx: Lint.WalkContext<Options>,
-  checkNode: Walk.CheckNodeFunction<Options>
-): ReadonlyArray<Walk.InvalidNode> {
-  let myInvalidNodes: Array<Walk.InvalidNode> = [];
+  checkNode: CheckNode.CheckNodeFunction<Options>
+): ReadonlyArray<CheckNode.InvalidNode> {
+  let myInvalidNodes: Array<CheckNode.InvalidNode> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {

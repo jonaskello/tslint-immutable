@@ -48,6 +48,25 @@ export function walk<TOptions>(
   }
 }
 
+export function createCheckNodeRule<TOptions>(
+  checkNode: CheckNodeFunction<TOptions>,
+  // tslint:disable-next-line:no-any
+  parseOptions: (ruleArguments: any[]) => TOptions,
+  failureString: string
+  // tslint:disable-next-line:no-any
+): any {
+  return class Rule extends Lint.Rules.AbstractRule {
+    public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
+      return this.applyWithFunction(
+        sourceFile,
+        (ctx: Lint.WalkContext<TOptions>) =>
+          walk(ctx, checkNode, failureString),
+        parseOptions(this.ruleArguments)
+      );
+    }
+  };
+}
+
 function reportInvalidNodes<TOptions>(
   invalidNodes: ReadonlyArray<InvalidNode>,
   ctx: Lint.WalkContext<TOptions>,

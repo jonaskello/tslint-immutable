@@ -1,24 +1,22 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared/ignore-options";
-import { createInvalidNode, CheckNodeResult, walk } from "./shared/walk";
+import * as IgnoreOptions from "./shared/ignore-options";
+import {
+  createInvalidNode,
+  CheckNodeResult,
+  createCheckNodeRule
+} from "./shared/check-node";
 
-const FAILURE_STRING = "Only the same kind of members allowed in interfaces.";
-
-export class Rule extends Lint.Rules.AbstractRule {
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(
-      sourceFile,
-      (ctx: Lint.WalkContext<Shared.Options>) =>
-        walk(ctx, Shared.checkNodeWithIgnore(checkNode), FAILURE_STRING),
-      Shared.parseOptions(this.ruleArguments)
-    );
-  }
-}
+// tslint:disable-next-line:variable-name
+export const Rule = createCheckNodeRule(
+  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  IgnoreOptions.parseOptions,
+  "Only the same kind of members allowed in interfaces."
+);
 
 function checkNode(
   node: ts.Node,
-  _ctx: Lint.WalkContext<Shared.Options>
+  _ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): CheckNodeResult {
   const invalidNodes = [];
   if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {

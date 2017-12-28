@@ -1,42 +1,34 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared/ignore-options";
+import * as IgnoreOptions from "./shared/ignore-options";
 import {
   InvalidNode,
   createInvalidNode,
   CheckNodeResult,
-  walk
-} from "./shared/walk";
+  createCheckNodeRule
+} from "./shared/check-node";
 
 /**
  * This rule checks that the readonly keyword is used in all PropertySignature and
  * IndexerSignature nodes (which are the only places that the readonly keyword can exist).
  */
-export class Rule extends Lint.Rules.AbstractRule {
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(
-      sourceFile,
-      (ctx: Lint.WalkContext<Shared.Options>) =>
-        walk(
-          ctx,
-          Shared.checkNodeWithIgnore(checkNode),
-          "A readonly modifier is required."
-        ),
-      Shared.parseOptions(this.ruleArguments)
-    );
-  }
-}
+// tslint:disable-next-line:variable-name
+export const Rule = createCheckNodeRule(
+  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  IgnoreOptions.parseOptions,
+  "A readonly modifier is required."
+);
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): CheckNodeResult {
   return { invalidNodes: checkPropertySignatureAndIndexSignature(node, ctx) };
 }
 
 function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.PropertySignature ||
@@ -51,7 +43,7 @@ function checkPropertySignatureAndIndexSignature(
       )
     ) {
       // Check if ignore-prefix applies
-      if (Shared.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+      if (IgnoreOptions.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
         return [];
       }
       const length = node.getWidth(ctx.sourceFile);

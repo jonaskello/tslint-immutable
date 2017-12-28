@@ -1,31 +1,23 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./shared/ignore-options";
+import * as IgnoreOptions from "./shared/ignore-options";
 import {
   InvalidNode,
   createInvalidNode,
   CheckNodeResult,
-  walk
-} from "./shared/walk";
+  createCheckNodeRule
+} from "./shared/check-node";
 
-export class Rule extends Lint.Rules.AbstractRule {
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    return this.applyWithFunction(
-      sourceFile,
-      (ctx: Lint.WalkContext<Shared.Options>) =>
-        walk(
-          ctx,
-          Shared.checkNodeWithIgnore(checkNode),
-          "Only ReadonlyArray allowed."
-        ),
-      Shared.parseOptions(this.ruleArguments)
-    );
-  }
-}
+// tslint:disable-next-line:variable-name
+export const Rule = createCheckNodeRule(
+  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  IgnoreOptions.parseOptions,
+  "Only ReadonlyArray allowed."
+);
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): CheckNodeResult {
   const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
   const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
@@ -34,7 +26,7 @@ function checkNode(
 
 function checkArrayTypeOrReference(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (
@@ -45,7 +37,7 @@ function checkArrayTypeOrReference(
   ) {
     if (
       node.parent &&
-      Shared.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+      IgnoreOptions.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
     ) {
       return [];
     }
@@ -78,7 +70,7 @@ function checkArrayTypeOrReference(
 
 function checkVariableOrParameterImplicitType(
   node: ts.Node,
-  ctx: Lint.WalkContext<Shared.Options>
+  ctx: Lint.WalkContext<IgnoreOptions.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.VariableDeclaration ||
@@ -89,7 +81,7 @@ function checkVariableOrParameterImplicitType(
     const varOrParamNode = node as
       | ts.VariableDeclaration
       | ts.ParameterDeclaration;
-    if (Shared.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+    if (IgnoreOptions.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return [];
     }
     if (!varOrParamNode.type) {
