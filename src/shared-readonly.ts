@@ -37,55 +37,6 @@ export function parseOptions(options: any[]): Options {
   }
   return { ignoreLocal, ignoreClass, ignoreInterface, ignorePrefix };
 }
-/*
-export function walk(
-  ctx: Lint.WalkContext<Options>,
-  checkNode: Shared.CheckNodeFunction<Options>,
-  failureString: string
-): void {
-  return ts.forEachChild(ctx.sourceFile, cb);
-  function cb(node: ts.Node): void {
-    // Skip checking in functions if ignore-local is set
-    if (
-      ctx.options.ignoreLocal &&
-      (node.kind === ts.SyntaxKind.FunctionDeclaration ||
-        node.kind === ts.SyntaxKind.ArrowFunction ||
-        node.kind === ts.SyntaxKind.FunctionExpression ||
-        node.kind === ts.SyntaxKind.MethodDeclaration)
-    ) {
-      // We still need to check the parameters and return type
-      const functionNode:
-        | ts.FunctionDeclaration
-        | ts.ArrowFunction
-        | ts.MethodDeclaration = node as any; //tslint:disable-line
-      const invalidNodes = checkIgnoreLocalFunctionNode(
-        functionNode,
-        ctx,
-        checkNode
-      );
-      // invalidNodes.forEach((n) => reportInvalidNodes(n, ctx, failureString));
-      Shared.reportInvalidNodes(invalidNodes, ctx, failureString);
-      // Now skip this whole branch
-      return;
-    }
-
-    // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
-    if (
-      (ctx.options.ignoreClass &&
-        node.kind === ts.SyntaxKind.PropertyDeclaration) ||
-      (ctx.options.ignoreInterface &&
-        node.kind === ts.SyntaxKind.PropertySignature)
-    ) {
-      return;
-    }
-
-    // Check the node
-    Shared.reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
-    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-    return ts.forEachChild(node, cb);
-  }
-}
-*/
 
 export function checkNodeWithIgnore(
   checkNode: CheckNodeFunction<Options>

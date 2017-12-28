@@ -39,10 +39,11 @@ export function walk<TOptions>(
     // Check the node
     const { invalidNodes, skipBranch } = checkNode(node, ctx);
     reportInvalidNodes(invalidNodes, ctx, failureString);
-    if (!skipBranch) {
-      // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-      return ts.forEachChild(node, cb);
+    if (skipBranch) {
+      return;
     }
+    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+    return ts.forEachChild(node, cb);
   }
 }
 
