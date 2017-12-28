@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+- New options `ignore-interface`, and `ignore-class` for the `readonly-keyword` rule. See [#44](https://github.com/jonaskello/tslint-immutable/issues/44) for background. Thanks to [@aboyton](https://github.com/aboyton) for this option! (See PR [#53](https://github.com/jonaskello/tslint-immutable/pull/57))
+
 ## [v4.4.0] - 2017-09-27
 ### Added
 - New option `ignore-prefix` for the `no-object-mutation` rule. See [#43](https://github.com/jonaskello/tslint-immutable/issues/43) for background. Thanks to [@miangraham](https://github.com/miangraham) for this option! (See PR [#53](https://github.com/jonaskello/tslint-immutable/pull/53))
