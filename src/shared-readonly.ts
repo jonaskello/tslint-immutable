@@ -7,6 +7,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared";
+import { CheckNodeFunction } from "./shared";
 
 const OPTION_IGNORE_LOCAL = "ignore-local";
 const OPTION_IGNORE_CLASS = "ignore-class";
@@ -36,7 +37,7 @@ export function parseOptions(options: any[]): Options {
   }
   return { ignoreLocal, ignoreClass, ignoreInterface, ignorePrefix };
 }
-
+/*
 export function walk(
   ctx: Lint.WalkContext<Options>,
   checkNode: Shared.CheckNodeFunction<Options>,
@@ -84,6 +85,61 @@ export function walk(
     return ts.forEachChild(node, cb);
   }
 }
+*/
+
+export function checkNodeWithIgnore(
+  checkNode: CheckNodeFunction<Options>
+): CheckNodeFunction<Options> {
+  return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
+    console.log("node.kind", node.kind);
+    // Skip checking in functions if ignore-local is set
+    if (
+      ctx.options.ignoreLocal &&
+      (node.kind === ts.SyntaxKind.FunctionDeclaration ||
+        node.kind === ts.SyntaxKind.ArrowFunction ||
+        node.kind === ts.SyntaxKind.FunctionExpression ||
+        node.kind === ts.SyntaxKind.MethodDeclaration)
+    ) {
+      // We still need to check the parameters and return type
+      const functionNode:
+        | ts.FunctionDeclaration
+        | ts.ArrowFunction
+        | ts.MethodDeclaration = node as any; //tslint:disable-line
+      const invalidNodes = checkIgnoreLocalFunctionNode(
+        functionNode,
+        ctx,
+        checkNode
+      );
+      console.log("OLLE", invalidNodes);
+      // invalidNodes.forEach((n) => reportInvalidNodes(n, ctx, failureString));
+      //Shared.reportInvalidNodes(invalidNodes, ctx, failureString);
+      // Now skip this whole branch
+      return { invalidNodes, skipBranch: true };
+    }
+
+    // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
+    if (
+      (ctx.options.ignoreClass &&
+        node.kind === ts.SyntaxKind.PropertyDeclaration) ||
+      (ctx.options.ignoreInterface &&
+        node.kind === ts.SyntaxKind.PropertySignature)
+    ) {
+      return { invalidNodes: [], skipBranch: true };
+    }
+
+    // Forward to check node
+    return checkNode(node, ctx);
+  };
+}
+
+export const walkWithIgnore = (
+  ctx: Lint.WalkContext<Options>,
+  checkNode: Shared.CheckNodeFunction<Options>,
+  failureString: string
+): void => {
+  const withIgnore = checkNodeWithIgnore(checkNode);
+  return Shared.walk(ctx, withIgnore, failureString);
+};
 
 export function checkIgnoreLocalFunctionNode(
   functionNode:
@@ -93,25 +149,28 @@ export function checkIgnoreLocalFunctionNode(
   ctx: Lint.WalkContext<Options>,
   checkNode: Shared.CheckNodeFunction<Options>
 ): ReadonlyArray<Shared.InvalidNode> {
-  let invalidNodes: Array<Shared.InvalidNode> = [];
+  let myInvalidNodes: Array<Shared.InvalidNode> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {
-    const invalidCheckNodes = checkNode(n, ctx);
+    const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
     if (invalidCheckNodes) {
-      invalidNodes = invalidNodes.concat(...invalidCheckNodes);
+      myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
     }
   }
 
   // Check the return type
   if (functionNode.type) {
-    const invalidCheckNodes = checkNode(functionNode.type, ctx);
+    const { invalidNodes: invalidCheckNodes } = checkNode(
+      functionNode.type,
+      ctx
+    );
     if (invalidCheckNodes) {
-      invalidNodes = invalidNodes.concat(...invalidCheckNodes);
+      myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
     }
   }
 
-  return invalidNodes;
+  return myInvalidNodes;
 }
 
 export function shouldIgnorePrefix(

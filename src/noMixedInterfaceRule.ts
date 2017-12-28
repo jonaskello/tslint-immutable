@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared-readonly";
-import { InvalidNode, createInvalidNode } from "./shared";
+import { createInvalidNode, CheckNodeResult } from "./shared";
 
 const FAILURE_STRING = "Only the same kind of members allowed in interfaces.";
 
@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     return this.applyWithFunction(
       sourceFile,
       (ctx: Lint.WalkContext<Shared.Options>) =>
-        Shared.walk(ctx, checkNode, FAILURE_STRING),
+        Shared.walkWithIgnore(ctx, checkNode, FAILURE_STRING),
       Shared.parseOptions(this.ruleArguments)
     );
   }
@@ -19,7 +19,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   const invalidNodes = [];
   if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
     const interfaceDeclaration = node as ts.InterfaceDeclaration;
@@ -50,5 +50,5 @@ function checkNode(
       prevMemberType = memberType;
     }
   }
-  return invalidNodes;
+  return { invalidNodes };
 }

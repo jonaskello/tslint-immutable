@@ -8,7 +8,7 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 
 export interface CheckNodeFunction<TOptions> {
-  (node: ts.Node, ctx: Lint.WalkContext<TOptions>): ReadonlyArray<InvalidNode>;
+  (node: ts.Node, ctx: Lint.WalkContext<TOptions>): CheckNodeResult;
 }
 
 export interface InvalidNode {
@@ -23,6 +23,11 @@ export function createInvalidNode(
   return { node, replacement };
 }
 
+export interface CheckNodeResult {
+  invalidNodes: ReadonlyArray<InvalidNode>;
+  skipBranch?: boolean;
+}
+
 export function walk<TOptions>(
   ctx: Lint.WalkContext<TOptions>,
   checkNode: CheckNodeFunction<TOptions>,
@@ -32,9 +37,12 @@ export function walk<TOptions>(
 
   function cb(node: ts.Node): void {
     // Check the node
-    reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
-    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-    return ts.forEachChild(node, cb);
+    const { invalidNodes, skipBranch } = checkNode(node, ctx);
+    reportInvalidNodes(invalidNodes, ctx, failureString);
+    if (!skipBranch) {
+      // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+      return ts.forEachChild(node, cb);
+    }
   }
 }
 

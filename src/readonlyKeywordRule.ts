@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared-readonly";
-import { InvalidNode, createInvalidNode } from "./shared";
+import { InvalidNode, createInvalidNode, CheckNodeResult } from "./shared";
 
 /**
  * This rule checks that the readonly keyword is used in all PropertySignature and
@@ -12,7 +12,11 @@ export class Rule extends Lint.Rules.AbstractRule {
     return this.applyWithFunction(
       sourceFile,
       (ctx: Lint.WalkContext<Shared.Options>) =>
-        Shared.walk(ctx, checkNode, "A readonly modifier is required."),
+        Shared.walkWithIgnore(
+          ctx,
+          checkNode,
+          "A readonly modifier is required."
+        ),
       Shared.parseOptions(this.ruleArguments)
     );
   }
@@ -21,8 +25,8 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<InvalidNode> {
-  return checkPropertySignatureAndIndexSignature(node, ctx);
+): CheckNodeResult {
+  return { invalidNodes: checkPropertySignatureAndIndexSignature(node, ctx) };
 }
 
 function checkPropertySignatureAndIndexSignature(

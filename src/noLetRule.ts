@@ -1,14 +1,18 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared-readonly";
-import { InvalidNode, createInvalidNode } from "./shared";
+import { InvalidNode, createInvalidNode, CheckNodeResult } from "./shared";
 
 export class Rule extends Lint.Rules.AbstractRule {
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
     return this.applyWithFunction(
       sourceFile,
       (ctx: Lint.WalkContext<Shared.Options>) =>
-        Shared.walk(ctx, checkNode, "Unexpected let, use const instead."),
+        Shared.walkWithIgnore(
+          ctx,
+          checkNode,
+          "Unexpected let, use const instead."
+        ),
       Shared.parseOptions(this.ruleArguments)
     );
   }
@@ -17,10 +21,12 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   const variableStatementFailures = chectVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
-  return [...variableStatementFailures, ...forStatementsFailures];
+  return {
+    invalidNodes: [...variableStatementFailures, ...forStatementsFailures]
+  };
 }
 
 function chectVariableStatement(

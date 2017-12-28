@@ -1,5 +1,6 @@
-for(let x = 0, y = 0; x < 1;x++);
-        ~~~~~ [failure]
-               ~~~~~ [failure]
+
+function foo() {
+  let x;
+}
 
 [failure]: Unexpected let, use const instead.
