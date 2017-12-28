@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./readonly-shared";
+import * as Shared from "./shared-readonly";
+import { InvalidNode, createInvalidNode } from "./shared";
 
 export class Rule extends Lint.Rules.AbstractRule {
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -16,7 +17,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
   const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
   return explicitTypeFailures.concat(implicitTypeFailures);
@@ -25,7 +26,7 @@ function checkNode(
 function checkArrayTypeOrReference(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (
     node.kind === ts.SyntaxKind.ArrayType ||
@@ -53,7 +54,7 @@ function checkArrayTypeOrReference(
     }
     const length = node.getWidth(ctx.sourceFile);
     return [
-      Shared.createInvalidNode(
+      createInvalidNode(
         node,
         new Lint.Replacement(
           node.end - length,
@@ -69,7 +70,7 @@ function checkArrayTypeOrReference(
 function checkVariableOrParameterImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.VariableDeclaration ||
     node.kind === ts.SyntaxKind.Parameter ||
@@ -103,7 +104,7 @@ function checkVariableOrParameterImplicitType(
         //   }
         // }
         return [
-          Shared.createInvalidNode(
+          createInvalidNode(
             varOrParamNode.name,
             new Lint.Replacement(
               varOrParamNode.name.end - length,

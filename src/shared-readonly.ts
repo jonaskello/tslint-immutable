@@ -6,33 +6,18 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as Shared from "./shared";
 
 const OPTION_IGNORE_LOCAL = "ignore-local";
 const OPTION_IGNORE_CLASS = "ignore-class";
 const OPTION_IGNORE_INTERFACE = "ignore-interface";
 const OPTION_IGNORE_PREFIX = "ignore-prefix";
 
-export interface CheckNodeFunction {
-  (node: ts.Node, ctx: Lint.WalkContext<Options>): ReadonlyArray<InvalidNode>;
-}
-
 export interface Options {
   readonly ignoreLocal: boolean;
   readonly ignoreClass: boolean;
   readonly ignoreInterface: boolean;
   readonly ignorePrefix: string | undefined;
-}
-
-export interface InvalidNode {
-  readonly node: ts.Node;
-  readonly replacement: Lint.Replacement | undefined;
-}
-
-export function createInvalidNode(
-  node: ts.Node,
-  replacement?: Lint.Replacement
-): InvalidNode {
-  return { node, replacement };
 }
 
 //tslint:disable-next-line
@@ -54,7 +39,7 @@ export function parseOptions(options: any[]): Options {
 
 export function walk(
   ctx: Lint.WalkContext<Options>,
-  checkNode: CheckNodeFunction,
+  checkNode: Shared.CheckNodeFunction<Options>,
   failureString: string
 ): void {
   return ts.forEachChild(ctx.sourceFile, cb);
@@ -78,7 +63,7 @@ export function walk(
         checkNode
       );
       // invalidNodes.forEach((n) => reportInvalidNodes(n, ctx, failureString));
-      reportInvalidNodes(invalidNodes, ctx, failureString);
+      Shared.reportInvalidNodes(invalidNodes, ctx, failureString);
       // Now skip this whole branch
       return;
     }
@@ -94,24 +79,10 @@ export function walk(
     }
 
     // Check the node
-    reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
+    Shared.reportInvalidNodes(checkNode(node, ctx), ctx, failureString);
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
-}
-
-export function reportInvalidNodes(
-  invalidNodes: ReadonlyArray<InvalidNode>,
-  ctx: Lint.WalkContext<Options>,
-  failureString: string
-): void {
-  invalidNodes.forEach(invalidNode =>
-    ctx.addFailureAtNode(
-      invalidNode.node,
-      failureString,
-      invalidNode.replacement
-    )
-  );
 }
 
 export function checkIgnoreLocalFunctionNode(
@@ -120,9 +91,9 @@ export function checkIgnoreLocalFunctionNode(
     | ts.ArrowFunction
     | ts.MethodDeclaration,
   ctx: Lint.WalkContext<Options>,
-  checkNode: CheckNodeFunction
-): ReadonlyArray<InvalidNode> {
-  let invalidNodes: Array<InvalidNode> = [];
+  checkNode: Shared.CheckNodeFunction<Options>
+): ReadonlyArray<Shared.InvalidNode> {
+  let invalidNodes: Array<Shared.InvalidNode> = [];
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {

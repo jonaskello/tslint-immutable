@@ -30,7 +30,7 @@
     "typescript": "^2.2.2"
   },
   "scripts": {
-    "tsc": "tsc",
+    "compile": "tsc",
     "build": "rm -rf rules && tsc -p tsconfig.json",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "tslint --test test/rules/**/*",

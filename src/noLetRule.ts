@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./readonly-shared";
+import * as Shared from "./shared-readonly";
+import { InvalidNode, createInvalidNode } from "./shared";
 
 export class Rule extends Lint.Rules.AbstractRule {
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
@@ -16,7 +17,7 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   const variableStatementFailures = chectVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
   return [...variableStatementFailures, ...forStatementsFailures];
@@ -25,7 +26,7 @@ function checkNode(
 function chectVariableStatement(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
     return checkDeclarationList(variableStatementNode.declarationList, ctx);
@@ -36,7 +37,7 @@ function chectVariableStatement(
 function checkForStatements(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
     node.kind === ts.SyntaxKind.ForInStatement ||
@@ -62,7 +63,7 @@ function checkForStatements(
 function checkDeclarationList(
   declarationList: ts.VariableDeclarationList,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
     // It is a let declaration, now check each variable that is declared
     const invalidVariableDeclarationNodes = [];
@@ -82,7 +83,7 @@ function checkDeclarationList(
         )
       ) {
         invalidVariableDeclarationNodes.push(
-          Shared.createInvalidNode(
+          createInvalidNode(
             variableDeclarationNode,
             addFix
               ? new Lint.Replacement(

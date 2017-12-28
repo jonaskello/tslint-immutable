@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as Shared from "./readonly-shared";
+import * as Shared from "./shared-readonly";
+import { InvalidNode, createInvalidNode } from "./shared";
 
 /**
  * This rule checks that the readonly keyword is used in all PropertySignature and
@@ -20,14 +21,14 @@ export class Rule extends Lint.Rules.AbstractRule {
 function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   return checkPropertySignatureAndIndexSignature(node, ctx);
 }
 
 function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
   ctx: Lint.WalkContext<Shared.Options>
-): ReadonlyArray<Shared.InvalidNode> {
+): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.PropertySignature ||
     node.kind === ts.SyntaxKind.IndexSignature ||
@@ -48,7 +49,7 @@ function checkPropertySignatureAndIndexSignature(
       // const fulltext = node.getText(ctx.sourceFile);
       const fulltext = node.getText(ctx.sourceFile);
       return [
-        Shared.createInvalidNode(
+        createInvalidNode(
           node,
           new Lint.Replacement(
             node.end - length,
