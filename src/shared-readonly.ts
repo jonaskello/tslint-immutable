@@ -91,7 +91,6 @@ export function checkNodeWithIgnore(
   checkNode: CheckNodeFunction<Options>
 ): CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
-    console.log("node.kind", node.kind);
     // Skip checking in functions if ignore-local is set
     if (
       ctx.options.ignoreLocal &&
@@ -110,9 +109,6 @@ export function checkNodeWithIgnore(
         ctx,
         checkNode
       );
-      console.log("OLLE", invalidNodes);
-      // invalidNodes.forEach((n) => reportInvalidNodes(n, ctx, failureString));
-      //Shared.reportInvalidNodes(invalidNodes, ctx, failureString);
       // Now skip this whole branch
       return { invalidNodes, skipBranch: true };
     }
@@ -124,6 +120,7 @@ export function checkNodeWithIgnore(
       (ctx.options.ignoreInterface &&
         node.kind === ts.SyntaxKind.PropertySignature)
     ) {
+      // Now skip this whole branch
       return { invalidNodes: [], skipBranch: true };
     }
 
