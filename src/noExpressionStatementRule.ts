@@ -1,5 +1,10 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import {
+  createInvalidNode,
+  CheckNodeResult,
+  createCheckNodeRule
+} from "./shared/check-node";
 
 const OPTION_IGNORE_PREFIX = "ignore-prefix";
 
@@ -20,60 +25,47 @@ function parseOptions(options: any[]): Options {
   return { ignorePrefix };
 }
 
-export class Rule extends Lint.Rules.AbstractRule {
-  public static FAILURE_STRING = "Using expressions to cause side-effects not allowed.";
+// tslint:disable-next-line:variable-name
+export const Rule = createCheckNodeRule(
+  checkNode,
+  "Using expressions to cause side-effects not allowed.",
+  parseOptions
+);
 
-  public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
-    const noExpressionStatementWalker = new NoExpressionStatementWalker(
-      sourceFile,
-      this.getOptions()
+function checkNode(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Options>
+): CheckNodeResult {
+  if (node && node.kind === ts.SyntaxKind.ExpressionStatement) {
+    const children = node.getChildren();
+    const text = node.getText(node.getSourceFile());
+    const isYield = children.every(
+      (n: ts.Node) => n.kind === ts.SyntaxKind.YieldExpression
     );
-    return this.applyWithWalker(noExpressionStatementWalker);
+    const isIgnored2 = isIgnored(text, ctx.options.ignorePrefix);
+    if (!isYield && !isIgnored2) {
+      return { invalidNodes: [createInvalidNode(node)] };
+    }
   }
+  return { invalidNodes: [] };
 }
 
-class NoExpressionStatementWalker extends Lint.RuleWalker {
-  ignorePrefix: string | string[] | undefined;
-
-  constructor(sourceFile: ts.SourceFile, options: Lint.IOptions) {
-    super(sourceFile, options);
-    Object.assign(this, parseOptions(options.ruleArguments));
-  }
-
-  public visitNode(node: ts.Node): void {
-    if (node && node.kind === ts.SyntaxKind.ExpressionStatement) {
-      const children = node.getChildren();
-      const text = node.getText(this.getSourceFile());
-      const isYield = children.every(
-        (n: ts.Node) => n.kind === ts.SyntaxKind.YieldExpression
-      );
-      const isIgnored = this.isIgnored(text);
-      if (!isYield && !isIgnored) {
-        this.addFailure(
-          this.createFailure(
-            node.getStart(),
-            node.getWidth(),
-            Rule.FAILURE_STRING
-          )
-        );
-      }
-    }
-    super.visitNode(node);
-  }
-
-  private isIgnored(text: string): boolean {
-    if (!this.ignorePrefix) {
-      return false;
-    }
-    if (Array.isArray(this.ignorePrefix)) {
-      if (this.ignorePrefix.find(pfx => text.indexOf(pfx) === 0)) {
-        return true;
-      }
-    } else {
-      if (text.indexOf(this.ignorePrefix) === 0) {
-        return true;
-      }
-    }
+// tslint:disable-next-line:no-any
+function isIgnored(
+  text: string,
+  ignorePrefix: Array<string> | string | undefined
+): boolean {
+  if (!ignorePrefix) {
     return false;
   }
+  if (Array.isArray(ignorePrefix)) {
+    if (ignorePrefix.find(pfx => text.indexOf(pfx) === 0)) {
+      return true;
+    }
+  } else {
+    if (text.indexOf(ignorePrefix) === 0) {
+      return true;
+    }
+  }
+  return false;
 }
