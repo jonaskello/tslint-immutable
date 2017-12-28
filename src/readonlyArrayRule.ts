@@ -1,14 +1,23 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared-readonly";
-import { InvalidNode, createInvalidNode, CheckNodeResult } from "./shared";
+import {
+  InvalidNode,
+  createInvalidNode,
+  CheckNodeResult,
+  walk
+} from "./shared";
 
 export class Rule extends Lint.Rules.AbstractRule {
   public apply(sourceFile: ts.SourceFile): Lint.RuleFailure[] {
     return this.applyWithFunction(
       sourceFile,
       (ctx: Lint.WalkContext<Shared.Options>) =>
-        Shared.walkWithIgnore(ctx, checkNode, "Only ReadonlyArray allowed."),
+        walk(
+          ctx,
+          Shared.checkNodeWithIgnore(checkNode),
+          "Only ReadonlyArray allowed."
+        ),
       Shared.parseOptions(this.ruleArguments)
     );
   }

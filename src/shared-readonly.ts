@@ -80,15 +80,6 @@ export function checkNodeWithIgnore(
   };
 }
 
-export const walkWithIgnore = (
-  ctx: Lint.WalkContext<Options>,
-  checkNode: Shared.CheckNodeFunction<Options>,
-  failureString: string
-): void => {
-  const withIgnore = checkNodeWithIgnore(checkNode);
-  return Shared.walk(ctx, withIgnore, failureString);
-};
-
 export function checkIgnoreLocalFunctionNode(
   functionNode:
     | ts.FunctionDeclaration

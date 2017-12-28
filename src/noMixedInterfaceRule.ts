@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as Shared from "./shared-readonly";
-import { createInvalidNode, CheckNodeResult } from "./shared";
+import { createInvalidNode, CheckNodeResult, walk } from "./shared";
 
 const FAILURE_STRING = "Only the same kind of members allowed in interfaces.";
 
@@ -10,7 +10,7 @@ export class Rule extends Lint.Rules.AbstractRule {
     return this.applyWithFunction(
       sourceFile,
       (ctx: Lint.WalkContext<Shared.Options>) =>
-        Shared.walkWithIgnore(ctx, checkNode, FAILURE_STRING),
+        walk(ctx, Shared.checkNodeWithIgnore(checkNode), FAILURE_STRING),
       Shared.parseOptions(this.ruleArguments)
     );
   }
