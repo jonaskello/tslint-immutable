@@ -121,11 +121,14 @@ export function shouldIgnorePrefix(
         | ts.PropertySignature
         | ts.TypeAliasDeclaration
         | ts.ParameterDeclaration;
-      if (
-        variableDeclarationNode.name
-          .getText(sourceFile)
-          .substr(0, options.ignorePrefix.length) === options.ignorePrefix
-      ) {
+      const variableText = variableDeclarationNode.name.getText(sourceFile);
+      // if (
+      //   variableText.substr(0, options.ignorePrefix.length) ===
+      //   options.ignorePrefix
+      // ) {
+      //   return true;
+      // }
+      if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
         return true;
       }
     }

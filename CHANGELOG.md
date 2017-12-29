@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - New options `ignore-interface`, and `ignore-class` for the `readonly-keyword` rule. See [#44](https://github.com/jonaskello/tslint-immutable/issues/44) for background. Thanks to [@aboyton](https://github.com/aboyton) for these options! (See PR [#57](https://github.com/jonaskello/tslint-immutable/pull/57))
 
+- The `ignore-prefix` option can be an array for all rules (previously just for `no-expression-statement` and `no-object-mutation`).
+
 ### Fixed
 - `no-mixed-interface` does not understand arrow function notation. See [#60](https://github.com/jonaskello/tslint-immutable/issues/60).
 
