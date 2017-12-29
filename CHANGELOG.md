@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - New rule `no-delete`. See [readme](https://github.com/jonaskello/tslint-immutable#no-delete) for more info.
 
+- New rule `no-if-statement`. See [readme](https://github.com/jonaskello/tslint-immutable#no-if-statement) for more info and [#54](https://github.com/jonaskello/tslint-immutable/issues/54) for discussion.
+
 ### Fixed
 - `no-mixed-interface` does not understand arrow function notation. See [#60](https://github.com/jonaskello/tslint-immutable/issues/60).
 
