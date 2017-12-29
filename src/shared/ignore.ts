@@ -16,7 +16,7 @@ export interface IgnoreLocalOption {
 }
 
 export interface IgnorePrefixOption {
-  readonly ignorePrefix?: string | undefined;
+  readonly ignorePrefix?: string | Array<string> | undefined;
 }
 
 export interface IgnoreClassOption {

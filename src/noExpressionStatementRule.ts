@@ -7,9 +7,7 @@ import {
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
 
-export interface Options {
-  readonly ignorePrefix?: string | Array<string>;
-}
+type Options = Ignore.IgnorePrefixOption;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
