@@ -11,7 +11,7 @@ type Options = {};
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   checkNode,
-  "Unexpected class, use functions not classes."
+  "Unexpected for, use map or reduce instead."
 );
 
 function checkNode(
@@ -19,8 +19,9 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   return node &&
-    (node.kind === ts.SyntaxKind.ClassKeyword ||
-      node.kind === ts.SyntaxKind.ClassDeclaration)
+    (node.kind === ts.SyntaxKind.ForStatement ||
+      node.kind === ts.SyntaxKind.ForInStatement ||
+      node.kind === ts.SyntaxKind.ForOfStatement)
     ? { invalidNodes: [createInvalidNode(node)] }
     : {
         invalidNodes: []

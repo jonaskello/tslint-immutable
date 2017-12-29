@@ -1,0 +1,24 @@
+var x = 0;
+
+for(const x = 0; x < 10; x++) {
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  console.log(x);
+~~~~~~~~~~~~~~~~~
+}
+~ [failure]
+
+for(const x in y) {
+~~~~~~~~~~~~~~~~~~~
+  console.log(x);
+~~~~~~~~~~~~~~~~~
+}
+~ [failure]
+
+for(const x of y) {
+~~~~~~~~~~~~~~~~~~~
+  console.log(x);
+~~~~~~~~~~~~~~~~~
+}
+~ [failure]
+
+[failure]: Unexpected for, use map or reduce instead.

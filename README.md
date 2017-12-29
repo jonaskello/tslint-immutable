@@ -6,7 +6,7 @@
 [![code style: prettier][prettier-image]][prettier-url]
 [![MIT license][license-image]][license-url]
 
-[TSLint](https://palantir.github.io/tslint/) rules to disable  mutation in TypeScript.
+[TSLint](https://palantir.github.io/tslint/) rules to disable mutation in TypeScript.
 
 ## Background
 
@@ -47,6 +47,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-mixed-interface](#no-mixed-interface)
   * [no-expression-statement](#no-expression-statement)
   * [no-if-statement](#no-if-statement)
+  * [no-for-statement](#no-for-statement)
 * [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
@@ -60,7 +61,10 @@ Below is some information about the `readonly` modifier and the benefits of usin
 You might think that using `const` would eliminate mutation from your TypeScript code. **Wrong.** Turns out that there's a pretty big loophole in `const`.
 
 ```typescript
-interface Point { x: number, y: number }
+interface Point {
+  x: number;
+  y: number;
+}
 const point: Point = { x: 23, y: 44 };
 point.x = 99; // This is legal
 ```
@@ -68,15 +72,21 @@ point.x = 99; // This is legal
 This is why the `readonly` modifier exists. It prevents you from assigning a value to the result of a member expression.
 
 ```typescript
-interface Point { readonly x: number, readonly y: number }
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
 const point: Point = { x: 23, y: 44 };
 point.x = 99; // <- No object mutation allowed.
 ```
 
-This is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However the `readonly` modifier has **no run-time cost**, and is enforced at **compile time**.  A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
+This is just as effective as using Object.freeze() to prevent mutations in your Redux reducers. However the `readonly` modifier has **no run-time cost**, and is enforced at **compile time**. A good alternative to object mutation is to use the ES2016 object spread [syntax](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#object-spread-and-rest) that was added in typescript 2.1:
 
 ```typescript
-interface Point { readonly x: number, readonly y: number }
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
 const point: Point = { x: 23, y: 44 };
 const transformedPoint = { ...point, x: 99 };
 ```
@@ -90,26 +100,31 @@ let { [action.id]: deletedItem, ...rest } = state;
 The `readonly` modifier also works on indexers:
 
 ```typescript
-const foo: { readonly [key: string]: number } = { "a": 1, "b": 2 };
+const foo: { readonly [key: string]: number } = { a: 1, b: 2 };
 foo["a"] = 3; // Error: Index signature only permits reading
 ```
 
 #### Has Fixer
+
 Yes
 
 #### Options
-- [ignore-local](#using-the-ignore-local-option)
-- [ignore-class](#using-the-ignore-class-option)
-- [ignore-interface](#using-the-ignore-interface-option)
-- [ignore-prefix](#using-the-ignore-prefix-option)
+
+* [ignore-local](#using-the-ignore-local-option)
+* [ignore-class](#using-the-ignore-class-option)
+* [ignore-interface](#using-the-ignore-interface-option)
+* [ignore-prefix](#using-the-ignore-prefix-option)
 
 #### Example config
+
 ```javascript
 "readonly-keyword": true
 ```
+
 ```javascript
 "readonly-keyword": [true, "ignore-local"]
 ```
+
 ```javascript
 "readonly-keyword": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
@@ -123,7 +138,10 @@ Below is some information about the `ReadonlyArray<T>` type and the benefits of 
 Even if an array is declared with `const` it is still possible to mutate the contents of the array.
 
 ```typescript
-interface Point { readonly x: number, readonly y: number }
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
 const points: Array<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // This is legal
 ```
@@ -131,30 +149,39 @@ points.push({ x: 1, y: 2 }); // This is legal
 Using the `ReadonlyArray<T>` type will stop this mutation:
 
 ```typescript
-interface Point { readonly x: number, readonly y: number }
+interface Point {
+  readonly x: number;
+  readonly y: number;
+}
 const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
 #### Has Fixer
+
 Yes
 
 #### Options
-- [ignore-local](#using-the-ignore-local-option)
-- [ignore-prefix](#using-the-ignore-prefix-option)
+
+* [ignore-local](#using-the-ignore-local-option)
+* [ignore-prefix](#using-the-ignore-prefix-option)
 
 #### Example config
+
 ```javascript
 "readonly-array": true
 ```
+
 ```javascript
 "readonly-array": [true, "ignore-local"]
 ```
+
 ```javascript
 "readonly-array": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
 
 ### no-let
+
 This rule should be combined with tslint's built-in `no-var-keyword` rule to enforce that all variables are declared as `const`.
 
 There's no reason to use `let` in a Redux/React application, because all your state is managed by either Redux or React. Use `const` instead, and avoid state bugs altogether.
@@ -166,69 +193,82 @@ let x = 5; // <- Unexpected let or var, use const.
 What about `for` loops? Loops can be replaced with the Array methods like `map`, `filter`, and so on. If you find the built-in JS Array methods lacking, use [ramda](http://ramdajs.com/), or [lodash-fp](https://github.com/lodash/lodash/wiki/FP-Guide).
 
 ```typescript
-const SearchResults =
-  ({ results }) =>
-    <ul>{
-      results.map(result => <li>result</li>) // <- Who needs let?
-    }</ul>;
+const SearchResults = ({ results }) => (
+  <ul>
+    {results.map(result => <li>result</li>) // <- Who needs let?
+    }
+  </ul>
+);
 ```
 
 #### Has Fixer
+
 Yes
 
 #### Options
-- [ignore-local](#using-the-ignore-local-option)
-- [ignore-prefix](#using-the-ignore-prefix-option)
+
+* [ignore-local](#using-the-ignore-local-option)
+* [ignore-prefix](#using-the-ignore-prefix-option)
 
 #### Example config
+
 ```javascript
 "no-let": true
 ```
+
 ```javascript
 "no-let": [true, "ignore-local"]
 ```
+
 ```javascript
 "no-let": [true, "ignore-local", {"ignore-prefix": "mutable"}]
 ```
 
 ### no-object-mutation
+
 This rule prohibits syntax that mutates existing objects via assignment to or deletion of their properties. While requiring the `readonly` modifier forces declared types to be immutable, it won't stop assignment into or modification of untyped objects or external types declared under different rules. Forbidding forms like `a.b = 'c'` is one way to plug this hole. Inspired by the no-mutation rule of [eslint-plugin-immutable](https://github.com/jhusain/eslint-plugin-immutable).
 
 ```typescript
-const x = {a: 1};
+const x = { a: 1 };
 
-x.foo = 'bar'; // <- Modifying properties of existing object not allowed.
+x.foo = "bar"; // <- Modifying properties of existing object not allowed.
 x.a += 1; // <- Modifying properties of existing object not allowed.
 delete x.a; // <- Modifying properties of existing object not allowed.
 ```
 
 #### Has Fixer
+
 No
 
 #### Options
-- [ignore-prefix](#using-the-ignore-prefix-option)
+
+* [ignore-prefix](#using-the-ignore-prefix-option)
 
 #### Example config
+
 ```javascript
 "no-object-mutation": true
 ```
+
 ```javascript
 "no-object-mutation": [true, {"ignore-prefix": "mutable"}]
 ```
 
 ### no-method-signature
+
 There are two ways function members can be declared in an interface or type alias:
 
 ```typescript
 interface Zoo {
-  foo(): string, // MethodSignature, cannot have readonly modifier
-  readonly bar: () => string, // PropertySignature
+  foo(): string; // MethodSignature, cannot have readonly modifier
+  readonly bar: () => string; // PropertySignature
 }
 ```
 
 The `MethodSignature` and the `PropertySignature` forms seem equivalent, but only the `PropertySignature` form can have a `readonly` modifier. Becuase of this any `MethodSignature` will be mutable. Therefore the `no-method-signature` rule disallows usage of this form and instead proposes to use the `PropertySignature` which can have a `readonly` modifier. It should be noted however that the `PropertySignature` form for declaring functions does not support overloading.
 
 ### no-delete
+
 The delete operator allows for mutating objects by deleting keys. This rule disallows any delete expressions.
 
 ```typescript
@@ -238,40 +278,42 @@ delete object.property; // Unexpected delete, objects should be considered immut
 As an alternative the spread operator can be used to delete a key in an object (as noted [here](https://stackoverflow.com/a/35676025/2761797)):
 
 ```typescript
-const { [action.id]: deletedItem, ...rest } = state
+const { [action.id]: deletedItem, ...rest } = state;
 ```
 
 ## Functional style rules
 
 ### no-this, no-class
+
 Thanks to libraries like [recompose](https://github.com/acdlite/recompose) and Redux's [React Container components](http://redux.js.org/docs/basics/UsageWithReact.html), there's not much reason to build Components using `React.createClass` or ES6 classes anymore. The `no-this` rule makes this explicit.
 
 ```typescript
 const Message = React.createClass({
   render: function() {
-    return <div>{ this.props.message }</div>; // <- no this allowed
+    return <div>{this.props.message}</div>; // <- no this allowed
   }
-})
+});
 ```
+
 Instead of creating classes, you should use React 0.14's [Stateless Functional Components](https://medium.com/@joshblack/stateless-components-in-react-0-14-f9798f8b992d#.t5z2fdit6) and save yourself some keystrokes:
 
 ```typescript
-const Message = ({message}) => <div>{ message }</div>;
+const Message = ({ message }) => <div>{message}</div>;
 ```
 
 What about lifecycle methods like `shouldComponentUpdate`? We can use the [recompose](https://github.com/acdlite/recompose) library to apply these optimizations to your Stateless Functional Components. The [recompose](https://github.com/acdlite/recompose) library relies on the fact that your Redux state is immutable to efficiently implement shouldComponentUpdate for you.
 
 ```typescript
-import { pure, onlyUpdateForKeys } from 'recompose';
+import { pure, onlyUpdateForKeys } from "recompose";
 
-const Message = ({message}) => <div>{ message }</div>;
+const Message = ({ message }) => <div>{message}</div>;
 
 // Optimized version of same component, using shallow comparison of props
 // Same effect as React's PureRenderMixin
 const OptimizedMessage = pure(Message);
 
 // Even more optimized: only updates if specific prop keys have changed
-const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
+const HyperOptimizedMessage = onlyUpdateForKeys(["message"], Message);
 ```
 
 ### no-mixed-interface
@@ -279,17 +321,19 @@ const HyperOptimizedMessage = onlyUpdateForKeys(['message'], Message);
 Mixing functions and data properties in the same interface is a sign of object-orientation style. This rule enforces that an inteface only has one type of members, eg. only data properties or only functions.
 
 ### no-expression-statement
+
 When you call a function and don’t use it’s return value, chances are high that it is being called for its side effect. e.g.
 
 ```typescript
-array.push(1)
-alert('Hello world!')
+array.push(1);
+alert("Hello world!");
 ```
 
 This rule checks that the value of an expression is assigned to a variable and thus helps promote side-effect free (pure) functions.
 
 #### Options
-- [ignore-prefix](#using-the-ignore-prefix-option-with-no-expression-statement)
+
+* [ignore-prefix](#using-the-ignore-prefix-option-with-no-expression-statement)
 
 #### Example config
 
@@ -306,11 +350,12 @@ This rule checks that the value of an expression is assigned to a variable and t
 ```
 
 ### no-if-statement
+
 If statements is not a good fit for functional style programming as they are not expresssions and do not return a value. This rule disallows if statements.
 
 ```typescript
 let x;
-if(i === 1) {
+if (i === 1) {
   x = 2;
 } else {
   x = 3;
@@ -325,6 +370,27 @@ const x = i === 1 ? 2 : 3;
 
 For more background see this [blog post](https://hackernoon.com/rethinking-javascript-the-if-statement-b158a61cd6cb) and discussion in [#54](https://github.com/jonaskello/tslint-immutable/issues/54).
 
+### no-for-statement
+
+In functional programming we want everthing to be an expression that returns a value. The `for` statement is not an expression. This rule disallows for statements, including `for of` and `for in`.
+
+```typescript
+const numbers = [1, 2, 3];
+const double = [];
+for (let i = 0; i < numbers.length; i++) {
+  double[i] = numbers[i] * 2;
+}
+```
+
+Instead consider using `map` or `reduce`:
+
+```typescript
+const numbers = [1, 2, 3];
+const double = numbers.map(n => n * 2);
+```
+
+For more background see this [blog post](https://hackernoon.com/rethinking-javascript-death-of-the-for-loop-c431564c84a8) and discussion in [#54](https://github.com/jonaskello/tslint-immutable/issues/54).
+
 ## Options
 
 ### Using the `ignore-local` option
@@ -337,9 +403,11 @@ The quote above is from the [clojure docs](https://clojure.org/reference/transie
 Note that using this option can lead to more imperative code in functions so use with care!
 
 ### Using the `ignore-class` option
+
 Doesn't check for `readonly` in classes.
 
 ### Using the `ignore-interface` option
+
 Doesn't check for `readonly` in interfaces.
 
 ### Using the `ignore-prefix` option
@@ -357,8 +425,8 @@ Typescript is not immutable by default but it can be if you use this package. So
 
 ```typescript
 type person = {
-  readonly name: string,
-  mutableAge: number // This is OK with ignore-prefix = "mutable"
+  readonly name: string;
+  mutableAge: number; // This is OK with ignore-prefix = "mutable"
 };
 ```
 
