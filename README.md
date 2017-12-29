@@ -32,7 +32,7 @@ See the [example](#sample-configuration-file) tslint.json file for configuration
 
 ## TSLint Rules
 
-In addition to immutable rules this project also contains a few rules for enforcing a functional style of programming and a few other rules. The following rules are available:
+In addition to immutable rules this project also contains a few rules for enforcing a functional style of programming. The following rules are available:
 
 * [Immutability rules](#immutability-rules)
   * [readonly-keyword](#readonly-keyword)
