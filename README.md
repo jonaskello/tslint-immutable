@@ -46,6 +46,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-class](#no-this-no-class)
   * [no-mixed-interface](#no-mixed-interface)
   * [no-expression-statement](#no-expression-statement)
+  * [no-if-statement](#no-if-statement)
 * [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
@@ -303,6 +304,26 @@ This rule checks that the value of an expression is assigned to a variable and t
 ```javascript
 "no-expression-statement": [true, {"ignore-prefix": ["console.log", "console.error"]}]
 ```
+
+### no-if-statement
+If statements is not a good fit for functional style programming as they are not expresssions and do not return a value. This rule disallows if statements.
+
+```typescript
+let x;
+if(i === 1) {
+  x = 2;
+} else {
+  x = 3;
+}
+```
+
+Instead consider using the [tenary operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator) which is an expression that returns a value:
+
+```typescript
+const x = i === 1 ? 2 : 3;
+```
+
+For more background see this [blog post](https://hackernoon.com/rethinking-javascript-the-if-statement-b158a61cd6cb) and discussion in [#54](https://github.com/jonaskello/tslint-immutable/issues/54).
 
 ## Options
 
