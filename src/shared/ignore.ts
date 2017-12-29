@@ -6,11 +6,32 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as CheckNode from "./check-node";
 
-export interface Options {
-  readonly ignoreLocal: boolean;
-  readonly ignoreClass: boolean;
-  readonly ignoreInterface: boolean;
-  readonly ignorePrefix: string | undefined;
+// export interface Options {
+//   readonly ignoreLocal?: boolean;
+//   readonly ignoreClass?: boolean;
+//   readonly ignoreInterface?: boolean;
+//   readonly ignorePrefix?: string | undefined;
+// }
+
+export type Options = IgnoreLocalOption &
+  IgnorePrefixOption &
+  IgnoreClassOption &
+  IgnoreInterfaceOption;
+
+export interface IgnoreLocalOption {
+  readonly ignoreLocal?: boolean;
+}
+
+export interface IgnorePrefixOption {
+  readonly ignorePrefix?: string | undefined;
+}
+
+export interface IgnoreClassOption {
+  readonly ignoreClass?: boolean;
+}
+
+export interface IgnoreInterfaceOption {
+  readonly ignoreInterface?: boolean;
 }
 
 export function checkNodeWithIgnore(

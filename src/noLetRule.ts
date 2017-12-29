@@ -8,6 +8,8 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
+type Options = Ignore.IgnoreLocalOption & Ignore.IgnorePrefixOption;
+
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   Ignore.checkNodeWithIgnore(checkNode),
@@ -16,7 +18,7 @@ export const Rule = createCheckNodeRule(
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   const variableStatementFailures = chectVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
@@ -27,7 +29,7 @@ function checkNode(
 
 function chectVariableStatement(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
@@ -38,7 +40,7 @@ function chectVariableStatement(
 
 function checkForStatements(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
@@ -64,7 +66,7 @@ function checkForStatements(
 
 function checkDeclarationList(
   declarationList: ts.VariableDeclarationList,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
     // It is a let declaration, now check each variable that is declared

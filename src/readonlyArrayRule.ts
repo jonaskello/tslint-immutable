@@ -8,6 +8,8 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
+type Options = Ignore.IgnoreLocalOption & Ignore.IgnorePrefixOption;
+
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   Ignore.checkNodeWithIgnore(checkNode),
@@ -16,7 +18,7 @@ export const Rule = createCheckNodeRule(
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
   const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
@@ -25,7 +27,7 @@ function checkNode(
 
 function checkArrayTypeOrReference(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (
@@ -69,7 +71,7 @@ function checkArrayTypeOrReference(
 
 function checkVariableOrParameterImplicitType(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.VariableDeclaration ||

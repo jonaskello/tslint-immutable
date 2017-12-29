@@ -8,6 +8,11 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
+type Options = Ignore.IgnoreLocalOption &
+  Ignore.IgnorePrefixOption &
+  Ignore.IgnoreClassOption &
+  Ignore.IgnoreInterfaceOption;
+
 /**
  * This rule checks that the readonly keyword is used in all PropertySignature and
  * IndexerSignature nodes (which are the only places that the readonly keyword can exist).
@@ -20,14 +25,14 @@ export const Rule = createCheckNodeRule(
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   return { invalidNodes: checkPropertySignatureAndIndexSignature(node, ctx) };
 }
 
 function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
-  ctx: Lint.WalkContext<Ignore.Options>
+  ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.PropertySignature ||
