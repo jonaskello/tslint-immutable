@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.5.0] - 2017-12-29
+
 ### Added
 
 * New options `ignore-interface`, and `ignore-class` for the `readonly-keyword` rule. See [#44](https://github.com/jonaskello/tslint-immutable/issues/44) for background. Thanks to [@aboyton](https://github.com/aboyton) for these options! (See PR [#57](https://github.com/jonaskello/tslint-immutable/pull/57))
@@ -224,7 +226,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.4.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.0...master
+[v4.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.4.0...v4.5.0
 [v4.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...v4.3.0
 [v4.2.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.0...v4.2.1
