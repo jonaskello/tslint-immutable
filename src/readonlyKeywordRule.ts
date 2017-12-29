@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as IgnoreOptions from "./shared/ignore";
+import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
   createInvalidNode,
@@ -14,20 +14,20 @@ import {
  */
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
-  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  Ignore.checkNodeWithIgnore(checkNode),
   "A readonly modifier is required."
 );
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): CheckNodeResult {
   return { invalidNodes: checkPropertySignatureAndIndexSignature(node, ctx) };
 }
 
 function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.PropertySignature ||
@@ -42,7 +42,7 @@ function checkPropertySignatureAndIndexSignature(
       )
     ) {
       // Check if ignore-prefix applies
-      if (IgnoreOptions.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+      if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
         return [];
       }
       const length = node.getWidth(ctx.sourceFile);

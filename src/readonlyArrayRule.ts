@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as IgnoreOptions from "./shared/ignore";
+import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
   createInvalidNode,
@@ -10,13 +10,13 @@ import {
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
-  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  Ignore.checkNodeWithIgnore(checkNode),
   "Only ReadonlyArray allowed."
 );
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): CheckNodeResult {
   const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
   const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
@@ -25,7 +25,7 @@ function checkNode(
 
 function checkArrayTypeOrReference(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
   if (
@@ -36,7 +36,7 @@ function checkArrayTypeOrReference(
   ) {
     if (
       node.parent &&
-      IgnoreOptions.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+      Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
     ) {
       return [];
     }
@@ -69,7 +69,7 @@ function checkArrayTypeOrReference(
 
 function checkVariableOrParameterImplicitType(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.VariableDeclaration ||
@@ -80,7 +80,7 @@ function checkVariableOrParameterImplicitType(
     const varOrParamNode = node as
       | ts.VariableDeclaration
       | ts.ParameterDeclaration;
-    if (IgnoreOptions.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+    if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return [];
     }
     if (!varOrParamNode.type) {

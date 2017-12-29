@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as IgnoreOptions from "./shared/ignore";
+import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
   createInvalidNode,
@@ -10,13 +10,13 @@ import {
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
-  IgnoreOptions.checkNodeWithIgnore(checkNode),
+  Ignore.checkNodeWithIgnore(checkNode),
   "Unexpected let, use const instead."
 );
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): CheckNodeResult {
   const variableStatementFailures = chectVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
@@ -27,7 +27,7 @@ function checkNode(
 
 function chectVariableStatement(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   if (node.kind === ts.SyntaxKind.VariableStatement) {
     const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
@@ -38,7 +38,7 @@ function chectVariableStatement(
 
 function checkForStatements(
   node: ts.Node,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   if (
     node.kind === ts.SyntaxKind.ForStatement ||
@@ -64,7 +64,7 @@ function checkForStatements(
 
 function checkDeclarationList(
   declarationList: ts.VariableDeclarationList,
-  ctx: Lint.WalkContext<IgnoreOptions.Options>
+  ctx: Lint.WalkContext<Ignore.Options>
 ): ReadonlyArray<InvalidNode> {
   if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
     // It is a let declaration, now check each variable that is declared
@@ -78,7 +78,7 @@ function checkDeclarationList(
     let addFix = true;
     for (const variableDeclarationNode of declarationList.declarations) {
       if (
-        !IgnoreOptions.shouldIgnorePrefix(
+        !Ignore.shouldIgnorePrefix(
           variableDeclarationNode,
           ctx.options,
           ctx.sourceFile

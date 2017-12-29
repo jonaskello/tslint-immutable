@@ -6,30 +6,14 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
-const OPTION_IGNORE_PREFIX = "ignore-prefix";
-
 export interface Options {
-  readonly ignorePrefix: string | string[] | undefined;
-}
-
-// tslint:disable-next-line:no-any
-function parseOptions(options: any[]): Options {
-  let ignorePrefix: string | undefined;
-  for (const o of options) {
-    if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] !== null) {
-      //tslint:disable-line
-      ignorePrefix = o[OPTION_IGNORE_PREFIX];
-      break;
-    }
-  }
-  return { ignorePrefix };
+  readonly ignorePrefix?: string | Array<string>;
 }
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   checkNode,
-  "Using expressions to cause side-effects not allowed.",
-  parseOptions
+  "Using expressions to cause side-effects not allowed."
 );
 
 function checkNode(

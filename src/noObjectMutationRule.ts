@@ -7,30 +7,14 @@ import {
   InvalidNode
 } from "./shared/check-node";
 
-const OPTION_IGNORE_PREFIX = "ignore-prefix";
-
 export interface Options {
-  readonly ignorePrefix: string | string[] | undefined;
-}
-
-// tslint:disable-next-line:no-any
-function parseOptions(options: any[]): Options {
-  let ignorePrefix: string | undefined;
-  for (const o of options) {
-    if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] !== null) {
-      //tslint:disable-line
-      ignorePrefix = o[OPTION_IGNORE_PREFIX];
-      break;
-    }
-  }
-  return { ignorePrefix };
+  readonly ignorePrefix?: string | string[];
 }
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   checkNode,
-  "Modifying properties of existing object not allowed.",
-  parseOptions
+  "Modifying properties of existing object not allowed."
 );
 
 const objPropAccessors: ReadonlyArray<ts.SyntaxKind> = [
