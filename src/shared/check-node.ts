@@ -27,7 +27,7 @@ export function createInvalidNode(
 
 export interface CheckNodeResult {
   invalidNodes: ReadonlyArray<InvalidNode>;
-  skipBranch?: boolean;
+  skipChildren?: boolean;
 }
 
 export function walk<TOptions>(
@@ -39,9 +39,9 @@ export function walk<TOptions>(
 
   function cb(node: ts.Node): void {
     // Check the node
-    const { invalidNodes, skipBranch } = checkNode(node, ctx);
+    const { invalidNodes, skipChildren } = checkNode(node, ctx);
     reportInvalidNodes(invalidNodes, ctx, failureString);
-    if (skipBranch) {
+    if (skipChildren) {
       return;
     }
     // Use return becuase performance hints docs say it optimizes the function using tail-call recursion

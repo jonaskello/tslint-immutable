@@ -6,13 +6,6 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as CheckNode from "./check-node";
 
-// export interface Options {
-//   readonly ignoreLocal?: boolean;
-//   readonly ignoreClass?: boolean;
-//   readonly ignoreInterface?: boolean;
-//   readonly ignorePrefix?: string | undefined;
-// }
-
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
   IgnoreClassOption &
@@ -57,7 +50,7 @@ export function checkNodeWithIgnore(
         checkNode
       );
       // Now skip this whole branch
-      return { invalidNodes, skipBranch: true };
+      return { invalidNodes, skipChildren: true };
     }
 
     // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
@@ -68,7 +61,7 @@ export function checkNodeWithIgnore(
         node.kind === ts.SyntaxKind.PropertySignature)
     ) {
       // Now skip this whole branch
-      return { invalidNodes: [], skipBranch: true };
+      return { invalidNodes: [], skipChildren: true };
     }
 
     // Forward to check node
@@ -81,8 +74,8 @@ function checkIgnoreLocalFunctionNode(
     | ts.FunctionDeclaration
     | ts.ArrowFunction
     | ts.MethodDeclaration,
-  ctx: Lint.WalkContext<Options>,
-  checkNode: CheckNode.CheckNodeFunction<Options>
+  ctx: Lint.WalkContext<{}>,
+  checkNode: CheckNode.CheckNodeFunction<{}>
 ): ReadonlyArray<CheckNode.InvalidNode> {
   let myInvalidNodes: Array<CheckNode.InvalidNode> = [];
 
@@ -110,7 +103,7 @@ function checkIgnoreLocalFunctionNode(
 
 export function shouldIgnorePrefix(
   node: ts.Node,
-  options: Options,
+  options: IgnorePrefixOption,
   sourceFile: ts.SourceFile
 ): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
