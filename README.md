@@ -40,6 +40,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-let](#no-let)
   * [no-object-mutation](#no-object-mutation)
   * [no-method-signature](#no-method-signature)
+  * [no-delete](#no-delete)
 * [Functional style rules](#functional-style-rules)
   * [no-this](#no-this-no-class)
   * [no-class](#no-this-no-class)
@@ -225,6 +226,13 @@ interface Zoo {
 ```
 
 The `MethodSignature` and the `PropertySignature` forms seem equivalent, but only the `PropertySignature` form can have a `readonly` modifier. Becuase of this any `MethodSignature` will be mutable. Therefore the `no-method-signature` rule disallows usage of this form and instead proposes to use the `PropertySignature` which can have a `readonly` modifier. It should be noted however that the `PropertySignature` form for declaring functions does not support overloading.
+
+### no-delete
+The delete operator allows for mutating objects by deleting keys. This rule disallows any delete expressions.
+
+```typescript
+delete object.property; // Unexpected delete, objects should be considered immutable.
+```
 
 ## Functional style rules
 

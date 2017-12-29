@@ -1,13 +1,15 @@
 {
   "rulesDirectory": "./rules",
   "rules": {
-    "readonly-keyword": false,
-    "readonly-array": false,
-    "no-let": false,
-    "no-this": false,
     "no-class": false,
-    "no-mixed-interface": false,
+    "no-delete": false,
     "no-expression-statement": false,
-    "no-object-mutation": false
+    "no-let": false,
+    "no-method-signature": false,
+    "no-mixed-interface": false,
+    "no-object-mutation": false,
+    "no-this": false,
+    "readonly-keyword": false,
+    "readonly-array": false
   }
 }
