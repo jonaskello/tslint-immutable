@@ -21,4 +21,18 @@ for(const x of y) {
 }
 ~ [failure]
 
-[failure]: Unexpected for, use map or reduce instead.
+while(1 === 1) {
+~~~~~~~~~~~~~~~~~~~
+	console.log("a");
+~~~~~~~~~~~~~~~~~~~
+}
+~ [failure]
+
+do {
+~~~~
+	console.log("a");
+~~~~~~~~~~~~~~~~~~~
+} while(1 === 1)
+~~~~~~~~~~~~~~~~ [failure]
+
+[failure]: Unexpected loop, use map or reduce instead.

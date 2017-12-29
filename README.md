@@ -47,7 +47,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-mixed-interface](#no-mixed-interface)
   * [no-expression-statement](#no-expression-statement)
   * [no-if-statement](#no-if-statement)
-  * [no-for-statement](#no-for-statement)
+  * [no-loop-statement](#no-loop-statement)
 * [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
@@ -370,9 +370,9 @@ const x = i === 1 ? 2 : 3;
 
 For more background see this [blog post](https://hackernoon.com/rethinking-javascript-the-if-statement-b158a61cd6cb) and discussion in [#54](https://github.com/jonaskello/tslint-immutable/issues/54).
 
-### no-for-statement
+### no-loop-statement
 
-In functional programming we want everthing to be an expression that returns a value. The `for` statement is not an expression. This rule disallows for statements, including `for of` and `for in`.
+In functional programming we want everthing to be an expression that returns a value. Loops in typescript are statements so they are not a good fit for a functional programming style. This rule disallows for loop statements, including `for`, `for...of`, `for...in`, `while`, and `do...while`.
 
 ```typescript
 const numbers = [1, 2, 3];

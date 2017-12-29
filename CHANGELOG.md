@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 * New rule `no-if-statement`. See [readme](https://github.com/jonaskello/tslint-immutable#no-if-statement) for more info and [#54](https://github.com/jonaskello/tslint-immutable/issues/54) for discussion.
 
-* New rule `no-for-statement`. See [readme](https://github.com/jonaskello/tslint-immutable#no-for-statement) for more info and [#54](https://github.com/jonaskello/tslint-immutable/issues/54) for discussion.
+* New rule `no-loop-statement`. See [readme](https://github.com/jonaskello/tslint-immutable#no-loop-statement) for more info and [#54](https://github.com/jonaskello/tslint-immutable/issues/54) for discussion.
 
 ### Fixed
 
