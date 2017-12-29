@@ -401,6 +401,8 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     "readonly-array": true,
     "no-let": true,
     "no-object-mutation": true,
+    "no-delete": true,
+    "no-method-signature": true,
 
     // Functional style rules
     "no-this": true,

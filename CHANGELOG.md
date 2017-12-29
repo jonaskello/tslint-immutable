@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - The `ignore-prefix` option can be an array for all rules (previously just for `no-expression-statement` and `no-object-mutation`).
 
+- New rule `no-delete`. See [readme](https://github.com/jonaskello/tslint-immutable#no-delete) for more info.
+
 ### Fixed
 - `no-mixed-interface` does not understand arrow function notation. See [#60](https://github.com/jonaskello/tslint-immutable/issues/60).
 
