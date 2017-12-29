@@ -6,33 +6,11 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as CheckNode from "./check-node";
 
-const OPTION_IGNORE_LOCAL = "ignore-local";
-const OPTION_IGNORE_CLASS = "ignore-class";
-const OPTION_IGNORE_INTERFACE = "ignore-interface";
-const OPTION_IGNORE_PREFIX = "ignore-prefix";
-
 export interface Options {
   readonly ignoreLocal: boolean;
   readonly ignoreClass: boolean;
   readonly ignoreInterface: boolean;
   readonly ignorePrefix: string | undefined;
-}
-
-//tslint:disable-next-line
-export function parseOptions(options: any[]): Options {
-  const ignoreLocal = options.indexOf(OPTION_IGNORE_LOCAL) !== -1;
-  const ignoreClass = options.indexOf(OPTION_IGNORE_CLASS) !== -1;
-  const ignoreInterface = options.indexOf(OPTION_IGNORE_INTERFACE) !== -1;
-  let ignorePrefix: string | undefined;
-  for (const o of options) {
-    //tslint:disable-next-line
-    if (typeof o === "object" && o[OPTION_IGNORE_PREFIX] !== null) {
-      //tslint:disable-line
-      ignorePrefix = o[OPTION_IGNORE_PREFIX];
-      break;
-    }
-  }
-  return { ignoreLocal, ignoreClass, ignoreInterface, ignorePrefix };
 }
 
 export function checkNodeWithIgnore(

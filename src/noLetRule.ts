@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as IgnoreOptions from "./shared/ignore-options";
+import * as IgnoreOptions from "./shared/ignore";
 import {
   InvalidNode,
   createInvalidNode,
@@ -11,8 +11,7 @@ import {
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   IgnoreOptions.checkNodeWithIgnore(checkNode),
-  "Unexpected let, use const instead.",
-  IgnoreOptions.parseOptions
+  "Unexpected let, use const instead."
 );
 
 function checkNode(

@@ -34,7 +34,7 @@
     "build": "rm -rf rules && tsc -p tsconfig.json",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "tslint --test test/rules/**/*",
-    "test:work": "yarn build && tslint --test test/rules/no-let/work/*",
+    "test:work": "yarn build && tslint --test test/rules/readonly-keyword/work/*",
     "verify": "yarn build && yarn lint && yarn coverage",
     "coverage": "rm -rf coverage .nyc_output && nyc yarn test",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",

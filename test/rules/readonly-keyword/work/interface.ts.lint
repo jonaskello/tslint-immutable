@@ -1,6 +1,5 @@
-// Interface with readonly modifiers should not produce failures
 interface Foo {
-  readonly d: { readonly [key: string]: string }
+  mutableA: number,
 }
 
 [failure]: A readonly modifier is required.

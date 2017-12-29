@@ -7,6 +7,7 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import { parseOptions as defaultParseOptions } from "./options";
 
 export interface CheckNodeFunction<TOptions> {
   (node: ts.Node, ctx: Lint.WalkContext<TOptions>): CheckNodeResult;
@@ -52,7 +53,7 @@ export function createCheckNodeRule<TOptions>(
   checkNode: CheckNodeFunction<TOptions>,
   failureString: string,
   // tslint:disable-next-line:no-any
-  parseOptions: (ruleArguments: any[]) => TOptions = () => ({} as any)
+  parseOptions: (ruleArguments: any[]) => TOptions = defaultParseOptions
   // tslint:disable-next-line:no-any
 ): any {
   return class Rule extends Lint.Rules.AbstractRule {

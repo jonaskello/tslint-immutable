@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as IgnoreOptions from "./shared/ignore-options";
+import * as IgnoreOptions from "./shared/ignore";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -10,8 +10,7 @@ import {
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   IgnoreOptions.checkNodeWithIgnore(checkNode),
-  "Only the same kind of members allowed in interfaces.",
-  IgnoreOptions.parseOptions
+  "Only the same kind of members allowed in interfaces."
 );
 
 function checkNode(
