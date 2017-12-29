@@ -6,6 +6,7 @@ import {
   createCheckNodeRule,
   InvalidNode
 } from "./shared/check-node";
+import * as Ignore from "./shared/ignore";
 
 export interface Options {
   readonly ignorePrefix?: string | string[];
@@ -55,7 +56,10 @@ function checkNode(
     if (
       objPropAccessors.some(k => k === binExp.left.kind) &&
       forbidObjPropOnLeftSideOf.some(k => k === binExp.operatorToken.kind) &&
-      !isIgnored(binExp.getText(node.getSourceFile()), ctx.options.ignorePrefix)
+      !Ignore.isIgnoredPrefix(
+        binExp.getText(node.getSourceFile()),
+        ctx.options.ignorePrefix
+      )
     ) {
       invalidNodes = [...invalidNodes, createInvalidNode(node)];
     }
@@ -66,7 +70,7 @@ function checkNode(
     const delExp = node as ts.DeleteExpression;
     if (
       objPropAccessors.some(k => k === delExp.expression.kind) &&
-      !isIgnored(
+      !Ignore.isIgnoredPrefix(
         delExp.expression.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
       )
@@ -81,7 +85,7 @@ function checkNode(
     if (
       objPropAccessors.some(k => k === preExp.operand.kind) &&
       forbidUnaryOps.some(o => o === preExp.operator) &&
-      !isIgnored(
+      !Ignore.isIgnoredPrefix(
         preExp.operand.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
       )
@@ -96,7 +100,7 @@ function checkNode(
     if (
       objPropAccessors.some(k => k === postExp.operand.kind) &&
       forbidUnaryOps.some(o => o === postExp.operator) &&
-      !isIgnored(
+      !Ignore.isIgnoredPrefix(
         postExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
       )
@@ -106,23 +110,4 @@ function checkNode(
   }
 
   return { invalidNodes };
-}
-
-function isIgnored(
-  text: string,
-  ignorePrefix: Array<string> | string | undefined
-): boolean {
-  if (!ignorePrefix) {
-    return false;
-  }
-  if (Array.isArray(ignorePrefix)) {
-    if (ignorePrefix.find(pfx => text.indexOf(pfx) === 0)) {
-      return true;
-    }
-  } else {
-    if (text.indexOf(ignorePrefix) === 0) {
-      return true;
-    }
-  }
-  return false;
 }

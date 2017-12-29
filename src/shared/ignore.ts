@@ -132,3 +132,22 @@ export function shouldIgnorePrefix(
   }
   return false;
 }
+
+export function isIgnoredPrefix(
+  text: string,
+  ignorePrefix: Array<string> | string | undefined
+): boolean {
+  if (!ignorePrefix) {
+    return false;
+  }
+  if (Array.isArray(ignorePrefix)) {
+    if (ignorePrefix.find(pfx => text.indexOf(pfx) === 0)) {
+      return true;
+    }
+  } else {
+    if (text.indexOf(ignorePrefix) === 0) {
+      return true;
+    }
+  }
+  return false;
+}
