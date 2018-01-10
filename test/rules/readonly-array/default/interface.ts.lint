@@ -6,6 +6,10 @@ interface Foo {
        ~~~~~~~~~~~~~ [failure]
 }
 
+// Should fail on Array type in index interface
+interface Foo { [key: string]: { groups: Array<string> } }
+                                         ~~~~~~~~~~~~~ [failure]
+
 // -- Local interface declarations
 
 function foo(): Array<string> {

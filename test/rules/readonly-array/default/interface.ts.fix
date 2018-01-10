@@ -5,6 +5,9 @@ interface Foo {
   bar: ReadonlyArray<string>
 }
 
+// Should fail on Array type in index interface
+interface Foo { [key: string]: { groups: ReadonlyArray<string> } }
+
 // -- Local interface declarations
 
 function foo(): ReadonlyArray<string> {
