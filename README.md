@@ -503,7 +503,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     "no-this": true,
     "no-class": true,
     "no-mixed-interface": true,
-    "no-expression-statement": true
+    "no-expression-statement": true,
     "no-if-statement": true
 
   }
