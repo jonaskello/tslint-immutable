@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.5.1] - 2018-01-16
+
+### Fixed
+
+* `no-mixed-interface` does not understand arrow function notation. See [#62](https://github.com/jonaskello/tslint-immutable/issues/62). Thanks to [@geon](https://github.com/geon) for this fix! (See PR [#63](https://github.com/jonaskello/tslint-immutable/pull/63))
+
 ## [v4.5.0] - 2017-12-29
 
 ### Added
@@ -226,7 +232,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.1...master
+[v4.5.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.0...v4.5.1
 [v4.5.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.4.0...v4.5.0
 [v4.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...v4.3.0
