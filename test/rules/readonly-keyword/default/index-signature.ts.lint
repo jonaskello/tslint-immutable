@@ -12,4 +12,11 @@ function foo(): { [source: string]: string } {
   return undefined;
 }
 
+// Index signature with nested object.
+interface Foo {
+  [key: string]: { bar: string }
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   [failure]
+                   ~~~~~~~~~~~ [failure]
+}
+
 [failure]: A readonly modifier is required.
