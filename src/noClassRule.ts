@@ -19,7 +19,7 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   return node &&
-    (node.kind === ts.SyntaxKind.ClassKeyword ||
+    (node.kind === ts.SyntaxKind.ClassExpression ||
       node.kind === ts.SyntaxKind.ClassDeclaration)
     ? { invalidNodes: [createInvalidNode(node)] }
     : {
