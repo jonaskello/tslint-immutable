@@ -11,7 +11,7 @@ type Options = {};
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   checkNode,
-  "Unexpected if, use tenary operator instead."
+  "Unexpected if, use a conditional expression (ternary operator) instead."
 );
 
 function checkNode(
