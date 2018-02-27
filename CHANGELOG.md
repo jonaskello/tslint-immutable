@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.5.2] - 2018-02-27
+
+### Fixed
+
+* Ignore await when checking `ignore-prefix` in `no-expression-statement`. See [#76](https://github.com/jonaskello/tslint-immutable/issues/76).
+
+* `no-class` does not catch class expressions. See [#65](https://github.com/jonaskello/tslint-immutable/issues/65). Thanks to [@ianbollinger](https://github.com/ianbollinger) for this fix! (See PR [#70](https://github.com/jonaskello/tslint-immutable/pull/70))
+
 ## [v4.5.1] - 2018-01-16
 
 ### Fixed
