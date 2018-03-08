@@ -18,6 +18,9 @@ let x: Foo<ReadonlyArray<string>>;
 // Should fail on nested type arguments
 let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
 
+// Should fail on nested type arguments
+let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
+
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
