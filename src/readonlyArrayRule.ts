@@ -46,25 +46,25 @@ function checkArrayTypeOrReference(
     if (node.kind === ts.SyntaxKind.ArrayType) {
       const typeNode = node as ts.ArrayTypeNode;
       typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
-    } else if (node.kind === ts.SyntaxKind.TypeReference) {
-      const typeNode = node as ts.TypeReferenceNode;
-      if (typeNode.typeArguments) {
-        typeArgument = typeNode.typeArguments[0]
-          .getFullText(ctx.sourceFile)
-          .trim();
-      }
-    }
-    const length = node.getWidth(ctx.sourceFile);
-    return [
-      createInvalidNode(
-        node,
-        new Lint.Replacement(
-          node.end - length,
-          length,
-          `ReadonlyArray<${typeArgument}>`
+      const length = node.getWidth(ctx.sourceFile);
+      return [
+        createInvalidNode(
+          node,
+          new Lint.Replacement(
+            node.end - length,
+            length,
+            `ReadonlyArray<${typeArgument}>`
+          )
         )
-      )
-    ];
+      ];
+    } else if (node.kind === ts.SyntaxKind.TypeReference) {
+      return [
+        createInvalidNode(
+          node,
+          new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
+        )
+      ];
+    }
   }
   return [];
 }
