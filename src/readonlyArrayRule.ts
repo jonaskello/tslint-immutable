@@ -20,22 +20,21 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  const explicitTypeFailures = checkArrayTypeOrReference(node, ctx);
-  const implicitTypeFailures = checkVariableOrParameterImplicitType(node, ctx);
-  return { invalidNodes: explicitTypeFailures.concat(implicitTypeFailures) };
+  return {
+    invalidNodes: [
+      ...checkArrayType(node, ctx),
+      ...checkTypeReference(node, ctx),
+      ...checkVariableOrParameterImplicitType(node, ctx)
+    ]
+  };
 }
 
-function checkArrayTypeOrReference(
+function checkArrayType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
-  // We need to check both shorthand syntax "number[]" and type reference "Array<number>"
-  if (
-    node.kind === ts.SyntaxKind.ArrayType ||
-    (node.kind === ts.SyntaxKind.TypeReference &&
-      (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) ===
-        "Array")
-  ) {
+  // We need to check both shorthand syntax "number[]"...
+  if (node.kind === ts.SyntaxKind.ArrayType) {
     if (
       node.parent &&
       Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
@@ -43,17 +42,8 @@ function checkArrayTypeOrReference(
       return [];
     }
     let typeArgument: string = "T";
-    if (node.kind === ts.SyntaxKind.ArrayType) {
-      const typeNode = node as ts.ArrayTypeNode;
-      typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
-    } else if (node.kind === ts.SyntaxKind.TypeReference) {
-      const typeNode = node as ts.TypeReferenceNode;
-      if (typeNode.typeArguments) {
-        typeArgument = typeNode.typeArguments[0]
-          .getFullText(ctx.sourceFile)
-          .trim();
-      }
-    }
+    const typeNode = node as ts.ArrayTypeNode;
+    typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
     const length = node.getWidth(ctx.sourceFile);
     return [
       createInvalidNode(
@@ -63,6 +53,31 @@ function checkArrayTypeOrReference(
           length,
           `ReadonlyArray<${typeArgument}>`
         )
+      )
+    ];
+  }
+  return [];
+}
+
+function checkTypeReference(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Options>
+): ReadonlyArray<InvalidNode> {
+  // ...and type reference "Array<number>"
+  if (
+    node.kind === ts.SyntaxKind.TypeReference &&
+    (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array"
+  ) {
+    if (
+      node.parent &&
+      Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+    ) {
+      return [];
+    }
+    return [
+      createInvalidNode(
+        node,
+        new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
       )
     ];
   }
