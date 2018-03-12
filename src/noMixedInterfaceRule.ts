@@ -42,7 +42,7 @@ function checkNode(
         prevMemberKind !== undefined &&
         (prevMemberKind !== memberKind || prevMemberType !== memberType)
       ) {
-        invalidNodes.push(createInvalidNode(member));
+        invalidNodes.push(createInvalidNode(member, []));
       }
       prevMemberKind = memberKind;
       prevMemberType = memberType;

@@ -32,7 +32,7 @@ function checkNode(
     }
     const isIgnored2 = Ignore.isIgnoredPrefix(text, ctx.options.ignorePrefix);
     if (!isYield && !isIgnored2) {
-      return { invalidNodes: [createInvalidNode(esNode)] };
+      return { invalidNodes: [createInvalidNode(esNode, [])] };
     }
   }
   return { invalidNodes: [] };

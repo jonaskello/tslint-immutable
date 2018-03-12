@@ -90,12 +90,14 @@ function checkDeclarationList(
           createInvalidNode(
             variableDeclarationNode,
             addFix
-              ? new Lint.Replacement(
-                  declarationList.getStart(ctx.sourceFile),
-                  "let".length,
-                  "const"
-                )
-              : undefined
+              ? [
+                  new Lint.Replacement(
+                    declarationList.getStart(ctx.sourceFile),
+                    "let".length,
+                    "const"
+                  )
+                ]
+              : []
           )
         );
         addFix = false;

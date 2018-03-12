@@ -59,7 +59,7 @@ function checkNode(
         ctx.options.ignorePrefix
       )
     ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node)];
+      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
     }
   }
 
@@ -73,7 +73,7 @@ function checkNode(
         ctx.options.ignorePrefix
       )
     ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node)];
+      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
     }
   }
 
@@ -88,7 +88,7 @@ function checkNode(
         ctx.options.ignorePrefix
       )
     ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node)];
+      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
     }
   }
 
@@ -103,7 +103,7 @@ function checkNode(
         ctx.options.ignorePrefix
       )
     ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node)];
+      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
     }
   }
 

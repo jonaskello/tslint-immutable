@@ -24,7 +24,7 @@ function checkNode(
       node.kind === ts.SyntaxKind.ForOfStatement ||
       node.kind === ts.SyntaxKind.WhileStatement ||
       node.kind === ts.SyntaxKind.DoStatement)
-    ? { invalidNodes: [createInvalidNode(node)] }
+    ? { invalidNodes: [createInvalidNode(node, [])] }
     : {
         invalidNodes: []
       };

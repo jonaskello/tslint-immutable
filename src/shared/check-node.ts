@@ -15,14 +15,14 @@ export interface CheckNodeFunction<TOptions> {
 
 export interface InvalidNode {
   readonly node: ts.Node;
-  readonly replacement: Lint.Replacement | undefined;
+  readonly replacements: Array<Lint.Replacement>;
 }
 
 export function createInvalidNode(
   node: ts.Node,
-  replacement?: Lint.Replacement
+  replacements: Array<Lint.Replacement>
 ): InvalidNode {
-  return { node, replacement };
+  return { node, replacements };
 }
 
 export interface CheckNodeResult {
@@ -77,7 +77,7 @@ function reportInvalidNodes<TOptions>(
     ctx.addFailureAtNode(
       invalidNode.node,
       failureString,
-      invalidNode.replacement
+      invalidNode.replacements
     )
   );
 }

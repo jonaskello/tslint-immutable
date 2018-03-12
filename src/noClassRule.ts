@@ -21,7 +21,7 @@ function checkNode(
   return node &&
     (node.kind === ts.SyntaxKind.ClassExpression ||
       node.kind === ts.SyntaxKind.ClassDeclaration)
-    ? { invalidNodes: [createInvalidNode(node)] }
+    ? { invalidNodes: [createInvalidNode(node, [])] }
     : {
         invalidNodes: []
       };

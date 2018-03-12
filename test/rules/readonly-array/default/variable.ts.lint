@@ -25,6 +25,12 @@ let x: Array<Array<Array<string>>>;
              ~~~~~~~~~~~~~~~~~~~~ [failure]
                    ~~~~~~~~~~~~~ [failure]
 
+// Should fail on nested shorthand arrayss
+let x: string[][][];
+       ~~~~~~~~~~~~ [failure]
+       ~~~~~~~~~~ [failure]
+       ~~~~~~~~ [failure]
+
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)

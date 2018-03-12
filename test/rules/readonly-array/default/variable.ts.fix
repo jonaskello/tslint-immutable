@@ -16,7 +16,10 @@ const foo: ReadonlyArray<number> = [1, 2, 3];
 let x: Foo<ReadonlyArray<string>>;
 
 // Should fail on nested type arguments
-let x: ReadonReadonReadonlyArray<string><string>>string>>>;
+let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
+
+// Should fail on nested shorthand arrayss
+let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
 
 // -- Local variable declarations
 
