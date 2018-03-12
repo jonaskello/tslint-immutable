@@ -9,3 +9,7 @@ console.trace();
 
 console.log('yo');
 console.error('yo');
+
+// await should not be considered when checking prefixes
+
+await console.log('yo');

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.5.2] - 2018-02-27
+
+### Fixed
+
+* Ignore await when checking `ignore-prefix` in `no-expression-statement`. See [#76](https://github.com/jonaskello/tslint-immutable/issues/76).
+
+* `no-class` does not catch class expressions. See [#65](https://github.com/jonaskello/tslint-immutable/issues/65). Thanks to [@ianbollinger](https://github.com/ianbollinger) for this fix! (See PR [#70](https://github.com/jonaskello/tslint-immutable/pull/70))
+
+## [v4.5.1] - 2018-01-16
+
+### Fixed
+
+* `no-mixed-interface` does not understand arrow function notation. See [#62](https://github.com/jonaskello/tslint-immutable/issues/62). Thanks to [@geon](https://github.com/geon) for this fix! (See PR [#63](https://github.com/jonaskello/tslint-immutable/pull/63))
+
 ## [v4.5.0] - 2017-12-29
 
 ### Added
@@ -226,7 +240,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.2...master
+[v4.5.2]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.1...v4.5.2
+[v4.5.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.0...v4.5.1
 [v4.5.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.4.0...v4.5.0
 [v4.4.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.3.0...v4.4.0
 [v4.3.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.2.1...v4.3.0
