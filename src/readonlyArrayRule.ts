@@ -48,11 +48,11 @@ function checkArrayType(
     return [
       createInvalidNode(
         node,
-        new Lint.Replacement(
+        [new Lint.Replacement(
           node.end - length,
           length,
           `ReadonlyArray<${typeArgument}>`
-        )
+        )]
       )
     ];
   }
@@ -75,10 +75,9 @@ function checkTypeReference(
       return [];
     }
     return [
-      createInvalidNode(
-        node,
+      createInvalidNode(node, [
         new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
-      )
+      ])
     ];
   }
   return [];
@@ -121,14 +120,13 @@ function checkVariableOrParameterImplicitType(
         //   }
         // }
         return [
-          createInvalidNode(
-            varOrParamNode.name,
+          createInvalidNode(varOrParamNode.name, [
             new Lint.Replacement(
               varOrParamNode.name.end - length,
               length,
               `${nameText}: ReadonlyArray<${typeArgument}>`
             )
-          )
+          ])
         ];
       }
     }

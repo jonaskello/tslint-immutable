@@ -51,10 +51,9 @@ function checkPropertySignatureAndIndexSignature(
         return [];
       }
       return [
-        createInvalidNode(
-          node,
+        createInvalidNode(node, [
           new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")
-        )
+        ])
       ];
     }
   }
