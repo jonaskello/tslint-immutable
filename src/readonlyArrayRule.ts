@@ -41,19 +41,15 @@ function checkArrayType(
     ) {
       return [];
     }
-    let typeArgument: string = "T";
-    const typeNode = node as ts.ArrayTypeNode;
-    typeArgument = typeNode.elementType.getFullText(ctx.sourceFile).trim();
-    const length = node.getWidth(ctx.sourceFile);
     return [
-      createInvalidNode(
-        node,
-        [new Lint.Replacement(
-          node.end - length,
-          length,
-          `ReadonlyArray<${typeArgument}>`
-        )]
-      )
+      createInvalidNode(node, [
+        new Lint.Replacement(
+          node.getStart(ctx.sourceFile),
+          0,
+          "ReadonlyArray<"
+        ),
+        new Lint.Replacement(node.end - 2, 2, ">")
+      ])
     ];
   }
   return [];
