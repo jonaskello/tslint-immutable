@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.5.3] - 2018-03-31
+
+### Fixed
+
+* `readonly-array` fixer does not work for arrays with nested template type. See [#24](https://github.com/jonaskello/tslint-immutable/issues/24). Thanks to [@geon](https://github.com/geon) for fixing this longstanding bug! (See PR [#78](https://github.com/jonaskello/tslint-immutable/pull/78))
+
 ## [v4.5.2] - 2018-02-27
 
 ### Fixed
