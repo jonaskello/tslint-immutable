@@ -22,7 +22,7 @@ function foo(bar: { zoo: string }): void {
 // Object as return value from function
 
 function foo(): { zoo: string } {
-                ~~~~~~~~~~~~~ [failure]
+                  ~~~~~~~~~~~ [failure]
   return undefined;
 }
 

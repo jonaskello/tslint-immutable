@@ -79,40 +79,41 @@ function checkIgnoreLocalFunctionNode(
 ): ReadonlyArray<CheckNode.InvalidNode> {
   let myInvalidNodes: Array<CheckNode.InvalidNode> = [];
 
+  const cb = (node: ts.Node): void => {
+    // Check the node
+    const { invalidNodes, skipChildren } = checkNode(node, ctx);
+    if (invalidNodes) {
+      myInvalidNodes = myInvalidNodes.concat(...invalidNodes);
+    }
+    if (skipChildren) {
+      return;
+    }
+    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+    return ts.forEachChild(node, cb);
+  };
+
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {
-    const cb = (node: ts.Node): void => {
-      // Check the node
-      const { invalidNodes, skipChildren } = checkNode(node, ctx);
-      if (invalidNodes) {
-        myInvalidNodes = myInvalidNodes.concat(...invalidNodes);
-      }
-      if (skipChildren) {
-        return;
-      }
-      // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
-      return ts.forEachChild(node, cb);
-    };
-
-    // Check all children of the parameter node
-    ts.forEachChild(n, cb);
-
-    // console.log("checkIgnoreLocalFunctionNode", n.kind);
-    // const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
-    // if (invalidCheckNodes) {
-    //   myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
-    // }
-  }
-
-  // Check the return type
-  if (functionNode.type) {
-    const { invalidNodes: invalidCheckNodes } = checkNode(
-      functionNode.type,
-      ctx
-    );
+    // Check the parameter node itself
+    const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
     if (invalidCheckNodes) {
       myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
     }
+
+    // Check all children for the paramter node
+    ts.forEachChild(n, cb);
+  }
+
+  // Check the return type
+  const nt = functionNode.type;
+  if (nt) {
+    // Check the return type node itself
+    const { invalidNodes: invalidCheckNodes } = checkNode(nt, ctx);
+    if (invalidCheckNodes) {
+      myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
+    }
+    // Check all children for the return type node
+    ts.forEachChild(nt, cb);
   }
 
   return myInvalidNodes;

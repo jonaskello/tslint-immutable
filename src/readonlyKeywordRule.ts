@@ -34,7 +34,6 @@ function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
-  console.log("check node!", node.kind);
   if (
     node.kind === ts.SyntaxKind.PropertySignature ||
     node.kind === ts.SyntaxKind.IndexSignature ||
