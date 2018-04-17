@@ -57,7 +57,8 @@ function checkNode(
       !Ignore.isIgnoredPrefix(
         binExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
-      )
+      ) &&
+      !inConstructor(node)
     ) {
       invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
     }
@@ -108,4 +109,15 @@ function checkNode(
   }
 
   return { invalidNodes };
+}
+
+function inConstructor(nodeIn: ts.Node): boolean {
+  let node = nodeIn.parent;
+  while (node) {
+    if (node.kind === ts.SyntaxKind.Constructor) {
+      return true;
+    }
+    node = node.parent;
+  }
+  return false;
 }
