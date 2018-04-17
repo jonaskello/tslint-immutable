@@ -77,4 +77,20 @@ if (x.a && y.a) {}
 const w = ~x.a;
 if (!x.a) {}
 
+// Allow initialization of class members in constructor
+
+class Foo {
+    readonly bar = 1;
+    readonly baz: string;
+    constructor() {
+      this.baz = "hello";
+    }
+    zoo() {
+        this.bar = 2;
+        ~~~~~~~~~~~~ [failure]
+        this.baz = 3;
+        ~~~~~~~~~~~~ [failure]
+    }
+}
+
 [failure]: Modifying properties of existing object not allowed.
