@@ -1,10 +1,3 @@
-
-// Index signature as part of interface
-interface Foo {
-  [key: string]: string
-  ~~~~~~~~~~~~~~~~~~~~~ [failure]
-}
-
 // Index signature as return value from function
 
 function foo(): { [source: string]: string } {
@@ -19,11 +12,18 @@ function foo(bar: { [source: string]: string }): void {
   return undefined;
 }
 
-// Index signature with nested object.
-interface Foo {
-  [key: string]: { bar: string }
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   [failure]
-                   ~~~~~~~~~~~ [failure]
+// Object as parameter to function
+
+function foo(bar: { zoo: string }): void {
+                    ~~~~~~~~~~~ [failure]
+  return undefined;
+}
+
+// Object as return value from function
+
+function foo(): { zoo: string } {
+                ~~~~~~~~~~~~~ [failure]
+  return undefined;
 }
 
 [failure]: A readonly modifier is required.

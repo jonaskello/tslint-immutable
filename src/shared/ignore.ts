@@ -81,10 +81,27 @@ function checkIgnoreLocalFunctionNode(
 
   // Check either the parameter's explicit type if it has one, or itself for implict type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {
-    const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
-    if (invalidCheckNodes) {
-      myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
-    }
+    const cb = (node: ts.Node): void => {
+      // Check the node
+      const { invalidNodes, skipChildren } = checkNode(node, ctx);
+      if (invalidNodes) {
+        myInvalidNodes = myInvalidNodes.concat(...invalidNodes);
+      }
+      if (skipChildren) {
+        return;
+      }
+      // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+      return ts.forEachChild(node, cb);
+    };
+
+    // Check all children of the parameter node
+    ts.forEachChild(n, cb);
+
+    // console.log("checkIgnoreLocalFunctionNode", n.kind);
+    // const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
+    // if (invalidCheckNodes) {
+    //   myInvalidNodes = myInvalidNodes.concat(...invalidCheckNodes);
+    // }
   }
 
   // Check the return type
