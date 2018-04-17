@@ -58,6 +58,4 @@ function foo() {
   }
 }
 
-
-
 [failure]: A readonly modifier is required.
