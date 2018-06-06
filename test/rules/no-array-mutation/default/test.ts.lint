@@ -1,0 +1,120 @@
+const x = [0, 1, 2];
+
+// Disallowed array mutation patterns
+
+x[0] = 4;
+~~~~~~~~ [failure]
+
+x[0] += 1;
+~~~~~~~~~ [failure]
+
+x[0] -= 1;
+~~~~~~~~~ [failure]
+
+x[0] *= 1;
+~~~~~~~~~ [failure]
+
+x[0] **= 1;
+~~~~~~~~~~ [failure]
+
+x[0] /= 1;
+~~~~~~~~~ [failure]
+
+x[0] %= 1;
+~~~~~~~~~ [failure]
+
+x[0] <<= 1;
+~~~~~~~~~~ [failure]
+
+x[0] >>= 1;
+~~~~~~~~~~ [failure]
+
+x[0] >>>= 1;
+~~~~~~~~~~~ [failure]
+
+x[0] &= 1;
+~~~~~~~~~ [failure]
+
+x[0] |= 1;
+~~~~~~~~~ [failure]
+
+x[0] ^= 1;
+~~~~~~~~~ [failure]
+
+delete x[0];
+~~~~~~~~~~~ [failure]
+
+x[0]++;
+~~~~~~ [failure]
+
+x[0]--;
+~~~~~~ [failure]
+
+++x[0];
+~~~~~~ [failure]
+
+--x[0];
+~~~~~~ [failure]
+
+if (x[0] = 2) {}
+    ~~~~~~~~ [failure]
+
+if (x[0]++) {}
+    ~~~~~~ [failure]
+
+// Disallowed array mutation methods
+
+x.copyWithin(0, 1, 2);
+~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.fill(3);
+~~~~~~~~~ [failure]
+
+x.pop();
+~~~~~~~ [failure]
+
+x.push(3);
+~~~~~~~~~ [failure]
+
+x.reverse();
+~~~~~~~~~~~ [failure]
+
+x.shift();
+~~~~~~~~~ [failure]
+
+x.sort();
+~~~~~~~~ [failure]
+
+x.splice(0, 1, 9);
+~~~~~~~~~~~~~~~~~ [failure]
+
+x.unshift(6);
+~~~~~~~~~~~~ [failure]
+
+// Don't catch calls of array mutation methods on non-array values
+
+class Y {
+  copyWithin() {}
+  fill() {}
+  pop() {}
+  push() {}
+  reverse() {}
+  shift() {}
+  sort() {}
+  splice() {}
+  unshift() {}
+}
+
+const y = new Y();
+
+y.copyWithin();
+y.fill();
+y.pop();
+y.push();
+y.reverse();
+y.shift();
+y.sort();
+y.splice();
+y.unshift();
+
+[failure]: Mutilating an array is not allowed.
