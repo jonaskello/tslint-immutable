@@ -91,21 +91,19 @@ x.splice(0, 1, 9);
 x.unshift(6);
 ~~~~~~~~~~~~ [failure]
 
-// Don't catch calls of array mutation methods on non-array values
+// Don't catch calls of array mutation methods on non-array objects
 
-class Y {
-  copyWithin() {}
-  fill() {}
-  pop() {}
-  push() {}
-  reverse() {}
-  shift() {}
-  sort() {}
-  splice() {}
-  unshift() {}
-}
-
-const y = new Y();
+const y = {
+  copyWithin: () => {},
+  fill: () => {},
+  pop: () => {},
+  push: () => {},
+  reverse: () => {},
+  shift: () => {},
+  sort: () => {},
+  splice: () => {},
+  unshift: () => {}
+};
 
 y.copyWithin();
 y.fill();

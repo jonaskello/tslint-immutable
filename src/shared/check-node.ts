@@ -13,6 +13,14 @@ export interface CheckNodeFunction<TOptions> {
   (node: ts.Node, ctx: Lint.WalkContext<TOptions>): CheckNodeResult;
 }
 
+export interface CheckTypedNodeFunction<TOptions> {
+  (
+    node: ts.Node,
+    ctx: Lint.WalkContext<TOptions>,
+    checker: ts.TypeChecker
+  ): CheckNodeResult;
+}
+
 export interface InvalidNode {
   readonly node: ts.Node;
   readonly replacements: Array<Lint.Replacement>;
@@ -44,7 +52,27 @@ export function walk<TOptions>(
     if (skipChildren) {
       return;
     }
-    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+    // Use return because performance hints docs say it optimizes the function using tail-call recursion
+    return ts.forEachChild(node, cb);
+  }
+}
+
+export function walkTyped<TOptions>(
+  ctx: Lint.WalkContext<TOptions>,
+  checkTypedNode: CheckTypedNodeFunction<TOptions>,
+  checker: ts.TypeChecker,
+  failureString: string
+): void {
+  return ts.forEachChild(ctx.sourceFile, cb);
+
+  function cb(node: ts.Node): void {
+    // Check the node
+    const { invalidNodes, skipChildren } = checkTypedNode(node, ctx, checker);
+    reportInvalidNodes(invalidNodes, ctx, failureString);
+    if (skipChildren) {
+      return;
+    }
+    // Use return because performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   }
 }
@@ -63,6 +91,29 @@ export function createCheckNodeRule<TOptions>(
         (ctx: Lint.WalkContext<TOptions>) =>
           walk(ctx, checkNode, failureString),
         parseOptions(this.ruleArguments)
+      );
+    }
+  };
+}
+
+export function createCheckNodeTypedRule<TOptions>(
+  checkTypedNode: CheckTypedNodeFunction<TOptions>,
+  failureString: string,
+  // tslint:disable-next-line:no-any
+  parseOptions: (ruleArguments: any[]) => TOptions = defaultParseOptions
+  // tslint:disable-next-line:no-any
+): any {
+  return class Rule extends Lint.Rules.TypedRule {
+    public applyWithProgram(
+      sourceFile: ts.SourceFile,
+      program: ts.Program
+    ): Lint.RuleFailure[] {
+      return this.applyWithFunction(
+        sourceFile,
+        (ctx: Lint.WalkContext<TOptions>, checker: ts.TypeChecker) =>
+          walkTyped(ctx, checkTypedNode, checker, failureString),
+        parseOptions(this.ruleArguments),
+        program.getTypeChecker()
       );
     }
   };

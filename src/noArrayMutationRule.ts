@@ -3,7 +3,7 @@ import * as Lint from "tslint";
 import {
   createInvalidNode,
   CheckNodeResult,
-  createCheckNodeRule,
+  createCheckNodeTypedRule,
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
@@ -11,8 +11,8 @@ import * as Ignore from "./shared/ignore";
 type Options = Ignore.IgnorePrefixOption;
 
 // tslint:disable-next-line:variable-name
-export const Rule = createCheckNodeRule(
-  checkNode,
+export const Rule = createCheckNodeTypedRule(
+  checkTypedNode,
   "Mutilating an array is not allowed."
 );
 
@@ -54,88 +54,191 @@ const forbiddenMethods: ReadonlyArray<string> = [
   "unshift"
 ];
 
-function checkNode(
-  node: ts.Node,
-  ctx: Lint.WalkContext<Options>
+function isArrayType(type: ts.Type): boolean {
+  return type.symbol !== undefined && type.symbol.name === "Array";
+}
+
+function checkTypedNode(
+  node: ts.BinaryExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
 ): CheckNodeResult {
-  let invalidNodes: Array<InvalidNode> = [];
+  return { invalidNodes: getInvalidNodes(node, ctx, checker) };
+}
 
-  // No assignment with array[index] on the left
-  // No assignment with array.property on the left
-  if (node && node.kind === ts.SyntaxKind.BinaryExpression) {
-    const binExp = node as ts.BinaryExpression;
+function getInvalidNodes(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  switch (node.kind) {
+    case ts.SyntaxKind.BinaryExpression:
+      return checkBinaryExpression(node as ts.BinaryExpression, ctx, checker);
+
+    case ts.SyntaxKind.DeleteExpression:
+      return checkDeleteExpression(node as ts.DeleteExpression, ctx, checker);
+
+    case ts.SyntaxKind.PrefixUnaryExpression:
+      return checkPrefixUnaryExpression(
+        node as ts.PrefixUnaryExpression,
+        ctx,
+        checker
+      );
+
+    case ts.SyntaxKind.PostfixUnaryExpression:
+      return checkPostfixUnaryExpression(
+        node as ts.PostfixUnaryExpression,
+        ctx,
+        checker
+      );
+
+    case ts.SyntaxKind.CallExpression:
+      return checkCallExpression(node as ts.CallExpression, ctx, checker);
+
+    default:
+      return [];
+  }
+}
+
+/**
+ * No assignment with array[index] on the left.
+ * No assignment with array.property on the left (e.g. array.length).
+ */
+function checkBinaryExpression(
+  node: ts.BinaryExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  if (
+    arrPropAccessors.some(k => k === node.left.kind) &&
+    forbidArrPropOnLeftSideOf.some(k => k === node.operatorToken.kind) &&
+    !Ignore.isIgnoredPrefix(
+      node.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    const left = node.left as
+      | ts.ElementAccessExpression
+      | ts.PropertyAccessExpression;
+    const leftExpressionType = checker.getTypeAtLocation(left.expression);
+
+    if (isArrayType(leftExpressionType)) {
+      return [createInvalidNode(node, [])];
+    }
+  }
+  return [];
+}
+
+/**
+ * No deleting array properties/values.
+ */
+function checkDeleteExpression(
+  node: ts.DeleteExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  const delExp = node as ts.DeleteExpression;
+  if (
+    arrPropAccessors.some(k => k === delExp.expression.kind) &&
+    !Ignore.isIgnoredPrefix(
+      delExp.expression.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    const delExpExp = delExp.expression as
+      | ts.ElementAccessExpression
+      | ts.PropertyAccessExpression;
+    const expressionType = checker.getTypeAtLocation(delExpExp.expression);
+
+    if (isArrayType(expressionType)) {
+      return [createInvalidNode(node, [])];
+    }
+  }
+  return [];
+}
+
+/**
+ * No prefix inc/dec.
+ */
+function checkPrefixUnaryExpression(
+  node: ts.PrefixUnaryExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  const preExp = node as ts.PrefixUnaryExpression;
+  if (
+    arrPropAccessors.some(k => k === preExp.operand.kind) &&
+    forbidUnaryOps.some(o => o === preExp.operator) &&
+    !Ignore.isIgnoredPrefix(
+      preExp.operand.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    const operand = preExp.operand as
+      | ts.ElementAccessExpression
+      | ts.PropertyAccessExpression;
+    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+
+    if (isArrayType(operandExpressionType)) {
+      return [createInvalidNode(node, [])];
+    }
+  }
+  return [];
+}
+
+/**
+ * No postfix inc/dec.
+ */
+function checkPostfixUnaryExpression(
+  node: ts.PostfixUnaryExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  const postExp = node as ts.PostfixUnaryExpression;
+  if (
+    arrPropAccessors.some(k => k === postExp.operand.kind) &&
+    forbidUnaryOps.some(o => o === postExp.operator) &&
+    !Ignore.isIgnoredPrefix(
+      postExp.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    const operand = postExp.operand as
+      | ts.ElementAccessExpression
+      | ts.PropertyAccessExpression;
+    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+
+    if (isArrayType(operandExpressionType)) {
+      return [createInvalidNode(node, [])];
+    }
+  }
+  return [];
+}
+
+/**
+ * No calls to array mutilating methods.
+ */
+function checkCallExpression(
+  node: ts.CallExpression,
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
+): ReadonlyArray<InvalidNode> {
+  const callExp = node as ts.CallExpression;
+  if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
+    const propAccExp = callExp.expression as ts.PropertyAccessExpression;
     if (
-      arrPropAccessors.some(k => k === binExp.left.kind) &&
-      forbidArrPropOnLeftSideOf.some(k => k === binExp.operatorToken.kind) &&
+      forbiddenMethods.some(m => m === propAccExp.name.text) &&
       !Ignore.isIgnoredPrefix(
-        binExp.getText(node.getSourceFile()),
+        callExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
       )
     ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
-  }
+      const expressionType = checker.getTypeAtLocation(propAccExp.expression);
 
-  // No deleting array properties/values
-  if (node && node.kind === ts.SyntaxKind.DeleteExpression) {
-    const delExp = node as ts.DeleteExpression;
-    if (
-      arrPropAccessors.some(k => k === delExp.expression.kind) &&
-      !Ignore.isIgnoredPrefix(
-        delExp.expression.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
-  }
-
-  // No prefix inc/dec
-  if (node && node.kind === ts.SyntaxKind.PrefixUnaryExpression) {
-    const preExp = node as ts.PrefixUnaryExpression;
-    if (
-      arrPropAccessors.some(k => k === preExp.operand.kind) &&
-      forbidUnaryOps.some(o => o === preExp.operator) &&
-      !Ignore.isIgnoredPrefix(
-        preExp.operand.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
-  }
-
-  // No postfix inc/dec
-  if (node && node.kind === ts.SyntaxKind.PostfixUnaryExpression) {
-    const postExp = node as ts.PostfixUnaryExpression;
-    if (
-      arrPropAccessors.some(k => k === postExp.operand.kind) &&
-      forbidUnaryOps.some(o => o === postExp.operator) &&
-      !Ignore.isIgnoredPrefix(
-        postExp.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
-  }
-
-  // No calls to array mutilating methods
-  if (node && node.kind === ts.SyntaxKind.CallExpression) {
-    const callExp = node as ts.CallExpression;
-    if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
-      const propAccExp = callExp.expression as ts.PropertyAccessExpression;
-      if (
-        forbiddenMethods.some(m => m === propAccExp.name.text) &&
-        !Ignore.isIgnoredPrefix(
-          callExp.getText(node.getSourceFile()),
-          ctx.options.ignorePrefix
-        )
-      ) {
-        invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
+      if (isArrayType(expressionType)) {
+        return [createInvalidNode(node, [])];
       }
     }
   }
-
-  return { invalidNodes };
+  return [];
 }
