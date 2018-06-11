@@ -38,6 +38,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [readonly-keyword](#readonly-keyword)
   * [readonly-array](#readonly-array)
   * [no-let](#no-let)
+  * [no-array-mutation](#no-array-mutation)
   * [no-object-mutation](#no-object-mutation)
   * [no-method-signature](#no-method-signature)
   * [no-delete](#no-delete)
@@ -222,6 +223,38 @@ Yes
 
 ```javascript
 "no-let": [true, "ignore-local", {"ignore-prefix": "mutable"}]
+```
+
+### no-array-mutation
+
+[![Type Info Required][type-info-badge]][type-info-url]
+
+This rule prohibits mutating an array via assignment to or deletion of their elements/properties. This rule enforces array immutability without the use of `ReadonlyArray<T>` (as apposed to [readonly-array](#readonly-array)).
+
+```typescript
+const x = [0, 1, 2];
+
+x[0] = 4; // <- Mutating an array is not allowed.
+x.length = 1; // <- Mutating an array is not allowed.
+x.push(3); // <- Mutating an array is not allowed.
+```
+
+#### Has Fixer
+
+No
+
+#### Options
+
+* [ignore-prefix](#using-the-ignore-prefix-option)
+
+#### Example config
+
+```javascript
+"no-array-mutation": true
+```
+
+```javascript
+"no-array-mutation": [true, {"ignore-prefix": "mutable"}]
 ```
 
 ### no-object-mutation
@@ -540,3 +573,5 @@ This work was originally inspired by [eslint-plugin-immutable](https://github.co
 [license-url]: https://opensource.org/licenses/MIT
 [prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat
 [prettier-url]: https://github.com/prettier/prettier
+[type-info-badge]: https://img.shields.io/badge/type_info-requried-d51313.svg?style=flat
+[type-info-url]: https://palantir.github.io/tslint/usage/type-checking
