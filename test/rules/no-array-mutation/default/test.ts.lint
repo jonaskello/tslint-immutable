@@ -62,6 +62,41 @@ if (x[0] = 2) {}
 if (x[0]++) {}
     ~~~~~~ [failure]
 
+// Allowed non-array mutation patterns
+
+const u = () => {};
+const v = {
+  x: 1,
+  y: u
+};
+const y = 0;
+
+y = 4;
+y += 1;
+y -= 1;
+y *= 1;
+y **= 1;
+y /= 1;
+y %= 1;
+y <<= 1;
+y >>= 1;
+y >>>= 1;
+y &= 1;
+y |= 1;
+y ^= 1;
+delete y;
+y++;
+y--;
+++y;
+--y;
+if (y = 2) {}
+if (y++) {}
+
+v.x = 2;
+v.x++;
+--v.x;
+delete v.x
+
 // Disallowed array mutation methods
 
 x.copyWithin(0, 1, 2);
@@ -91,9 +126,24 @@ x.splice(0, 1, 9);
 x.unshift(6);
 ~~~~~~~~~~~~ [failure]
 
+// Allow array non-mutation methods
+
+x.concat([3, 4]);
+x.includes(2);
+x.indexOf(1);
+x.join(', ');
+x.lastIndexOf(0);
+x.slice(1, 2);
+x.toString();
+x.toLocaleString("en", {timeZone: "UTC"});
+
+// Allow other functions and methods
+u();
+v.y();
+
 // Don't catch calls of array mutation methods on non-array objects
 
-const y = {
+const z = {
   copyWithin: () => {},
   fill: () => {},
   pop: () => {},
@@ -105,14 +155,14 @@ const y = {
   unshift: () => {}
 };
 
-y.copyWithin();
-y.fill();
-y.pop();
-y.push();
-y.reverse();
-y.shift();
-y.sort();
-y.splice();
-y.unshift();
+z.copyWithin();
+z.fill();
+z.pop();
+z.push();
+z.reverse();
+z.shift();
+z.sort();
+z.splice();
+z.unshift();
 
 [failure]: Mutilating an array is not allowed.

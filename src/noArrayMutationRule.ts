@@ -10,6 +10,8 @@ import * as Ignore from "./shared/ignore";
 
 type Options = Ignore.IgnorePrefixOption;
 
+type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
+
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeTypedRule(
   checkTypedNode,
@@ -42,7 +44,7 @@ const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.MinusMinusToken
 ];
 
-const forbiddenMethods: ReadonlyArray<string> = [
+const forbidMethods: ReadonlyArray<string> = [
   "copyWithin",
   "fill",
   "pop",
@@ -117,9 +119,7 @@ function checkBinaryExpression(
       ctx.options.ignorePrefix
     )
   ) {
-    const left = node.left as
-      | ts.ElementAccessExpression
-      | ts.PropertyAccessExpression;
+    const left = node.left as EntryAccessor;
     const leftExpressionType = checker.getTypeAtLocation(left.expression);
 
     if (isArrayType(leftExpressionType)) {
@@ -145,9 +145,7 @@ function checkDeleteExpression(
       ctx.options.ignorePrefix
     )
   ) {
-    const delExpExp = delExp.expression as
-      | ts.ElementAccessExpression
-      | ts.PropertyAccessExpression;
+    const delExpExp = delExp.expression as EntryAccessor;
     const expressionType = checker.getTypeAtLocation(delExpExp.expression);
 
     if (isArrayType(expressionType)) {
@@ -174,9 +172,7 @@ function checkPrefixUnaryExpression(
       ctx.options.ignorePrefix
     )
   ) {
-    const operand = preExp.operand as
-      | ts.ElementAccessExpression
-      | ts.PropertyAccessExpression;
+    const operand = preExp.operand as EntryAccessor;
     const operandExpressionType = checker.getTypeAtLocation(operand.expression);
 
     if (isArrayType(operandExpressionType)) {
@@ -203,9 +199,7 @@ function checkPostfixUnaryExpression(
       ctx.options.ignorePrefix
     )
   ) {
-    const operand = postExp.operand as
-      | ts.ElementAccessExpression
-      | ts.PropertyAccessExpression;
+    const operand = postExp.operand as EntryAccessor;
     const operandExpressionType = checker.getTypeAtLocation(operand.expression);
 
     if (isArrayType(operandExpressionType)) {
@@ -227,7 +221,7 @@ function checkCallExpression(
   if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
     const propAccExp = callExp.expression as ts.PropertyAccessExpression;
     if (
-      forbiddenMethods.some(m => m === propAccExp.name.text) &&
+      forbidMethods.some(m => m === propAccExp.name.text) &&
       !Ignore.isIgnoredPrefix(
         callExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
