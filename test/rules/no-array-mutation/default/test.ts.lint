@@ -62,6 +62,9 @@ if (x[0] = 2) {}
 if (x[0]++) {}
     ~~~~~~ [failure]
 
+x.length = 1;
+~~~~~~~~~~~~ [failure]
+
 // Allowed non-array mutation patterns
 
 const u = () => {};
@@ -144,6 +147,7 @@ v.y();
 // Don't catch calls of array mutation methods on non-array objects
 
 const z = {
+  length: 5,
   copyWithin: () => {},
   fill: () => {},
   pop: () => {},
@@ -155,6 +159,7 @@ const z = {
   unshift: () => {}
 };
 
+z.length = 7;
 z.copyWithin();
 z.fill();
 z.pop();
