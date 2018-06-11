@@ -165,4 +165,4 @@ z.sort();
 z.splice();
 z.unshift();
 
-[failure]: Mutilating an array is not allowed.
+[failure]: Mutating an array is not allowed.

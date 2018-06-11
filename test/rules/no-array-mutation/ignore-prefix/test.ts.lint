@@ -25,4 +25,4 @@ mutableY[0]++;
 
 ++mutableY[0];
 
-[failure]: Mutilating an array is not allowed.
+[failure]: Mutating an array is not allowed.

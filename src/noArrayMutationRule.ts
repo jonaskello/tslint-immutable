@@ -15,7 +15,7 @@ type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeTypedRule(
   checkTypedNode,
-  "Mutilating an array is not allowed."
+  "Mutating an array is not allowed."
 );
 
 const arrPropAccessors: ReadonlyArray<ts.SyntaxKind> = [
@@ -210,7 +210,7 @@ function checkPostfixUnaryExpression(
 }
 
 /**
- * No calls to array mutilating methods.
+ * No calls to array mutating methods.
  */
 function checkCallExpression(
   node: ts.CallExpression,
