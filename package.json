@@ -1,13 +1,16 @@
 {
   "name": "tslint-immutable",
-  "version": "4.5.3",
+  "version": "4.6.0",
   "description": "TSLint rules to disable mutation in TypeScript.",
   "main": "tslint-immutable.json",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
-  "keywords": ["tslint", "immutability"],
+  "keywords": [
+    "tslint",
+    "immutability"
+  ],
   "author": "Jonas Kello",
   "license": "MIT",
   "bugs": {
@@ -32,8 +35,7 @@
     "build": "rimraf rules && yarn compile",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "tslint --test test/rules/**/*",
-    "test:work":
-      "yarn build && tslint --test test/rules/no-array-mutation/**/*",
+    "test:work": "yarn build && tslint --test test/rules/no-array-mutation/**/*",
     "verify": "yarn build && yarn lint && yarn coverage",
     "coverage": "rimraf coverage .nyc_output && nyc yarn test",
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
@@ -43,6 +45,9 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": "tslint",
-    "*.{ts,tsx,json,css}": ["prettier --write", "git add"]
+    "*.{ts,tsx,json,css}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
