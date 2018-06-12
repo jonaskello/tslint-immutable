@@ -1,0 +1,173 @@
+const x = [0, 1, 2];
+
+// Disallowed array mutation patterns
+
+x[0] = 4;
+~~~~~~~~ [failure]
+
+x[0] += 1;
+~~~~~~~~~ [failure]
+
+x[0] -= 1;
+~~~~~~~~~ [failure]
+
+x[0] *= 1;
+~~~~~~~~~ [failure]
+
+x[0] **= 1;
+~~~~~~~~~~ [failure]
+
+x[0] /= 1;
+~~~~~~~~~ [failure]
+
+x[0] %= 1;
+~~~~~~~~~ [failure]
+
+x[0] <<= 1;
+~~~~~~~~~~ [failure]
+
+x[0] >>= 1;
+~~~~~~~~~~ [failure]
+
+x[0] >>>= 1;
+~~~~~~~~~~~ [failure]
+
+x[0] &= 1;
+~~~~~~~~~ [failure]
+
+x[0] |= 1;
+~~~~~~~~~ [failure]
+
+x[0] ^= 1;
+~~~~~~~~~ [failure]
+
+delete x[0];
+~~~~~~~~~~~ [failure]
+
+x[0]++;
+~~~~~~ [failure]
+
+x[0]--;
+~~~~~~ [failure]
+
+++x[0];
+~~~~~~ [failure]
+
+--x[0];
+~~~~~~ [failure]
+
+if (x[0] = 2) {}
+    ~~~~~~~~ [failure]
+
+if (x[0]++) {}
+    ~~~~~~ [failure]
+
+x.length = 1;
+~~~~~~~~~~~~ [failure]
+
+// Allowed non-array mutation patterns
+
+const u = () => {};
+const v = {
+  x: 1,
+  y: u
+};
+const y = 0;
+
+y = 4;
+y += 1;
+y -= 1;
+y *= 1;
+y **= 1;
+y /= 1;
+y %= 1;
+y <<= 1;
+y >>= 1;
+y >>>= 1;
+y &= 1;
+y |= 1;
+y ^= 1;
+delete y;
+y++;
+y--;
+++y;
+--y;
+if (y = 2) {}
+if (y++) {}
+
+v.x = 2;
+v.x++;
+--v.x;
+delete v.x
+
+// Disallowed array mutation methods
+
+x.copyWithin(0, 1, 2);
+~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.fill(3);
+~~~~~~~~~ [failure]
+
+x.pop();
+~~~~~~~ [failure]
+
+x.push(3);
+~~~~~~~~~ [failure]
+
+x.reverse();
+~~~~~~~~~~~ [failure]
+
+x.shift();
+~~~~~~~~~ [failure]
+
+x.sort();
+~~~~~~~~ [failure]
+
+x.splice(0, 1, 9);
+~~~~~~~~~~~~~~~~~ [failure]
+
+x.unshift(6);
+~~~~~~~~~~~~ [failure]
+
+// Allow array non-mutation methods
+
+x.concat([3, 4]);
+x.includes(2);
+x.indexOf(1);
+x.join(', ');
+x.lastIndexOf(0);
+x.slice(1, 2);
+x.toString();
+x.toLocaleString("en", {timeZone: "UTC"});
+
+// Allow other functions and methods
+u();
+v.y();
+
+// Don't catch calls of array mutation methods on non-array objects
+
+const z = {
+  length: 5,
+  copyWithin: () => {},
+  fill: () => {},
+  pop: () => {},
+  push: () => {},
+  reverse: () => {},
+  shift: () => {},
+  sort: () => {},
+  splice: () => {},
+  unshift: () => {}
+};
+
+z.length = 7;
+z.copyWithin();
+z.fill();
+z.pop();
+z.push();
+z.reverse();
+z.shift();
+z.sort();
+z.splice();
+z.unshift();
+
+[failure]: Mutating an array is not allowed.
