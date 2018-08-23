@@ -20,14 +20,14 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  const variableStatementFailures = chectVariableStatement(node, ctx);
+  const variableStatementFailures = checkVariableStatement(node, ctx);
   const forStatementsFailures = checkForStatements(node, ctx);
   return {
     invalidNodes: [...variableStatementFailures, ...forStatementsFailures]
   };
 }
 
-function chectVariableStatement(
+function checkVariableStatement(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
@@ -47,17 +47,17 @@ function checkForStatements(
     node.kind === ts.SyntaxKind.ForInStatement ||
     node.kind === ts.SyntaxKind.ForOfStatement
   ) {
-    const forStatmentNode = node as
+    const forStatementNode = node as
       | ts.ForStatement
       | ts.ForInStatement
       | ts.ForOfStatement;
     if (
-      forStatmentNode.initializer &&
-      forStatmentNode.initializer.kind ===
+      forStatementNode.initializer &&
+      forStatementNode.initializer.kind ===
         ts.SyntaxKind.VariableDeclarationList &&
-      Lint.isNodeFlagSet(forStatmentNode.initializer, ts.NodeFlags.Let)
+      Lint.isNodeFlagSet(forStatementNode.initializer, ts.NodeFlags.Let)
     ) {
-      const declarationList = forStatmentNode.initializer as ts.VariableDeclarationList;
+      const declarationList = forStatementNode.initializer as ts.VariableDeclarationList;
       return checkDeclarationList(declarationList, ctx);
     }
   }
