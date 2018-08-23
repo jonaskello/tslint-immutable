@@ -9,7 +9,8 @@ import * as CheckNode from "./check-node";
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
   IgnoreClassOption &
-  IgnoreInterfaceOption;
+  IgnoreInterfaceOption &
+  IgnoreMutationFollowingAccessorOption;
 
 export interface IgnoreLocalOption {
   readonly ignoreLocal?: boolean;
@@ -25,6 +26,10 @@ export interface IgnoreClassOption {
 
 export interface IgnoreInterfaceOption {
   readonly ignoreInterface?: boolean;
+}
+
+export interface IgnoreMutationFollowingAccessorOption {
+  readonly ignoreMutationFollowingAccessor?: boolean;
 }
 
 export function checkNodeWithIgnore(
