@@ -49,6 +49,8 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-expression-statement](#no-expression-statement)
   * [no-if-statement](#no-if-statement)
   * [no-loop-statement](#no-loop-statement)
+  * [no-throw](#no-throw)
+  * [no-try](#no-try)
 * [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
@@ -428,6 +430,44 @@ const double = numbers.map(n => n * 2);
 ```
 
 For more background see this [blog post](https://hackernoon.com/rethinking-javascript-death-of-the-for-loop-c431564c84a8) and discussion in [#54](https://github.com/jonaskello/tslint-immutable/issues/54).
+
+### no-throw
+
+Exceptions are not part of functional programming.
+
+```typescript
+throw new Error('Something went wrong.'); // Unexpected throw, throwing exceptions is not functional.
+```
+
+As an alternative a function should return an error:
+
+```typescript
+function divide(x: number, y: number): number | Error {
+  return (
+    y === 0
+    ? new Error('Cannot divide by zero.')
+    : x / y
+  );
+}
+```
+
+Or in the case of an async function, a rejected promise should be returned:
+
+```typescript
+async function divide(x: Promise<number>, y: Promise<number>): Promise<number> {
+  const [xv, yv] = await Promise.all([x, y]);
+
+  return (
+    yv === 0
+    ? Promise.reject(new Error('Cannot divide by zero.'))
+    : xv / yv
+  );
+}
+```
+
+### no-try
+
+Try statements are not part of functional programming. See [no-throw](#no-throw) for more information.
 
 ## Options
 
