@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.7.0] - 2018-08-23
+
+### Added
+
+* New option `ignore-mutation-following-accessor` for the `no-array-mutation` rule. See [#88](https://github.com/jonaskello/tslint-immutable/issues/88). Thanks to [@RebeccaStevens](https://github.com/RebeccaStevens) for adding this option! (See PR [#89](https://github.com/jonaskello/tslint-immutable/pull/89))
+
+* New rules `no-throw` and `no-try`. See [#86](https://github.com/jonaskello/tslint-immutable/issues/86). Thanks to [@RebeccaStevens](https://github.com/RebeccaStevens) for adding these rules! (See PR [#91](https://github.com/jonaskello/tslint-immutable/pull/91))
+
+* Option for enabling all the rules with `tslint-immutable/all`. See [#66](https://github.com/jonaskello/tslint-immutable/issues/66). Thanks to [@bakerface](https://github.com/bakerface) for adding this! (See PR [#85](https://github.com/jonaskello/tslint-immutable/pull/85))
+
 ## [v4.6.0] - 2018-06-12
 
 ### Added
