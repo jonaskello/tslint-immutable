@@ -246,6 +246,7 @@ No
 #### Options
 
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-mutation-following-accessor](#using-the-ignore-mutation-following-accessor-option-with-no-array-mutation)
 
 #### Example config
 
@@ -255,6 +256,10 @@ No
 
 ```javascript
 "no-array-mutation": [true, {"ignore-prefix": "mutable"}]
+```
+
+```javascript
+"no-array-mutation": [true, "ignore-mutation-following-accessor"]
 ```
 
 ### no-object-mutation
@@ -480,6 +485,16 @@ const doSomething(arg:string) => {
   }
   return `Hello ${arg}`;
 }
+```
+
+### Using the `ignore-mutation-following-accessor` option with `no-array-mutation`
+
+This option allows for the use of array mutating methods to be chained to an array accessor method (such as `slice` or `concat`).
+
+For example, an array can be immutably sorted with a single line like so:
+
+```typescript
+const sorted = ["foo", "bar"].slice().sort((a, b) => a.localeCompare(b)); // This is OK with ignore-mutation-following-accessor
 ```
 
 ## Recommended built-in rules

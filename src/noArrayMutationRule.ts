@@ -8,7 +8,8 @@ import {
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
 
-type Options = Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreMutationFollowingAccessorOption &
+  Ignore.IgnorePrefixOption;
 
 type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
 
@@ -44,7 +45,12 @@ const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.MinusMinusToken
 ];
 
-const forbidMethods: ReadonlyArray<string> = [
+/**
+ * Methods that mutate an array.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Mutator_methods
+ */
+const mutatorMethods: ReadonlyArray<string> = [
   "copyWithin",
   "fill",
   "pop",
@@ -54,6 +60,17 @@ const forbidMethods: ReadonlyArray<string> = [
   "sort",
   "splice",
   "unshift"
+];
+
+/**
+ * Methods that return a new array without mutating the original.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
+ */
+const accessorMethods: ReadonlyArray<string> = [
+  "concat",
+  "slice",
+  "toSource" // TODO: This is a non standardized method, should it me including?
 ];
 
 function isArrayType(type: ts.Type): boolean {
@@ -221,12 +238,15 @@ function checkCallExpression(
   if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
     const propAccExp = callExp.expression as ts.PropertyAccessExpression;
     if (
-      forbidMethods.some(m => m === propAccExp.name.text) &&
+      mutatorMethods.some(m => m === propAccExp.name.text) &&
       !Ignore.isIgnoredPrefix(
         callExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
-      )
+      ) &&
+      (!ctx.options.ignoreMutationFollowingAccessor ||
+        !isInChainCallAndFollowsAccessor(propAccExp))
     ) {
+      // Do the type checking as late as possible (as it is expensive).
       const expressionType = checker.getTypeAtLocation(propAccExp.expression);
 
       if (isArrayType(expressionType)) {
@@ -235,4 +255,26 @@ function checkCallExpression(
     }
   }
   return [];
+}
+
+/**
+ * Check if the given the given PropertyAccessExpression is part of a chain and
+ * immediately follows an accessor method call.
+ *
+ * If this is the case, then the given PropertyAccessExpression is allowed to be a mutator method call.
+ */
+function isInChainCallAndFollowsAccessor(
+  propAccExp: ts.PropertyAccessExpression
+): boolean {
+  if (ts.SyntaxKind.CallExpression === propAccExp.expression.kind) {
+    const subCallExp = propAccExp.expression as ts.CallExpression;
+    if (ts.SyntaxKind.PropertyAccessExpression === subCallExp.expression.kind) {
+      const subPropAccExp = subCallExp.expression as ts.PropertyAccessExpression;
+      if (accessorMethods.some(m => m === subPropAccExp.name.text)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }

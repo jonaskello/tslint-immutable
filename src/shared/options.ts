@@ -36,5 +36,11 @@ function upFirst(word: string): string {
 
 function camelize(text: string): string {
   let words = text.split(/[-_]/g);
-  return words[0].toLowerCase() + words.slice(1).map(upFirst);
+  return (
+    words[0].toLowerCase() +
+    words
+      .slice(1)
+      .map(upFirst)
+      .join("")
+  );
 }
