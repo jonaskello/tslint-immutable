@@ -88,11 +88,11 @@ function checkIgnoreLocalFunctionNode(
     if (skipChildren) {
       return;
     }
-    // Use return becuase performance hints docs say it optimizes the function using tail-call recursion
+    // Use return because performance hints docs say it optimizes the function using tail-call recursion
     return ts.forEachChild(node, cb);
   };
 
-  // Check either the parameter's explicit type if it has one, or itself for implict type
+  // Check either the parameter's explicit type if it has one, or itself for implicit type
   for (const n of functionNode.parameters.map(p => (p.type ? p.type : p))) {
     // Check the parameter node itself
     const { invalidNodes: invalidCheckNodes } = checkNode(n, ctx);
