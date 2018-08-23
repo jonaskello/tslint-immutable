@@ -436,18 +436,14 @@ For more background see this [blog post](https://hackernoon.com/rethinking-javas
 Exceptions are not part of functional programming.
 
 ```typescript
-throw new Error('Something went wrong.'); // Unexpected throw, throwing exceptions is not functional.
+throw new Error("Something went wrong."); // Unexpected throw, throwing exceptions is not functional.
 ```
 
 As an alternative a function should return an error:
 
 ```typescript
 function divide(x: number, y: number): number | Error {
-  return (
-    y === 0
-    ? new Error('Cannot divide by zero.')
-    : x / y
-  );
+  return y === 0 ? new Error("Cannot divide by zero.") : x / y;
 }
 ```
 
@@ -457,11 +453,9 @@ Or in the case of an async function, a rejected promise should be returned:
 async function divide(x: Promise<number>, y: Promise<number>): Promise<number> {
   const [xv, yv] = await Promise.all([x, y]);
 
-  return (
-    yv === 0
-    ? Promise.reject(new Error('Cannot divide by zero.'))
-    : xv / yv
-  );
+  return yv === 0
+    ? Promise.reject(new Error("Cannot divide by zero."))
+    : xv / yv;
 }
 ```
 
@@ -529,7 +523,7 @@ const doSomething(arg:string) => {
 
 ### Using the `ignore-mutation-following-accessor` option with `no-array-mutation`
 
-This option allows for the use of array mutating methods to be chained to an array accessor method (such as `slice` or `concat`).
+This option allows for the use of array mutator methods to be chained to an array accessor method (methods that modify the original array are known as [mutator methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Mutator_methods) (eg. `sort`) and methods that return a copy are known as [accessor methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Accessor_methods) (eg. `slice` and `concat`)).
 
 For example, an array can be immutably sorted with a single line like so:
 
@@ -569,9 +563,7 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
 
 ```javascript
 {
-  "extends": [
-    "tslint-immutable"
-  ],
+  "extends": ["tslint-immutable"],
   "rules": {
 
     // Recommended built-in rules
@@ -595,6 +587,14 @@ Here's a sample TSLint configuration file (tslint.json) that activates all the r
     "no-if-statement": true
 
   }
+}
+```
+
+It is also possible to enable all the rules in tslint-immutable by extending `tslint-immutable/all` like this:
+
+```javascript
+{
+  "extends": ["tslint-immutable/all"]
 }
 ```
 
