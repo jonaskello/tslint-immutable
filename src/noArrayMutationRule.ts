@@ -8,7 +8,8 @@ import {
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
 
-type Options = Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreMutationFollowingAccessorOption &
+  Ignore.IgnorePrefixOption;
 
 type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
 
@@ -241,8 +242,11 @@ function checkCallExpression(
       !Ignore.isIgnoredPrefix(
         callExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
-      )
+      ) &&
+      (!ctx.options.ignoreMutationFollowingAccessor ||
+        !isInChainCallAndFollowsAccessor(propAccExp))
     ) {
+      // Do the type checking as late as possible (as it is expensive).
       const expressionType = checker.getTypeAtLocation(propAccExp.expression);
 
       if (isArrayType(expressionType)) {
@@ -251,4 +255,26 @@ function checkCallExpression(
     }
   }
   return [];
+}
+
+/**
+ * Check if the given the given PropertyAccessExpression is part of a chain and
+ * immediately follows an accessor method call.
+ *
+ * If this is the case, then the given PropertyAccessExpression is allowed to be a mutator method call.
+ */
+function isInChainCallAndFollowsAccessor(
+  propAccExp: ts.PropertyAccessExpression
+): boolean {
+  if (ts.SyntaxKind.CallExpression === propAccExp.expression.kind) {
+    const subCallExp = propAccExp.expression as ts.CallExpression;
+    if (ts.SyntaxKind.PropertyAccessExpression === subCallExp.expression.kind) {
+      const subPropAccExp = subCallExp.expression as ts.PropertyAccessExpression;
+      if (accessorMethods.some(m => m === subPropAccExp.name.text)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
