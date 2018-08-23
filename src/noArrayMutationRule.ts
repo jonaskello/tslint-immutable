@@ -44,7 +44,12 @@ const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.MinusMinusToken
 ];
 
-const forbidMethods: ReadonlyArray<string> = [
+/**
+ * Methods that mutate an array.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Mutator_methods
+ */
+const mutatorMethods: ReadonlyArray<string> = [
   "copyWithin",
   "fill",
   "pop",
@@ -54,6 +59,17 @@ const forbidMethods: ReadonlyArray<string> = [
   "sort",
   "splice",
   "unshift"
+];
+
+/**
+ * Methods that return a new array without mutating the original.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
+ */
+const accessorMethods: ReadonlyArray<string> = [
+  "concat",
+  "slice",
+  "toSource" // TODO: This is a non standardized method, should it me including?
 ];
 
 function isArrayType(type: ts.Type): boolean {
@@ -221,7 +237,7 @@ function checkCallExpression(
   if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
     const propAccExp = callExp.expression as ts.PropertyAccessExpression;
     if (
-      forbidMethods.some(m => m === propAccExp.name.text) &&
+      mutatorMethods.some(m => m === propAccExp.name.text) &&
       !Ignore.isIgnoredPrefix(
         callExp.getText(node.getSourceFile()),
         ctx.options.ignorePrefix
