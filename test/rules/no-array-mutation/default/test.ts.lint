@@ -140,6 +140,64 @@ x.slice(1, 2);
 x.toString();
 x.toLocaleString("en", {timeZone: "UTC"});
 
+// Disallowed array mutation methods to be chained to array accessor methods without the setting being set.
+
+x.slice().copyWithin(0, 1, 2);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().fill(3);
+~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().pop();
+~~~~~~~~~~~~~~~ [failure]
+
+x.slice().push(3);
+~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().reverse();
+~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().shift();
+~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().sort();
+~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().splice(0, 1, 9);
+~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.slice().unshift(6);
+~~~~~~~~~~~~~~~~~~~~ [failure]
+
+
+
+x.concat([1, 2, 3]).copyWithin(0, 1, 2);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).fill(3);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).pop();
+~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).push(3);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).reverse();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).shift();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).sort();
+~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).splice(0, 1, 9);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+x.concat([1, 2, 3]).unshift(6);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
 // Allow other functions and methods
 u();
 v.y();
