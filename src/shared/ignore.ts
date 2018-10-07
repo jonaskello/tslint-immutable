@@ -8,6 +8,7 @@ import * as CheckNode from "./check-node";
 
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
+  IgnoreRestParametersOption &
   IgnoreClassOption &
   IgnoreInterfaceOption &
   IgnoreMutationFollowingAccessorOption;
@@ -18,6 +19,10 @@ export interface IgnoreLocalOption {
 
 export interface IgnorePrefixOption {
   readonly ignorePrefix?: string | Array<string> | undefined;
+}
+
+export interface IgnoreRestParametersOption {
+  readonly ignoreRestParameters?: boolean;
 }
 
 export interface IgnoreClassOption {

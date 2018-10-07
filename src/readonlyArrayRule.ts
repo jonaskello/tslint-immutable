@@ -8,7 +8,9 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
-type Options = Ignore.IgnoreLocalOption & Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreLocalOption &
+  Ignore.IgnorePrefixOption &
+  Ignore.IgnoreRestParametersOption;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
@@ -41,6 +43,16 @@ function checkArrayType(
     ) {
       return [];
     }
+
+    if (
+      ctx.options.ignoreRestParameters &&
+      node.parent &&
+      node.parent.kind === ts.SyntaxKind.Parameter &&
+      (node.parent as ts.ParameterDeclaration).dotDotDotToken
+    ) {
+      return [];
+    }
+
     return [
       createInvalidNode(node, [
         new Lint.Replacement(

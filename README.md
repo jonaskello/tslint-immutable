@@ -166,8 +166,9 @@ Yes
 
 #### Options
 
-* [ignore-local](#using-the-ignore-local-option)
-* [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-rest-parameters](#using-the-ignore-rest-parameters)
 
 #### Example config
 
@@ -481,6 +482,9 @@ Doesn't check for `readonly` in classes.
 ### Using the `ignore-interface` option
 
 Doesn't check for `readonly` in interfaces.
+
+### Using the `ignore-rest-parameters` option
+Doesn't check for `ReadonlyArray` for function rest parameters.
 
 ### Using the `ignore-prefix` option
 
