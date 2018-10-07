@@ -1,0 +1,6 @@
+// -- Function spread arguments
+
+function foo(...numbers: number[]) {
+                         ~~~~~~~~    [Only ReadonlyArray allowed.]
+}
+
