@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.8.0] - 2018-10-07
+
+### Added
+
+* New option `ignore-rest-parameters` for the `readonly-array` rule. See [#73](https://github.com/jonaskello/tslint-immutable/issues/73). Thanks to [@aboyton](https://github.com/aboyton) for adding this option! (See PR [#93](https://github.com/jonaskello/tslint-immutable/pull/93))
+
+### Added
+
 ## [v4.7.0] - 2018-08-23
 
 ### Added
@@ -268,7 +276,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.7.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.8.0...master
+[v4.8.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.7.0...v4.8.0
 [v4.7.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.6.0...v4.7.0
 [v4.6.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.4...v4.6.0
 [v4.5.4]: https://github.com/jonaskello/tslint-immutable/compare/v4.5.3...v4.5.4
