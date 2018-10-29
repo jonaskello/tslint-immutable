@@ -169,6 +169,7 @@ Yes
 - [ignore-local](#using-the-ignore-local-option)
 - [ignore-prefix](#using-the-ignore-prefix-option)
 - [ignore-rest-parameters](#using-the-ignore-rest-parameters)
+- [ignore-return-type](#using-the-ignore-return-type-option)
 
 #### Example config
 
@@ -485,6 +486,10 @@ Doesn't check for `readonly` in interfaces.
 
 ### Using the `ignore-rest-parameters` option
 Doesn't check for `ReadonlyArray` for function rest parameters.
+
+### Using the `ignore-return-type` option
+
+Doesn't check the return type of functions.
 
 ### Using the `ignore-prefix` option
 
