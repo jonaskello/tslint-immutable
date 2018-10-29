@@ -25,6 +25,10 @@ export interface IgnoreRestParametersOption {
   readonly ignoreRestParameters?: boolean;
 }
 
+export interface IgnoreReturnType {
+  readonly ignoreReturnType?: boolean;
+}
+
 export interface IgnoreClassOption {
   readonly ignoreClass?: boolean;
 }

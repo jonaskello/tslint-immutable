@@ -10,7 +10,8 @@ import {
 
 type Options = Ignore.IgnoreLocalOption &
   Ignore.IgnorePrefixOption &
-  Ignore.IgnoreRestParametersOption;
+  Ignore.IgnoreRestParametersOption &
+  Ignore.IgnoreReturnType;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
@@ -53,6 +54,10 @@ function checkArrayType(
       return [];
     }
 
+    if (ctx.options.ignoreReturnType && checkIsReturnType(node)) {
+      return [];
+    }
+
     return [
       createInvalidNode(node, [
         new Lint.Replacement(
@@ -82,6 +87,11 @@ function checkTypeReference(
     ) {
       return [];
     }
+
+    if (ctx.options.ignoreReturnType && checkIsReturnType(node)) {
+      return [];
+    }
+
     return [
       createInvalidNode(node, [
         new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
@@ -140,4 +150,18 @@ function checkVariableOrParameterImplicitType(
     }
   }
   return [];
+}
+
+function checkIsReturnType(node: ts.Node): boolean {
+  return Boolean(
+    node.parent !== undefined &&
+      (node.parent.kind === ts.SyntaxKind.FunctionDeclaration ||
+        node.parent.kind === ts.SyntaxKind.FunctionExpression ||
+        node.parent.kind === ts.SyntaxKind.ArrowFunction) &&
+      node ===
+        (node.parent as
+          | ts.FunctionDeclaration
+          | ts.FunctionExpression
+          | ts.ArrowFunction).type
+  );
 }
