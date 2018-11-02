@@ -70,3 +70,42 @@ const foo = (...numbers: ReadOnlyArray<number>): number[] => {
 const foo = (...numbers: number[]): number[] => {
                          ~~~~~~~~ [Only ReadonlyArray allowed.]
 }
+
+
+
+// Method Declarations
+
+class Test {
+  foo(...numbers: ReadonlyArray<number>): number[] {
+  }
+
+  foo(...numbers: ReadonlyArray<number>): Array<number> {
+  }
+
+  foo(...numbers: ReadonlyArray<number>): ReadOnlyArray<number> {
+  }
+
+  foo(...numbers: number[]): number[] {
+                  ~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+
+  foo(...numbers: number[]): Array<number> {
+                  ~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+
+  foo(...numbers: number[]): ReadOnlyArray<number> {
+                  ~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+
+  foo(...numbers: Array<number>): number[] {
+                  ~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+
+  foo(...numbers: Array<number>): Array<number> {
+                  ~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+
+  foo(...numbers: Array<number>): ReadOnlyArray<number> {
+                  ~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
+  }
+}
