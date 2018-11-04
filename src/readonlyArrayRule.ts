@@ -157,11 +157,13 @@ function checkIsReturnType(node: ts.Node): boolean {
     node.parent !== undefined &&
       (node.parent.kind === ts.SyntaxKind.FunctionDeclaration ||
         node.parent.kind === ts.SyntaxKind.FunctionExpression ||
-        node.parent.kind === ts.SyntaxKind.ArrowFunction) &&
+        node.parent.kind === ts.SyntaxKind.ArrowFunction ||
+        node.parent.kind === ts.SyntaxKind.MethodDeclaration) &&
       node ===
         (node.parent as
           | ts.FunctionDeclaration
           | ts.FunctionExpression
-          | ts.ArrowFunction).type
+          | ts.ArrowFunction
+          | ts.MethodDeclaration).type
   );
 }
