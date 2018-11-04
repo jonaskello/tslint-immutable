@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v4.9.1] - 2018-11-04
+
+### Fixed
+
+* `ignore-return-type` option for the `readonly-array` doesn't catch method declarations. See [#95](https://github.com/jonaskello/tslint-immutable/issues/95).
+
 ## [v4.9.0] - 2018-11-01
 
 ### Added
@@ -282,7 +288,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.1...master
+[v4.9.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.0...v4.9.1
 [v4.9.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.8.0...v4.9.0
 [v4.8.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.7.0...v4.8.0
 [v4.7.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.6.0...v4.7.0
