@@ -49,63 +49,55 @@ function checkNode(
   let invalidNodes: Array<InvalidNode> = [];
 
   // No assignment with object.property on the left
-  if (node && node.kind === ts.SyntaxKind.BinaryExpression) {
-    const binExp = node as ts.BinaryExpression;
-    if (
-      objPropAccessors.some(k => k === binExp.left.kind) &&
-      forbidObjPropOnLeftSideOf.some(k => k === binExp.operatorToken.kind) &&
-      !Ignore.isIgnoredPrefix(
-        binExp.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      ) &&
-      !inConstructor(node)
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
+  if (
+    ts.isBinaryExpression(node) &&
+    objPropAccessors.some(k => k === node.left.kind) &&
+    forbidObjPropOnLeftSideOf.some(k => k === node.operatorToken.kind) &&
+    !Ignore.isIgnoredPrefix(
+      node.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    ) &&
+    !inConstructor(node)
+  ) {
+    invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
   // No deleting object properties
-  if (node && node.kind === ts.SyntaxKind.DeleteExpression) {
-    const delExp = node as ts.DeleteExpression;
-    if (
-      objPropAccessors.some(k => k === delExp.expression.kind) &&
-      !Ignore.isIgnoredPrefix(
-        delExp.expression.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
+  if (
+    ts.isDeleteExpression(node) &&
+    objPropAccessors.some(k => k === node.expression.kind) &&
+    !Ignore.isIgnoredPrefix(
+      node.expression.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
   // No prefix inc/dec
-  if (node && node.kind === ts.SyntaxKind.PrefixUnaryExpression) {
-    const preExp = node as ts.PrefixUnaryExpression;
-    if (
-      objPropAccessors.some(k => k === preExp.operand.kind) &&
-      forbidUnaryOps.some(o => o === preExp.operator) &&
-      !Ignore.isIgnoredPrefix(
-        preExp.operand.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
+  if (
+    ts.isPrefixUnaryExpression(node) &&
+    objPropAccessors.some(k => k === node.operand.kind) &&
+    forbidUnaryOps.some(o => o === node.operator) &&
+    !Ignore.isIgnoredPrefix(
+      node.operand.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
   // No postfix inc/dec
-  if (node && node.kind === ts.SyntaxKind.PostfixUnaryExpression) {
-    const postExp = node as ts.PostfixUnaryExpression;
-    if (
-      objPropAccessors.some(k => k === postExp.operand.kind) &&
-      forbidUnaryOps.some(o => o === postExp.operator) &&
-      !Ignore.isIgnoredPrefix(
-        postExp.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      )
-    ) {
-      invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
-    }
+  if (
+    ts.isPostfixUnaryExpression(node) &&
+    objPropAccessors.some(k => k === node.operand.kind) &&
+    forbidUnaryOps.some(o => o === node.operator) &&
+    !Ignore.isIgnoredPrefix(
+      node.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    )
+  ) {
+    invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
   return { invalidNodes };
@@ -114,7 +106,7 @@ function checkNode(
 function inConstructor(nodeIn: ts.Node): boolean {
   let node = nodeIn.parent;
   while (node) {
-    if (node.kind === ts.SyntaxKind.Constructor) {
+    if (ts.isConstructorDeclaration(node)) {
       return true;
     }
     node = node.parent;
