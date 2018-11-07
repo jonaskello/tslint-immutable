@@ -18,9 +18,7 @@ function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  return node && node.kind === ts.SyntaxKind.MethodSignature
+  return ts.isMethodSignature(node)
     ? { invalidNodes: [createInvalidNode(node, [])] }
-    : {
-        invalidNodes: []
-      };
+    : { invalidNodes: [] };
 }
