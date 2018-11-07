@@ -19,11 +19,10 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   const invalidNodes = [];
-  if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
-    const interfaceDeclaration = node as ts.InterfaceDeclaration;
+  if (ts.isInterfaceDeclaration(node)) {
     let prevMemberKind: number | undefined = undefined;
     let prevMemberType: number | undefined = undefined;
-    for (const member of interfaceDeclaration.members) {
+    for (const member of node.members) {
       const memberKind = member.kind;
       let memberType = 0;
       // If it is a property declaration we need to check the type too
@@ -32,7 +31,7 @@ function checkNode(
         // Special care for function type
         if (
           propertySignature.type &&
-          propertySignature.type.kind === ts.SyntaxKind.FunctionType
+          ts.isFunctionTypeNode(propertySignature.type)
         ) {
           // We only set memberType for Functions
           memberType = propertySignature.type.kind;
