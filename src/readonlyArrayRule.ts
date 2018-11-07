@@ -113,35 +113,37 @@ function checkVariableOrParameterImplicitType(
     if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return [];
     }
-    if (!node.type) {
-      if (node.initializer && ts.isArrayLiteralExpression(node.initializer)) {
-        const length = node.name.getWidth(ctx.sourceFile);
-        const nameText = node.name.getText(ctx.sourceFile);
-        let typeArgument = "any";
-        // Not sure it is a good idea to guess what the element types are...
-        // if (node.initializer.elements.length > 0) {
-        //   const element = node.initializer.elements[0];
-        //   if (ts.isNumericLiteral(element)) {
-        //     typeArgument = "number";
-        //   } else if (ts.isStringLiteral(element)) {
-        //     typeArgument = "string";
-        //   } else if (
-        //     element.kind === ts.SyntaxKind.TrueKeyword ||
-        //     element.kind === ts.SyntaxKind.FalseKeyword
-        //   ) {
-        //     typeArgument = "boolean";
-        //   }
-        // }
-        return [
-          createInvalidNode(node.name, [
-            new Lint.Replacement(
-              node.name.end - length,
-              length,
-              `${nameText}: ReadonlyArray<${typeArgument}>`
-            )
-          ])
-        ];
-      }
+    if (
+      !node.type &&
+      node.initializer &&
+      ts.isArrayLiteralExpression(node.initializer)
+    ) {
+      const length = node.name.getWidth(ctx.sourceFile);
+      const nameText = node.name.getText(ctx.sourceFile);
+      let typeArgument = "any";
+      // Not sure it is a good idea to guess what the element types are...
+      // if (node.initializer.elements.length > 0) {
+      //   const element = node.initializer.elements[0];
+      //   if (ts.isNumericLiteral(element)) {
+      //     typeArgument = "number";
+      //   } else if (ts.isStringLiteral(element)) {
+      //     typeArgument = "string";
+      //   } else if (
+      //     element.kind === ts.SyntaxKind.TrueKeyword ||
+      //     element.kind === ts.SyntaxKind.FalseKeyword
+      //   ) {
+      //     typeArgument = "boolean";
+      //   }
+      // }
+      return [
+        createInvalidNode(node.name, [
+          new Lint.Replacement(
+            node.name.end - length,
+            length,
+            `${nameText}: ReadonlyArray<${typeArgument}>`
+          )
+        ])
+      ];
     }
   }
   return [];

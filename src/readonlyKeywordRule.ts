@@ -35,27 +35,24 @@ function checkPropertySignatureAndIndexSignature(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
-    ts.isPropertySignature(node) ||
-    ts.isIndexSignatureDeclaration(node) ||
-    ts.isPropertyDeclaration(node)
+    (ts.isPropertySignature(node) ||
+      ts.isIndexSignatureDeclaration(node) ||
+      ts.isPropertyDeclaration(node)) &&
+    !(
+      node.modifiers &&
+      node.modifiers.filter(m => m.kind === ts.SyntaxKind.ReadonlyKeyword)
+        .length > 0
+    )
   ) {
-    if (
-      !(
-        node.modifiers &&
-        node.modifiers.filter(m => m.kind === ts.SyntaxKind.ReadonlyKeyword)
-          .length > 0
-      )
-    ) {
-      // Check if ignore-prefix applies
-      if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-        return [];
-      }
-      return [
-        createInvalidNode(node, [
-          new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")
-        ])
-      ];
+    // Check if ignore-prefix applies
+    if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+      return [];
     }
+    return [
+      createInvalidNode(node, [
+        new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")
+      ])
+    ];
   }
   return [];
 }

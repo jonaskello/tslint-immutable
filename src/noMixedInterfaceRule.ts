@@ -26,16 +26,13 @@ function checkNode(
       const memberKind = member.kind;
       let memberType = 0;
       // If it is a property declaration we need to check the type too
-      if (member.kind === ts.SyntaxKind.PropertySignature) {
-        const propertySignature = member as ts.PropertySignature;
-        // Special care for function type
-        if (
-          propertySignature.type &&
-          ts.isFunctionTypeNode(propertySignature.type)
-        ) {
-          // We only set memberType for Functions
-          memberType = propertySignature.type.kind;
-        }
+      if (
+        ts.isPropertySignature(member) &&
+        member.type &&
+        ts.isFunctionTypeNode(member.type)
+      ) {
+        // We only set memberType for Functions
+        memberType = member.type.kind;
       }
       if (
         prevMemberKind !== undefined &&
