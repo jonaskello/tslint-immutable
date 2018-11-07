@@ -18,9 +18,7 @@ function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  return node && node.kind === ts.SyntaxKind.ThisKeyword
+  return node.kind === ts.SyntaxKind.ThisKeyword
     ? { invalidNodes: [createInvalidNode(node, [])] }
-    : {
-        invalidNodes: []
-      };
+    : { invalidNodes: [] };
 }
