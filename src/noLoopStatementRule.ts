@@ -19,13 +19,11 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   return node &&
-    (node.kind === ts.SyntaxKind.ForStatement ||
-      node.kind === ts.SyntaxKind.ForInStatement ||
-      node.kind === ts.SyntaxKind.ForOfStatement ||
-      node.kind === ts.SyntaxKind.WhileStatement ||
-      node.kind === ts.SyntaxKind.DoStatement)
+    (ts.isForStatement(node) ||
+      ts.isForInStatement(node) ||
+      ts.isForOfStatement(node) ||
+      ts.isWhileStatement(node) ||
+      ts.isDoStatement(node))
     ? { invalidNodes: [createInvalidNode(node, [])] }
-    : {
-        invalidNodes: []
-      };
+    : { invalidNodes: [] };
 }
