@@ -46,33 +46,17 @@ export function checkNodeWithIgnore(
 ): CheckNode.CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
     // Skip checking in functions if ignore-local is set
-    if (
-      ctx.options.ignoreLocal &&
-      (node.kind === ts.SyntaxKind.FunctionDeclaration ||
-        node.kind === ts.SyntaxKind.ArrowFunction ||
-        node.kind === ts.SyntaxKind.FunctionExpression ||
-        node.kind === ts.SyntaxKind.MethodDeclaration)
-    ) {
+    if (ctx.options.ignoreLocal && ts.isFunctionLikeDeclaration(node)) {
       // We still need to check the parameters and return type
-      const functionNode:
-        | ts.FunctionDeclaration
-        | ts.ArrowFunction
-        | ts.MethodDeclaration = node as any; //tslint:disable-line
-      const invalidNodes = checkIgnoreLocalFunctionNode(
-        functionNode,
-        ctx,
-        checkNode
-      );
+      const invalidNodes = checkIgnoreLocalFunctionNode(node, ctx, checkNode);
       // Now skip this whole branch
       return { invalidNodes, skipChildren: true };
     }
 
     // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
     if (
-      (ctx.options.ignoreClass &&
-        node.kind === ts.SyntaxKind.PropertyDeclaration) ||
-      (ctx.options.ignoreInterface &&
-        node.kind === ts.SyntaxKind.PropertySignature)
+      (ctx.options.ignoreClass && ts.isPropertyDeclaration(node)) ||
+      (ctx.options.ignoreInterface && ts.isPropertySignature(node))
     ) {
       // Now skip this whole branch
       return { invalidNodes: [], skipChildren: true };
@@ -84,10 +68,7 @@ export function checkNodeWithIgnore(
 }
 
 function checkIgnoreLocalFunctionNode(
-  functionNode:
-    | ts.FunctionDeclaration
-    | ts.ArrowFunction
-    | ts.MethodDeclaration,
+  functionNode: ts.FunctionLikeDeclaration,
   ctx: Lint.WalkContext<{}>,
   checkNode: CheckNode.CheckNodeFunction<{}>
 ): ReadonlyArray<CheckNode.InvalidNode> {
@@ -140,20 +121,8 @@ export function shouldIgnorePrefix(
 ): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
   if (options.ignorePrefix) {
-    if (
-      node &&
-      (node.kind === ts.SyntaxKind.VariableDeclaration ||
-        node.kind === ts.SyntaxKind.Parameter ||
-        node.kind === ts.SyntaxKind.PropertySignature ||
-        node.kind === ts.SyntaxKind.PropertyDeclaration ||
-        node.kind === ts.SyntaxKind.TypeAliasDeclaration)
-    ) {
-      const variableDeclarationNode = node as
-        | ts.VariableDeclaration
-        | ts.PropertySignature
-        | ts.TypeAliasDeclaration
-        | ts.ParameterDeclaration;
-      const variableText = variableDeclarationNode.name.getText(sourceFile);
+    if (node && (ts.isVariableLike(node) || ts.isTypeAliasDeclaration(node))) {
+      const variableText = node.name.getText(sourceFile);
       // if (
       //   variableText.substr(0, options.ignorePrefix.length) ===
       //   options.ignorePrefix

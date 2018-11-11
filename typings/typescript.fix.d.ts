@@ -16,3 +16,11 @@ export function isAssignmentExpression(
   node: ts.Node,
   excludeCompoundAssignment?: boolean
 ): node is ts.AssignmentExpression<ts.AssignmentOperatorToken>;
+
+export function isVariableLike(
+  node: ts.Node
+): node is ts.VariableLikeDeclaration;
+
+export function isFunctionLikeDeclaration(
+  node: ts.Node
+): node is ts.FunctionLikeDeclaration;
