@@ -47,6 +47,7 @@ function checkArrayType(
 
     if (
       ctx.options.ignoreRestParameters &&
+      node.parent &&
       ts.isParameter(node.parent) &&
       node.parent.dotDotDotToken
     ) {
@@ -151,6 +152,8 @@ function checkVariableOrParameterImplicitType(
 
 function checkIsReturnType(node: ts.Node): boolean {
   return Boolean(
-    ts.isFunctionLikeDeclaration(node.parent) && node === node.parent.type
+    node.parent &&
+      ts.isFunctionLikeDeclaration(node.parent) &&
+      node === node.parent.type
   );
 }

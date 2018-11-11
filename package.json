@@ -30,6 +30,9 @@
     "tslint-plugin-prettier": "^1.3.0",
     "typescript": "^3.0.0"
   },
+  "peerDependencies": {
+    "typescript": "^2.6.1 || ^3.0.0"
+  },
   "scripts": {
     "fix-missing-ts-declarations": "node scripts/fix-missing-ts-declarations.js",
     "compile": "yarn fix-missing-ts-declarations && tsc",

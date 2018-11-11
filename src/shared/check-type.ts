@@ -13,5 +13,5 @@ export function isAccessExpression(
 }
 
 export function isArrayType(type: ts.Type): boolean {
-  return type.symbol.name === "Array";
+  return Boolean(type.symbol && type.symbol.name === "Array");
 }
