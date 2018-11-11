@@ -18,5 +18,5 @@
     "outDir": "rules",
     "lib": ["es2015", "dom"]
   },
-  "include": ["src/*.ts"]
+  "include": ["src/*.ts", "typings/typescript.d.ts"]
 }
