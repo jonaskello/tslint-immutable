@@ -7,38 +7,16 @@ import {
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
+import { isAccessExpression, isArrayType } from "./shared/check-type";
 
 type Options = Ignore.IgnoreMutationFollowingAccessorOption &
   Ignore.IgnorePrefixOption;
-
-type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeTypedRule(
   checkTypedNode,
   "Mutating an array is not allowed."
 );
-
-const arrPropAccessors: ReadonlyArray<ts.SyntaxKind> = [
-  ts.SyntaxKind.ElementAccessExpression,
-  ts.SyntaxKind.PropertyAccessExpression
-];
-
-const forbidArrPropOnLeftSideOf: ReadonlyArray<ts.SyntaxKind> = [
-  ts.SyntaxKind.EqualsToken,
-  ts.SyntaxKind.PlusEqualsToken,
-  ts.SyntaxKind.MinusEqualsToken,
-  ts.SyntaxKind.AsteriskEqualsToken,
-  ts.SyntaxKind.AsteriskAsteriskEqualsToken,
-  ts.SyntaxKind.SlashEqualsToken,
-  ts.SyntaxKind.PercentEqualsToken,
-  ts.SyntaxKind.LessThanLessThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.AmpersandEqualsToken,
-  ts.SyntaxKind.BarEqualsToken,
-  ts.SyntaxKind.CaretEqualsToken
-];
 
 const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.PlusPlusToken,
@@ -68,10 +46,6 @@ const mutatorMethods: ReadonlyArray<string> = [
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
  */
 const accessorMethods: ReadonlyArray<string> = ["concat", "slice"];
-
-function isArrayType(type: ts.Type): boolean {
-  return type.symbol.name === "Array";
-}
 
 function checkTypedNode(
   node: ts.BinaryExpression,
@@ -118,15 +92,14 @@ function checkBinaryExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    arrPropAccessors.some(k => k === node.left.kind) &&
-    forbidArrPropOnLeftSideOf.some(k => k === node.operatorToken.kind) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    ts.isAssignmentExpression(node, false) &&
+    isAccessExpression(node.left)
   ) {
-    const left = node.left as EntryAccessor;
-    const leftExpressionType = checker.getTypeAtLocation(left.expression);
+    const leftExpressionType = checker.getTypeAtLocation(node.left.expression);
 
     if (isArrayType(leftExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -144,14 +117,15 @@ function checkDeleteExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    arrPropAccessors.some(k => k === node.expression.kind) &&
     !Ignore.isIgnoredPrefix(
       node.expression.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.expression)
   ) {
-    const delExpExp = node.expression as EntryAccessor;
-    const expressionType = checker.getTypeAtLocation(delExpExp.expression);
+    const expressionType = checker.getTypeAtLocation(
+      node.expression.expression
+    );
 
     if (isArrayType(expressionType)) {
       return [createInvalidNode(node, [])];
@@ -169,15 +143,16 @@ function checkPrefixUnaryExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    arrPropAccessors.some(k => k === node.operand.kind) &&
-    forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnoredPrefix(
       node.operand.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.operand) &&
+    forbidUnaryOps.some(o => o === node.operator)
   ) {
-    const operand = node.operand as EntryAccessor;
-    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+    const operandExpressionType = checker.getTypeAtLocation(
+      node.operand.expression
+    );
 
     if (isArrayType(operandExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -195,15 +170,16 @@ function checkPostfixUnaryExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    arrPropAccessors.some(k => k === node.operand.kind) &&
-    forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.operand) &&
+    forbidUnaryOps.some(o => o === node.operator)
   ) {
-    const operand = node.operand as EntryAccessor;
-    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+    const operandExpressionType = checker.getTypeAtLocation(
+      node.operand.expression
+    );
 
     if (isArrayType(operandExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -221,16 +197,16 @@ function checkCallExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    ts.isPropertyAccessExpression(node.expression) &&
-    mutatorMethods.some(
-      m => m === (node.expression as ts.PropertyAccessExpression).name.text
-    ) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
     ) &&
+    ts.isPropertyAccessExpression(node.expression) &&
     (!ctx.options.ignoreMutationFollowingAccessor ||
-      !isInChainCallAndFollowsAccessor(node.expression))
+      !isInChainCallAndFollowsAccessor(node.expression)) &&
+    mutatorMethods.some(
+      m => m === (node.expression as ts.PropertyAccessExpression).name.text
+    )
   ) {
     // Do the type checking as late as possible (as it is expensive).
     const expressionType = checker.getTypeAtLocation(
@@ -253,7 +229,7 @@ function checkCallExpression(
 function isInChainCallAndFollowsAccessor(
   node: ts.PropertyAccessExpression
 ): boolean {
-  if (
+  return (
     ts.isCallExpression(node.expression) &&
     ts.isPropertyAccessExpression(node.expression.expression) &&
     accessorMethods.some(
@@ -262,9 +238,5 @@ function isInChainCallAndFollowsAccessor(
         ((node.expression as ts.CallExpression)
           .expression as ts.PropertyAccessExpression).name.text
     )
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }
