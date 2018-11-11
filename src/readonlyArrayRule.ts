@@ -150,5 +150,7 @@ function checkVariableOrParameterImplicitType(
 }
 
 function checkIsReturnType(node: ts.Node): boolean {
-  return Boolean(ts.isFunctionLike(node.parent) && node === node.parent.type);
+  return Boolean(
+    ts.isFunctionLikeDeclaration(node.parent) && node === node.parent.type
+  );
 }
