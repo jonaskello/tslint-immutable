@@ -3,7 +3,7 @@
  */
 
 import * as ts from "typescript";
-import * as utils from "tsutils";
+import * as utils from "tsutils/typeguard/2.8";
 
 export function isAccessExpression(
   node: ts.Node

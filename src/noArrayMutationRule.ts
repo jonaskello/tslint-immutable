@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as utils from "tsutils";
+import * as utils from "tsutils/typeguard/2.8";
+import { isAssignmentKind } from "tsutils/util";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -108,7 +109,7 @@ function checkBinaryExpression(
       ctx.options.ignorePrefix
     ) &&
     utils.isBinaryExpression(node) &&
-    utils.isAssignmentKind(node.operatorToken.kind) &&
+    isAssignmentKind(node.operatorToken.kind) &&
     isAccessExpression(node.left)
   ) {
     const leftExpressionType = checker.getTypeAtLocation(node.left.expression);

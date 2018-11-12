@@ -4,7 +4,7 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as utils from "tsutils";
+import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
 import { isFunctionLikeDeclaration, isVariableLike } from "./typeguard";
 

@@ -1,6 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
-import * as utils from "tsutils";
+import * as utils from "tsutils/typeguard/2.8";
+import { isAssignmentKind } from "tsutils/util";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -34,7 +35,7 @@ function checkNode(
     utils.isBinaryExpression(node) &&
     isAccessExpression(node.left) &&
     utils.isBinaryExpression(node) &&
-    utils.isAssignmentKind(node.operatorToken.kind) &&
+    isAssignmentKind(node.operatorToken.kind) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
