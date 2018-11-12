@@ -34,8 +34,7 @@
     "typescript": "^2.6.1 || ^3.0.0"
   },
   "scripts": {
-    "fix-missing-ts-declarations": "node scripts/fix-missing-ts-declarations.js",
-    "compile": "yarn fix-missing-ts-declarations && tsc",
+    "compile": "tsc",
     "build": "rimraf rules && yarn compile",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "tslint --test test/rules/**/*",
