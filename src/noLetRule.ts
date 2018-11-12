@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
@@ -31,7 +32,7 @@ function checkVariableStatement(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
-  if (ts.isVariableStatement(node)) {
+  if (utils.isVariableStatement(node)) {
     return checkDeclarationList(node.declarationList, ctx);
   }
   return [];
@@ -42,11 +43,11 @@ function checkForStatements(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
-    (ts.isForStatement(node) ||
-      ts.isForInStatement(node) ||
-      ts.isForOfStatement(node)) &&
+    (utils.isForStatement(node) ||
+      utils.isForInStatement(node) ||
+      utils.isForOfStatement(node)) &&
     node.initializer &&
-    ts.isVariableDeclarationList(node.initializer) &&
+    utils.isVariableDeclarationList(node.initializer) &&
     Lint.isNodeFlagSet(node.initializer, ts.NodeFlags.Let)
   ) {
     return checkDeclarationList(node.initializer, ctx);

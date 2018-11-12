@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -19,7 +20,7 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   const invalidNodes = [];
-  if (ts.isInterfaceDeclaration(node)) {
+  if (utils.isInterfaceDeclaration(node)) {
     let prevMemberKind: number | undefined = undefined;
     let prevMemberType: number | undefined = undefined;
     for (const member of node.members) {
@@ -27,9 +28,9 @@ function checkNode(
       let memberType = 0;
       // If it is a property declaration we need to check the type too
       if (
-        ts.isPropertySignature(member) &&
+        utils.isPropertySignature(member) &&
         member.type &&
-        ts.isFunctionTypeNode(member.type)
+        utils.isFunctionTypeNode(member.type)
       ) {
         // We only set memberType for Functions
         memberType = member.type.kind;

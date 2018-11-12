@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -7,7 +8,7 @@ import {
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
-import { isAccessExpression } from "./shared/check-type";
+import { isAccessExpression } from "./shared/typeguard";
 
 type Options = Ignore.IgnorePrefixOption;
 
@@ -30,9 +31,10 @@ function checkNode(
 
   // No assignment with object.property on the left
   if (
-    ts.isBinaryExpression(node) &&
+    utils.isBinaryExpression(node) &&
     isAccessExpression(node.left) &&
-    ts.isAssignmentExpression(node, false) &&
+    utils.isBinaryExpression(node) &&
+    utils.isAssignmentKind(node.operatorToken.kind) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
@@ -44,7 +46,7 @@ function checkNode(
 
   // No deleting object properties
   if (
-    ts.isDeleteExpression(node) &&
+    utils.isDeleteExpression(node) &&
     isAccessExpression(node.expression) &&
     !Ignore.isIgnoredPrefix(
       node.expression.getText(node.getSourceFile()),
@@ -56,7 +58,7 @@ function checkNode(
 
   // No prefix inc/dec
   if (
-    ts.isPrefixUnaryExpression(node) &&
+    utils.isPrefixUnaryExpression(node) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnoredPrefix(
@@ -69,7 +71,7 @@ function checkNode(
 
   // No postfix inc/dec
   if (
-    ts.isPostfixUnaryExpression(node) &&
+    utils.isPostfixUnaryExpression(node) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnoredPrefix(
@@ -86,7 +88,7 @@ function checkNode(
 function inConstructor(nodeIn: ts.Node): boolean {
   let node = nodeIn.parent;
   while (node) {
-    if (ts.isConstructorDeclaration(node)) {
+    if (utils.isConstructorDeclaration(node)) {
       return true;
     }
     node = node.parent;

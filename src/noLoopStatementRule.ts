@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -19,11 +20,11 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   return node &&
-    (ts.isForStatement(node) ||
-      ts.isForInStatement(node) ||
-      ts.isForOfStatement(node) ||
-      ts.isWhileStatement(node) ||
-      ts.isDoStatement(node))
+    (utils.isForStatement(node) ||
+      utils.isForInStatement(node) ||
+      utils.isForOfStatement(node) ||
+      utils.isWhileStatement(node) ||
+      utils.isDoStatement(node))
     ? { invalidNodes: [createInvalidNode(node, [])] }
     : { invalidNodes: [] };
 }

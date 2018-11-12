@@ -4,7 +4,9 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import * as CheckNode from "./check-node";
+import { isFunctionLikeDeclaration, isVariableLike } from "./typeguard";
 
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
@@ -46,7 +48,7 @@ export function checkNodeWithIgnore(
 ): CheckNode.CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
     // Skip checking in functions if ignore-local is set
-    if (ctx.options.ignoreLocal && ts.isFunctionLikeDeclaration(node)) {
+    if (ctx.options.ignoreLocal && isFunctionLikeDeclaration(node)) {
       // We still need to check the parameters and return type
       const invalidNodes = checkIgnoreLocalFunctionNode(node, ctx, checkNode);
       // Now skip this whole branch
@@ -55,8 +57,8 @@ export function checkNodeWithIgnore(
 
     // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
     if (
-      (ctx.options.ignoreClass && ts.isPropertyDeclaration(node)) ||
-      (ctx.options.ignoreInterface && ts.isPropertySignature(node))
+      (ctx.options.ignoreClass && utils.isPropertyDeclaration(node)) ||
+      (ctx.options.ignoreInterface && utils.isPropertySignature(node))
     ) {
       // Now skip this whole branch
       return { invalidNodes: [], skipChildren: true };
@@ -121,7 +123,7 @@ export function shouldIgnorePrefix(
 ): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
   if (options.ignorePrefix) {
-    if (node && (ts.isVariableLike(node) || ts.isTypeAliasDeclaration(node))) {
+    if (node && (isVariableLike(node) || utils.isTypeAliasDeclaration(node))) {
       const variableText = node.name.getText(sourceFile);
       // if (
       //   variableText.substr(0, options.ignorePrefix.length) ===

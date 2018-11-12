@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
@@ -35,9 +36,9 @@ function checkPropertySignatureAndIndexSignature(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
-    (ts.isPropertySignature(node) ||
-      ts.isIndexSignatureDeclaration(node) ||
-      ts.isPropertyDeclaration(node)) &&
+    (utils.isPropertySignature(node) ||
+      utils.isIndexSignatureDeclaration(node) ||
+      utils.isPropertyDeclaration(node)) &&
     !(
       node.modifiers &&
       node.modifiers.filter(m => m.kind === ts.SyntaxKind.ReadonlyKeyword)

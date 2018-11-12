@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -18,7 +19,7 @@ function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  return ts.isIfStatement(node)
+  return utils.isIfStatement(node)
     ? { invalidNodes: [createInvalidNode(node, [])] }
     : { invalidNodes: [] };
 }

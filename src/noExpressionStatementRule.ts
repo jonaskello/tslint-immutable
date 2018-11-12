@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -19,11 +20,11 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  if (ts.isExpressionStatement(node)) {
+  if (utils.isExpressionStatement(node)) {
     const children = node.getChildren();
     const isYield = children.every((n: ts.Node) => ts.isYieldExpression(n));
     let text = node.getText(node.getSourceFile());
-    if (ts.isAwaitExpression(node.expression)) {
+    if (utils.isAwaitExpression(node.expression)) {
       text = node.expression.expression.getText(
         node.expression.getSourceFile()
       );

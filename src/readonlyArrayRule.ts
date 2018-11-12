@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils";
 import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
@@ -7,6 +8,7 @@ import {
   CheckNodeResult,
   createCheckNodeRule
 } from "./shared/check-node";
+import { isFunctionLikeDeclaration } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreLocalOption &
   Ignore.IgnorePrefixOption &
@@ -37,7 +39,7 @@ function checkArrayType(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]"...
-  if (ts.isArrayTypeNode(node)) {
+  if (utils.isArrayTypeNode(node)) {
     if (
       node.parent &&
       Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
@@ -48,7 +50,7 @@ function checkArrayType(
     if (
       ctx.options.ignoreRestParameters &&
       node.parent &&
-      ts.isParameter(node.parent) &&
+      utils.isParameterDeclaration(node.parent) &&
       node.parent.dotDotDotToken
     ) {
       return [];
@@ -78,7 +80,7 @@ function checkTypeReference(
 ): ReadonlyArray<InvalidNode> {
   // ...and type reference "Array<number>"
   if (
-    ts.isTypeReferenceNode(node) &&
+    utils.isTypeReferenceNode(node) &&
     node.typeName.getText(ctx.sourceFile) === "Array"
   ) {
     if (
@@ -106,9 +108,9 @@ function checkVariableOrParameterImplicitType(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
-    ts.isVariableDeclaration(node) ||
-    ts.isParameter(node) ||
-    ts.isPropertyDeclaration(node)
+    utils.isVariableDeclaration(node) ||
+    utils.isParameterDeclaration(node) ||
+    utils.isPropertyDeclaration(node)
   ) {
     // The initializer is used to set and implicit type
     if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
@@ -117,7 +119,7 @@ function checkVariableOrParameterImplicitType(
     if (
       !node.type &&
       node.initializer &&
-      ts.isArrayLiteralExpression(node.initializer)
+      utils.isArrayLiteralExpression(node.initializer)
     ) {
       const length = node.name.getWidth(ctx.sourceFile);
       const nameText = node.name.getText(ctx.sourceFile);
@@ -125,9 +127,9 @@ function checkVariableOrParameterImplicitType(
       // Not sure it is a good idea to guess what the element types are...
       // if (node.initializer.elements.length > 0) {
       //   const element = node.initializer.elements[0];
-      //   if (ts.isNumericLiteral(element)) {
+      //   if (utils.isNumericLiteral(element)) {
       //     typeArgument = "number";
-      //   } else if (ts.isStringLiteral(element)) {
+      //   } else if (utils.isStringLiteral(element)) {
       //     typeArgument = "string";
       //   } else if (
       //     element.kind === ts.SyntaxKind.TrueKeyword ||
@@ -153,7 +155,7 @@ function checkVariableOrParameterImplicitType(
 function checkIsReturnType(node: ts.Node): boolean {
   return Boolean(
     node.parent &&
-      ts.isFunctionLikeDeclaration(node.parent) &&
+      isFunctionLikeDeclaration(node.parent) &&
       node === node.parent.type
   );
 }
