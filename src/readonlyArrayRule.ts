@@ -8,7 +8,10 @@ import {
   CheckNodeResult,
   createCheckNodeRule
 } from "./shared/check-node";
-import { isFunctionLikeDeclaration } from "./shared/typeguard";
+import {
+  isFunctionLikeDeclaration,
+  isVariableLikeDeclaration
+} from "./shared/typeguard";
 
 type Options = Ignore.IgnoreLocalOption &
   Ignore.IgnorePrefixOption &
@@ -29,7 +32,7 @@ function checkNode(
     invalidNodes: [
       ...checkArrayType(node, ctx),
       ...checkTypeReference(node, ctx),
-      ...checkVariableOrParameterImplicitType(node, ctx)
+      ...checkVariableLikeImplicitType(node, ctx)
     ]
   };
 }
@@ -103,51 +106,44 @@ function checkTypeReference(
   return [];
 }
 
-function checkVariableOrParameterImplicitType(
+function checkVariableLikeImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
+  // The initializer is used to set and implicit type
+  if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+    return [];
+  }
   if (
-    utils.isVariableDeclaration(node) ||
-    utils.isParameterDeclaration(node) ||
-    utils.isPropertyDeclaration(node)
+    isVariableLikeDeclaration(node) &&
+    isUntypedAndHasArrayLiteralExpressionInitializer(node)
   ) {
-    // The initializer is used to set and implicit type
-    if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-      return [];
-    }
-    if (
-      !node.type &&
-      node.initializer &&
-      utils.isArrayLiteralExpression(node.initializer)
-    ) {
-      const length = node.name.getWidth(ctx.sourceFile);
-      const nameText = node.name.getText(ctx.sourceFile);
-      let typeArgument = "any";
-      // Not sure it is a good idea to guess what the element types are...
-      // if (node.initializer.elements.length > 0) {
-      //   const element = node.initializer.elements[0];
-      //   if (utils.isNumericLiteral(element)) {
-      //     typeArgument = "number";
-      //   } else if (utils.isStringLiteral(element)) {
-      //     typeArgument = "string";
-      //   } else if (
-      //     element.kind === ts.SyntaxKind.TrueKeyword ||
-      //     element.kind === ts.SyntaxKind.FalseKeyword
-      //   ) {
-      //     typeArgument = "boolean";
-      //   }
-      // }
-      return [
-        createInvalidNode(node.name, [
-          new Lint.Replacement(
-            node.name.end - length,
-            length,
-            `${nameText}: ReadonlyArray<${typeArgument}>`
-          )
-        ])
-      ];
-    }
+    const length = node.name.getWidth(ctx.sourceFile);
+    const nameText = node.name.getText(ctx.sourceFile);
+    let typeArgument = "any";
+    // Not sure it is a good idea to guess what the element types are...
+    // if (node.initializer.elements.length > 0) {
+    //   const element = node.initializer.elements[0];
+    //   if (utils.isNumericLiteral(element)) {
+    //     typeArgument = "number";
+    //   } else if (utils.isStringLiteral(element)) {
+    //     typeArgument = "string";
+    //   } else if (
+    //     element.kind === ts.SyntaxKind.TrueKeyword ||
+    //     element.kind === ts.SyntaxKind.FalseKeyword
+    //   ) {
+    //     typeArgument = "boolean";
+    //   }
+    // }
+    return [
+      createInvalidNode(node.name, [
+        new Lint.Replacement(
+          node.name.end - length,
+          length,
+          `${nameText}: ReadonlyArray<${typeArgument}>`
+        )
+      ])
+    ];
   }
   return [];
 }
@@ -158,4 +154,18 @@ function checkIsReturnType(node: ts.Node): boolean {
       isFunctionLikeDeclaration(node.parent) &&
       node === node.parent.type
   );
+}
+
+function isUntypedAndHasArrayLiteralExpressionInitializer(
+  node: ts.VariableLikeDeclaration
+): node is ts.VariableLikeDeclaration & {
+  initializer: ts.ArrayLiteralExpression;
+} {
+  // tslint:disable:no-any
+  return Boolean(
+    !(node as any).type &&
+      (node as any).initializer &&
+      utils.isArrayLiteralExpression((node as any).initializer)
+  );
+  // tslint:enable:no-any
 }
