@@ -22,7 +22,9 @@ function checkNode(
 ): CheckNodeResult {
   if (utils.isExpressionStatement(node)) {
     const children = node.getChildren();
-    const isYield = children.every((n: ts.Node) => ts.isYieldExpression(n));
+    const isYield = children.every(
+      n => n.kind === ts.SyntaxKind.YieldExpression
+    );
     let text = node.getText(node.getSourceFile());
     if (utils.isAwaitExpression(node.expression)) {
       text = node.expression.expression.getText(
