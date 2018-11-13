@@ -6,7 +6,10 @@ import * as ts from "typescript";
 import * as Lint from "tslint";
 import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
-import { isFunctionLikeDeclaration, isVariableLike } from "./typeguard";
+import {
+  isFunctionLikeDeclaration,
+  isVariableLikeDeclaration
+} from "./typeguard";
 
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
@@ -123,7 +126,7 @@ export function shouldIgnorePrefix(
 ): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
   if (options.ignorePrefix) {
-    if (node && (isVariableLike(node) || utils.isTypeAliasDeclaration(node))) {
+    if (node && (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))) {
       const variableText = node.name.getText(sourceFile);
       // if (
       //   variableText.substr(0, options.ignorePrefix.length) ===

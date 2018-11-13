@@ -28,7 +28,7 @@ export function isFunctionLikeDeclaration(
   );
 }
 
-export function isVariableLike(
+export function isVariableLikeDeclaration(
   node: ts.Node
 ): node is ts.VariableLikeDeclaration {
   return (
