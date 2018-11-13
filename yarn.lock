@@ -1998,9 +1998,9 @@ tsutils@^2.27.2:
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^3.0.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.4.0.tgz#72a56f2a9eebd9bb8a38d018485ab529aa0cb113"
+"tsutils@^2.28.0 || ^3.0.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.5.0.tgz#42602f7df241e753a2105cc3627a664abf11f745"
   dependencies:
     tslib "^1.8.1"
 
