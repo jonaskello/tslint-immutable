@@ -126,7 +126,10 @@ export function shouldIgnorePrefix(
 ): boolean {
   // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
   if (options.ignorePrefix) {
-    if (node && (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))) {
+    if (
+      node &&
+      (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
+    ) {
       const variableText = node.name.getText(sourceFile);
       // if (
       //   variableText.substr(0, options.ignorePrefix.length) ===
