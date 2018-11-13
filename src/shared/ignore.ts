@@ -124,7 +124,7 @@ export function shouldIgnorePrefix(
   options: IgnorePrefixOption,
   sourceFile: ts.SourceFile
 ): boolean {
-  // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
+  // Check ignore-prefix for VariableLikeDeclaration, TypeAliasDeclaration
   if (options.ignorePrefix) {
     if (
       node &&

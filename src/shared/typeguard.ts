@@ -5,9 +5,11 @@
 import * as ts from "typescript";
 import * as utils from "tsutils/typeguard/2.8";
 
-export function isAccessExpression(
-  node: ts.Node
-): node is ts.ElementAccessExpression | ts.PropertyAccessExpression {
+export type AccessExpression =
+  | ts.ElementAccessExpression
+  | ts.PropertyAccessExpression;
+
+export function isAccessExpression(node: ts.Node): node is AccessExpression {
   return (
     utils.isElementAccessExpression(node) ||
     utils.isPropertyAccessExpression(node)
