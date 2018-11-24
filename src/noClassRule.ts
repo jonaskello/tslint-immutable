@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -18,11 +19,7 @@ function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  return node &&
-    (node.kind === ts.SyntaxKind.ClassExpression ||
-      node.kind === ts.SyntaxKind.ClassDeclaration)
+  return utils.isClassLikeDeclaration(node)
     ? { invalidNodes: [createInvalidNode(node, [])] }
-    : {
-        invalidNodes: []
-      };
+    : { invalidNodes: [] };
 }

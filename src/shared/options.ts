@@ -12,7 +12,7 @@ export interface MutableOptions {
  * to options in format
  * {fooBar: true, doIt: "foo", doNotDoIt: true}
  */
-//tslint:disable-next-line
+// tslint:disable-next-line:no-any
 export function parseOptions<TOptions>(ruleArguments: any[]): TOptions {
   let options: MutableOptions = {};
   for (const o of ruleArguments) {

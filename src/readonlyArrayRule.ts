@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
@@ -7,6 +8,10 @@ import {
   CheckNodeResult,
   createCheckNodeRule
 } from "./shared/check-node";
+import {
+  isFunctionLikeDeclaration,
+  isVariableLikeDeclaration
+} from "./shared/typeguard";
 
 type Options = Ignore.IgnoreLocalOption &
   Ignore.IgnorePrefixOption &
@@ -27,7 +32,7 @@ function checkNode(
     invalidNodes: [
       ...checkArrayType(node, ctx),
       ...checkTypeReference(node, ctx),
-      ...checkVariableOrParameterImplicitType(node, ctx)
+      ...checkVariableLikeImplicitType(node, ctx)
     ]
   };
 }
@@ -37,7 +42,7 @@ function checkArrayType(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   // We need to check both shorthand syntax "number[]"...
-  if (node.kind === ts.SyntaxKind.ArrayType) {
+  if (utils.isArrayTypeNode(node)) {
     if (
       node.parent &&
       Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
@@ -48,8 +53,8 @@ function checkArrayType(
     if (
       ctx.options.ignoreRestParameters &&
       node.parent &&
-      node.parent.kind === ts.SyntaxKind.Parameter &&
-      (node.parent as ts.ParameterDeclaration).dotDotDotToken
+      utils.isParameterDeclaration(node.parent) &&
+      node.parent.dotDotDotToken
     ) {
       return [];
     }
@@ -78,8 +83,8 @@ function checkTypeReference(
 ): ReadonlyArray<InvalidNode> {
   // ...and type reference "Array<number>"
   if (
-    node.kind === ts.SyntaxKind.TypeReference &&
-    (node as ts.TypeReferenceNode).typeName.getText(ctx.sourceFile) === "Array"
+    utils.isTypeReferenceNode(node) &&
+    node.typeName.getText(ctx.sourceFile) === "Array"
   ) {
     if (
       node.parent &&
@@ -101,69 +106,66 @@ function checkTypeReference(
   return [];
 }
 
-function checkVariableOrParameterImplicitType(
+function checkVariableLikeImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
+  // The initializer is used to set and implicit type
+  if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+    return [];
+  }
   if (
-    node.kind === ts.SyntaxKind.VariableDeclaration ||
-    node.kind === ts.SyntaxKind.Parameter ||
-    node.kind === ts.SyntaxKind.PropertyDeclaration
+    isVariableLikeDeclaration(node) &&
+    isUntypedAndHasArrayLiteralExpressionInitializer(node)
   ) {
-    // The initializer is used to set and implicit type
-    const varOrParamNode = node as
-      | ts.VariableDeclaration
-      | ts.ParameterDeclaration;
-    if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-      return [];
-    }
-    if (!varOrParamNode.type) {
-      if (
-        varOrParamNode.initializer &&
-        varOrParamNode.initializer.kind === ts.SyntaxKind.ArrayLiteralExpression
-      ) {
-        const length = varOrParamNode.name.getWidth(ctx.sourceFile);
-        const nameText = varOrParamNode.name.getText(ctx.sourceFile);
-        let typeArgument = "any";
-        // Not sure it is a good idea to guess what the element types are...
-        // const arrayLiteralNode = varOrParamNode.initializer as ts.ArrayLiteralExpression;
-        // if (arrayLiteralNode.elements.length > 0) {
-        //   const element = arrayLiteralNode.elements[0];
-        //   if (element.kind === ts.SyntaxKind.NumericLiteral) {
-        //     typeArgument = "number";
-        //   } else if (element.kind === ts.SyntaxKind.StringLiteral) {
-        //     typeArgument = "string";
-        //   } else if (element.kind === ts.SyntaxKind.TrueKeyword || element.kind === ts.SyntaxKind.FalseKeyword) {
-        //     typeArgument = "boolean";
-        //   }
-        // }
-        return [
-          createInvalidNode(varOrParamNode.name, [
-            new Lint.Replacement(
-              varOrParamNode.name.end - length,
-              length,
-              `${nameText}: ReadonlyArray<${typeArgument}>`
-            )
-          ])
-        ];
-      }
-    }
+    const length = node.name.getWidth(ctx.sourceFile);
+    const nameText = node.name.getText(ctx.sourceFile);
+    let typeArgument = "any";
+    // Not sure it is a good idea to guess what the element types are...
+    // if (node.initializer.elements.length > 0) {
+    //   const element = node.initializer.elements[0];
+    //   if (utils.isNumericLiteral(element)) {
+    //     typeArgument = "number";
+    //   } else if (utils.isStringLiteral(element)) {
+    //     typeArgument = "string";
+    //   } else if (
+    //     element.kind === ts.SyntaxKind.TrueKeyword ||
+    //     element.kind === ts.SyntaxKind.FalseKeyword
+    //   ) {
+    //     typeArgument = "boolean";
+    //   }
+    // }
+    return [
+      createInvalidNode(node.name, [
+        new Lint.Replacement(
+          node.name.end - length,
+          length,
+          `${nameText}: ReadonlyArray<${typeArgument}>`
+        )
+      ])
+    ];
   }
   return [];
 }
 
 function checkIsReturnType(node: ts.Node): boolean {
   return Boolean(
-    node.parent !== undefined &&
-      (node.parent.kind === ts.SyntaxKind.FunctionDeclaration ||
-        node.parent.kind === ts.SyntaxKind.FunctionExpression ||
-        node.parent.kind === ts.SyntaxKind.ArrowFunction ||
-        node.parent.kind === ts.SyntaxKind.MethodDeclaration) &&
-      node ===
-        (node.parent as
-          | ts.FunctionDeclaration
-          | ts.FunctionExpression
-          | ts.ArrowFunction
-          | ts.MethodDeclaration).type
+    node.parent &&
+      isFunctionLikeDeclaration(node.parent) &&
+      node === node.parent.type
   );
+}
+
+function isUntypedAndHasArrayLiteralExpressionInitializer(
+  node: ts.VariableLikeDeclaration
+): node is ts.VariableLikeDeclaration & {
+  initializer: ts.ArrayLiteralExpression;
+} {
+  // tslint:disable:no-any
+  return Boolean(
+    !(node as any).type &&
+      (node as any).initializer &&
+      utils.isArrayLiteralExpression((node as any).initializer)
+  );
+  // tslint:enable:no-any
 }

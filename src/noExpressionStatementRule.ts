@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -19,20 +20,20 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  if (node && node.kind === ts.SyntaxKind.ExpressionStatement) {
-    const esNode = node as ts.ExpressionStatement;
-    const children = esNode.getChildren();
+  if (utils.isExpressionStatement(node)) {
+    const children = node.getChildren();
     const isYield = children.every(
-      (n: ts.Node) => n.kind === ts.SyntaxKind.YieldExpression
+      n => n.kind === ts.SyntaxKind.YieldExpression
     );
-    let text = esNode.getText(esNode.getSourceFile());
-    if (esNode.expression.kind === ts.SyntaxKind.AwaitExpression) {
-      const awaitNode = esNode.expression as ts.AwaitExpression;
-      text = awaitNode.expression.getText(awaitNode.getSourceFile());
+    let text = node.getText(node.getSourceFile());
+    if (utils.isAwaitExpression(node.expression)) {
+      text = node.expression.expression.getText(
+        node.expression.getSourceFile()
+      );
     }
     const isIgnored2 = Ignore.isIgnoredPrefix(text, ctx.options.ignorePrefix);
     if (!isYield && !isIgnored2) {
-      return { invalidNodes: [createInvalidNode(esNode, [])] };
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
   return { invalidNodes: [] };

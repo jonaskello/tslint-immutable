@@ -7,6 +7,9 @@ let foo: { bar: Array<string> };
 // Should not fail on Array as type literal member with prefix (TypeReferenceNode)
 let foo: { mutableBar: Array<string> };
 
+// Check shorthand syntax as well
+let foo: { mutableBar: string[] };
+
 // -- Local type literal
 
 // Should fail on Array as type literal member as function parameter (TypeReferenceNode)

@@ -4,7 +4,12 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
+import {
+  isFunctionLikeDeclaration,
+  isVariableLikeDeclaration
+} from "./typeguard";
 
 export type Options = IgnoreLocalOption &
   IgnorePrefixOption &
@@ -46,33 +51,17 @@ export function checkNodeWithIgnore(
 ): CheckNode.CheckNodeFunction<Options> {
   return (node: ts.Node, ctx: Lint.WalkContext<Options>) => {
     // Skip checking in functions if ignore-local is set
-    if (
-      ctx.options.ignoreLocal &&
-      (node.kind === ts.SyntaxKind.FunctionDeclaration ||
-        node.kind === ts.SyntaxKind.ArrowFunction ||
-        node.kind === ts.SyntaxKind.FunctionExpression ||
-        node.kind === ts.SyntaxKind.MethodDeclaration)
-    ) {
+    if (ctx.options.ignoreLocal && isFunctionLikeDeclaration(node)) {
       // We still need to check the parameters and return type
-      const functionNode:
-        | ts.FunctionDeclaration
-        | ts.ArrowFunction
-        | ts.MethodDeclaration = node as any; //tslint:disable-line
-      const invalidNodes = checkIgnoreLocalFunctionNode(
-        functionNode,
-        ctx,
-        checkNode
-      );
+      const invalidNodes = checkIgnoreLocalFunctionNode(node, ctx, checkNode);
       // Now skip this whole branch
       return { invalidNodes, skipChildren: true };
     }
 
     // Skip checking in classes/interfaces if ignore-class/ignore-interface is set
     if (
-      (ctx.options.ignoreClass &&
-        node.kind === ts.SyntaxKind.PropertyDeclaration) ||
-      (ctx.options.ignoreInterface &&
-        node.kind === ts.SyntaxKind.PropertySignature)
+      (ctx.options.ignoreClass && utils.isPropertyDeclaration(node)) ||
+      (ctx.options.ignoreInterface && utils.isPropertySignature(node))
     ) {
       // Now skip this whole branch
       return { invalidNodes: [], skipChildren: true };
@@ -84,10 +73,7 @@ export function checkNodeWithIgnore(
 }
 
 function checkIgnoreLocalFunctionNode(
-  functionNode:
-    | ts.FunctionDeclaration
-    | ts.ArrowFunction
-    | ts.MethodDeclaration,
+  functionNode: ts.FunctionLikeDeclaration,
   ctx: Lint.WalkContext<{}>,
   checkNode: CheckNode.CheckNodeFunction<{}>
 ): ReadonlyArray<CheckNode.InvalidNode> {
@@ -138,22 +124,13 @@ export function shouldIgnorePrefix(
   options: IgnorePrefixOption,
   sourceFile: ts.SourceFile
 ): boolean {
-  // Check ignore-prefix for VariableDeclaration, PropertySignature, TypeAliasDeclaration, Parameter
+  // Check ignore-prefix for VariableLikeDeclaration, TypeAliasDeclaration
   if (options.ignorePrefix) {
     if (
       node &&
-      (node.kind === ts.SyntaxKind.VariableDeclaration ||
-        node.kind === ts.SyntaxKind.Parameter ||
-        node.kind === ts.SyntaxKind.PropertySignature ||
-        node.kind === ts.SyntaxKind.PropertyDeclaration ||
-        node.kind === ts.SyntaxKind.TypeAliasDeclaration)
+      (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
     ) {
-      const variableDeclarationNode = node as
-        | ts.VariableDeclaration
-        | ts.PropertySignature
-        | ts.TypeAliasDeclaration
-        | ts.ParameterDeclaration;
-      const variableText = variableDeclarationNode.name.getText(sourceFile);
+      const variableText = node.name.getText(sourceFile);
       // if (
       //   variableText.substr(0, options.ignorePrefix.length) ===
       //   options.ignorePrefix

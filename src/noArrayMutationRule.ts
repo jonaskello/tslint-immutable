@@ -1,5 +1,7 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
+import { isAssignmentKind } from "tsutils/util";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -7,11 +9,16 @@ import {
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
+import { isAccessExpression } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreMutationFollowingAccessorOption &
   Ignore.IgnorePrefixOption;
 
-type EntryAccessor = ts.ElementAccessExpression | ts.PropertyAccessExpression;
+type ArrayType = ts.Type & {
+  symbol: {
+    name: "Array";
+  };
+};
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeTypedRule(
@@ -19,26 +26,9 @@ export const Rule = createCheckNodeTypedRule(
   "Mutating an array is not allowed."
 );
 
-const arrPropAccessors: ReadonlyArray<ts.SyntaxKind> = [
-  ts.SyntaxKind.ElementAccessExpression,
-  ts.SyntaxKind.PropertyAccessExpression
-];
-
-const forbidArrPropOnLeftSideOf: ReadonlyArray<ts.SyntaxKind> = [
-  ts.SyntaxKind.EqualsToken,
-  ts.SyntaxKind.PlusEqualsToken,
-  ts.SyntaxKind.MinusEqualsToken,
-  ts.SyntaxKind.AsteriskEqualsToken,
-  ts.SyntaxKind.AsteriskAsteriskEqualsToken,
-  ts.SyntaxKind.SlashEqualsToken,
-  ts.SyntaxKind.PercentEqualsToken,
-  ts.SyntaxKind.LessThanLessThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
-  ts.SyntaxKind.AmpersandEqualsToken,
-  ts.SyntaxKind.BarEqualsToken,
-  ts.SyntaxKind.CaretEqualsToken
-];
+export function isArrayType(type: ts.Type): type is ArrayType {
+  return Boolean(type.symbol && type.symbol.name === "Array");
+}
 
 const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.PlusPlusToken,
@@ -67,15 +57,7 @@ const mutatorMethods: ReadonlyArray<string> = [
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
  */
-const accessorMethods: ReadonlyArray<string> = [
-  "concat",
-  "slice",
-  "toSource" // TODO: This is a non standardized method, should it me including?
-];
-
-function isArrayType(type: ts.Type): boolean {
-  return type.symbol !== undefined && type.symbol.name === "Array";
-}
+const accessorMethods: ReadonlyArray<string> = ["concat", "slice"];
 
 function checkTypedNode(
   node: ts.BinaryExpression,
@@ -90,33 +72,26 @@ function getInvalidNodes(
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
-  switch (node.kind) {
-    case ts.SyntaxKind.BinaryExpression:
-      return checkBinaryExpression(node as ts.BinaryExpression, ctx, checker);
-
-    case ts.SyntaxKind.DeleteExpression:
-      return checkDeleteExpression(node as ts.DeleteExpression, ctx, checker);
-
-    case ts.SyntaxKind.PrefixUnaryExpression:
-      return checkPrefixUnaryExpression(
-        node as ts.PrefixUnaryExpression,
-        ctx,
-        checker
-      );
-
-    case ts.SyntaxKind.PostfixUnaryExpression:
-      return checkPostfixUnaryExpression(
-        node as ts.PostfixUnaryExpression,
-        ctx,
-        checker
-      );
-
-    case ts.SyntaxKind.CallExpression:
-      return checkCallExpression(node as ts.CallExpression, ctx, checker);
-
-    default:
-      return [];
+  if (utils.isBinaryExpression(node)) {
+    return checkBinaryExpression(node, ctx, checker);
   }
+
+  if (utils.isDeleteExpression(node)) {
+    return checkDeleteExpression(node, ctx, checker);
+  }
+
+  if (utils.isPrefixUnaryExpression(node)) {
+    return checkPrefixUnaryExpression(node, ctx, checker);
+  }
+
+  if (utils.isPostfixUnaryExpression(node)) {
+    return checkPostfixUnaryExpression(node, ctx, checker);
+  }
+
+  if (utils.isCallExpression(node)) {
+    return checkCallExpression(node, ctx, checker);
+  }
+  return [];
 }
 
 /**
@@ -129,15 +104,15 @@ function checkBinaryExpression(
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
   if (
-    arrPropAccessors.some(k => k === node.left.kind) &&
-    forbidArrPropOnLeftSideOf.some(k => k === node.operatorToken.kind) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    utils.isBinaryExpression(node) &&
+    isAssignmentKind(node.operatorToken.kind) &&
+    isAccessExpression(node.left)
   ) {
-    const left = node.left as EntryAccessor;
-    const leftExpressionType = checker.getTypeAtLocation(left.expression);
+    const leftExpressionType = checker.getTypeAtLocation(node.left.expression);
 
     if (isArrayType(leftExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -154,16 +129,16 @@ function checkDeleteExpression(
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
-  const delExp = node as ts.DeleteExpression;
   if (
-    arrPropAccessors.some(k => k === delExp.expression.kind) &&
     !Ignore.isIgnoredPrefix(
-      delExp.expression.getText(node.getSourceFile()),
+      node.expression.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.expression)
   ) {
-    const delExpExp = delExp.expression as EntryAccessor;
-    const expressionType = checker.getTypeAtLocation(delExpExp.expression);
+    const expressionType = checker.getTypeAtLocation(
+      node.expression.expression
+    );
 
     if (isArrayType(expressionType)) {
       return [createInvalidNode(node, [])];
@@ -180,17 +155,17 @@ function checkPrefixUnaryExpression(
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
-  const preExp = node as ts.PrefixUnaryExpression;
   if (
-    arrPropAccessors.some(k => k === preExp.operand.kind) &&
-    forbidUnaryOps.some(o => o === preExp.operator) &&
     !Ignore.isIgnoredPrefix(
-      preExp.operand.getText(node.getSourceFile()),
+      node.operand.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.operand) &&
+    forbidUnaryOps.some(o => o === node.operator)
   ) {
-    const operand = preExp.operand as EntryAccessor;
-    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+    const operandExpressionType = checker.getTypeAtLocation(
+      node.operand.expression
+    );
 
     if (isArrayType(operandExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -207,17 +182,17 @@ function checkPostfixUnaryExpression(
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
-  const postExp = node as ts.PostfixUnaryExpression;
   if (
-    arrPropAccessors.some(k => k === postExp.operand.kind) &&
-    forbidUnaryOps.some(o => o === postExp.operator) &&
     !Ignore.isIgnoredPrefix(
-      postExp.getText(node.getSourceFile()),
+      node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
-    )
+    ) &&
+    isAccessExpression(node.operand) &&
+    forbidUnaryOps.some(o => o === node.operator)
   ) {
-    const operand = postExp.operand as EntryAccessor;
-    const operandExpressionType = checker.getTypeAtLocation(operand.expression);
+    const operandExpressionType = checker.getTypeAtLocation(
+      node.operand.expression
+    );
 
     if (isArrayType(operandExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -234,24 +209,25 @@ function checkCallExpression(
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
 ): ReadonlyArray<InvalidNode> {
-  const callExp = node as ts.CallExpression;
-  if (ts.SyntaxKind.PropertyAccessExpression === callExp.expression.kind) {
-    const propAccExp = callExp.expression as ts.PropertyAccessExpression;
-    if (
-      mutatorMethods.some(m => m === propAccExp.name.text) &&
-      !Ignore.isIgnoredPrefix(
-        callExp.getText(node.getSourceFile()),
-        ctx.options.ignorePrefix
-      ) &&
-      (!ctx.options.ignoreMutationFollowingAccessor ||
-        !isInChainCallAndFollowsAccessor(propAccExp))
-    ) {
-      // Do the type checking as late as possible (as it is expensive).
-      const expressionType = checker.getTypeAtLocation(propAccExp.expression);
+  if (
+    !Ignore.isIgnoredPrefix(
+      node.getText(node.getSourceFile()),
+      ctx.options.ignorePrefix
+    ) &&
+    utils.isPropertyAccessExpression(node.expression) &&
+    (!ctx.options.ignoreMutationFollowingAccessor ||
+      !isInChainCallAndFollowsAccessor(node.expression)) &&
+    mutatorMethods.some(
+      m => m === (node.expression as ts.PropertyAccessExpression).name.text
+    )
+  ) {
+    // Do the type checking as late as possible (as it is expensive).
+    const expressionType = checker.getTypeAtLocation(
+      node.expression.expression
+    );
 
-      if (isArrayType(expressionType)) {
-        return [createInvalidNode(node, [])];
-      }
+    if (isArrayType(expressionType)) {
+      return [createInvalidNode(node, [])];
     }
   }
   return [];
@@ -264,17 +240,16 @@ function checkCallExpression(
  * If this is the case, then the given PropertyAccessExpression is allowed to be a mutator method call.
  */
 function isInChainCallAndFollowsAccessor(
-  propAccExp: ts.PropertyAccessExpression
+  node: ts.PropertyAccessExpression
 ): boolean {
-  if (ts.SyntaxKind.CallExpression === propAccExp.expression.kind) {
-    const subCallExp = propAccExp.expression as ts.CallExpression;
-    if (ts.SyntaxKind.PropertyAccessExpression === subCallExp.expression.kind) {
-      const subPropAccExp = subCallExp.expression as ts.PropertyAccessExpression;
-      if (accessorMethods.some(m => m === subPropAccExp.name.text)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  return (
+    utils.isCallExpression(node.expression) &&
+    utils.isPropertyAccessExpression(node.expression.expression) &&
+    accessorMethods.some(
+      m =>
+        m ===
+        ((node.expression as ts.CallExpression)
+          .expression as ts.PropertyAccessExpression).name.text
+    )
+  );
 }

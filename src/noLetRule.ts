@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import * as Ignore from "./shared/ignore";
 import {
   InvalidNode,
@@ -31,9 +32,8 @@ function checkVariableStatement(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
-  if (node.kind === ts.SyntaxKind.VariableStatement) {
-    const variableStatementNode: ts.VariableStatement = node as ts.VariableStatement;
-    return checkDeclarationList(variableStatementNode.declarationList, ctx);
+  if (utils.isVariableStatement(node)) {
+    return checkDeclarationList(node.declarationList, ctx);
   }
   return [];
 }
@@ -43,23 +43,14 @@ function checkForStatements(
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
   if (
-    node.kind === ts.SyntaxKind.ForStatement ||
-    node.kind === ts.SyntaxKind.ForInStatement ||
-    node.kind === ts.SyntaxKind.ForOfStatement
+    (utils.isForStatement(node) ||
+      utils.isForInStatement(node) ||
+      utils.isForOfStatement(node)) &&
+    node.initializer &&
+    utils.isVariableDeclarationList(node.initializer) &&
+    Lint.isNodeFlagSet(node.initializer, ts.NodeFlags.Let)
   ) {
-    const forStatementNode = node as
-      | ts.ForStatement
-      | ts.ForInStatement
-      | ts.ForOfStatement;
-    if (
-      forStatementNode.initializer &&
-      forStatementNode.initializer.kind ===
-        ts.SyntaxKind.VariableDeclarationList &&
-      Lint.isNodeFlagSet(forStatementNode.initializer, ts.NodeFlags.Let)
-    ) {
-      const declarationList = forStatementNode.initializer as ts.VariableDeclarationList;
-      return checkDeclarationList(declarationList, ctx);
-    }
+    return checkDeclarationList(node.initializer, ctx);
   }
   return [];
 }

@@ -1,5 +1,6 @@
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import * as utils from "tsutils/typeguard/2.8";
 import {
   createInvalidNode,
   CheckNodeResult,
@@ -19,24 +20,20 @@ function checkNode(
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
   const invalidNodes = [];
-  if (node.kind === ts.SyntaxKind.InterfaceDeclaration) {
-    const interfaceDeclaration = node as ts.InterfaceDeclaration;
+  if (utils.isInterfaceDeclaration(node)) {
     let prevMemberKind: number | undefined = undefined;
     let prevMemberType: number | undefined = undefined;
-    for (const member of interfaceDeclaration.members) {
+    for (const member of node.members) {
       const memberKind = member.kind;
       let memberType = 0;
       // If it is a property declaration we need to check the type too
-      if (member.kind === ts.SyntaxKind.PropertySignature) {
-        const propertySignature = member as ts.PropertySignature;
-        // Special care for function type
-        if (
-          propertySignature.type &&
-          propertySignature.type.kind === ts.SyntaxKind.FunctionType
-        ) {
-          // We only set memberType for Functions
-          memberType = propertySignature.type.kind;
-        }
+      if (
+        utils.isPropertySignature(member) &&
+        member.type &&
+        utils.isFunctionTypeNode(member.type)
+      ) {
+        // We only set memberType for Functions
+        memberType = member.type.kind;
       }
       if (
         prevMemberKind !== undefined &&
