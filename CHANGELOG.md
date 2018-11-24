@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.0.0] - 2018-11-24
+
+### Changed
+
+* Internal refactoring to use the [tsutils](https://www.npmjs.com/package/tsutils) library, see PR [100](https://github.com/jonaskello/tslint-immutable/pull/100). This cleans up a lot of code and makes it easier to do further development. Becasue the tsutils library requires typescript version >=2.8 and node >=6 this refactoring required a major version bump. Big thanks to [RebeccaStevens](https://github.com/RebeccaStevens) for the amazing work on this refactoring :-).
+
 ## [v4.9.1] - 2018-11-04
 
 ### Fixed
@@ -288,7 +294,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.1...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.0...master
+[v5.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.1...v5.0.0
 [v4.9.1]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.0...v4.9.1
 [v4.9.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.8.0...v4.9.0
 [v4.8.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.7.0...v4.8.0

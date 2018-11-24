@@ -26,9 +26,10 @@ See the [example](#sample-configuration-file) tslint.json file for configuration
 
 ## Compability
 
-* tslint-immutable 3.x.x is compatible with tslint 5.x.x.
-* tslint-immutable 2.x.x is compatible with tslint 4.x.x.
-* tslint-immutable 1.x.x is compatible with tslint 3.x.x.
+* tslint-immutable 5.x.x requires typescript >=2.8, node >=6, and tslint 5.x.x.
+* tslint-immutable 3.x.x requires tslint 5.x.x.
+* tslint-immutable 2.x.x requires tslint 4.x.x.
+* tslint-immutable 1.x.x requires tslint 3.x.x.
 
 ## TSLint Rules
 
@@ -166,10 +167,10 @@ Yes
 
 #### Options
 
-- [ignore-local](#using-the-ignore-local-option)
-- [ignore-prefix](#using-the-ignore-prefix-option)
-- [ignore-return-type](#using-the-ignore-return-type-option)
-- [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
+* [ignore-local](#using-the-ignore-local-option)
+* [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-return-type](#using-the-ignore-return-type-option)
+* [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
 
 #### Example config
 
