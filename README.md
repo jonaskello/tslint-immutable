@@ -639,5 +639,5 @@ This work was originally inspired by [eslint-plugin-immutable](https://github.co
 [license-url]: https://opensource.org/licenses/MIT
 [prettier-image]: https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat
 [prettier-url]: https://github.com/prettier/prettier
-[type-info-badge]: https://img.shields.io/badge/type_info-requried-d51313.svg?style=flat
+[type-info-badge]: https://img.shields.io/badge/type_info-required-d51313.svg?style=flat
 [type-info-url]: https://palantir.github.io/tslint/usage/type-checking
