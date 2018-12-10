@@ -64,4 +64,12 @@ const foo = function (): string {
            ~~~~~~~~~~~~~ [failure]
 };
 
+// Assignment to overridden array
+interface SomeType {
+  array: Array<string>; // tslint:disable-line:readonly-array
+}
+const o: SomeType = {
+    array: [""],
+}
+
 [failure]: Only ReadonlyArray allowed.

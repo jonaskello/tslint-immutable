@@ -55,3 +55,11 @@ const foo = function (): string {
   let bar: ReadonlyArray<string>;
 };
 
+// Assignment to overridden array
+interface SomeType {
+  array: Array<string>; // tslint:disable-line:readonly-array
+}
+const o: SomeType = {
+    array: [""],
+}
+
