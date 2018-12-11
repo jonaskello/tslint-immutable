@@ -9,6 +9,21 @@ import {
 
 type Options = {};
 
+export function untested(): void {
+  const x = 100;
+  const y = x / 8;
+  if (x === y) {
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+    console.log("This is untested.");
+  }
+}
+
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
   checkNode,
