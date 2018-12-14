@@ -10,7 +10,7 @@ import {
 } from "./shared/check-node";
 import {
   isFunctionLikeDeclaration,
-  isVariableLikeDeclaration
+  isVariableOrParameterOrPropertyDeclaration
 } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreLocalOption &
@@ -32,7 +32,7 @@ function checkNode(
     invalidNodes: [
       ...checkArrayType(node, ctx),
       ...checkTypeReference(node, ctx),
-      ...checkVariableLikeImplicitType(node, ctx)
+      ...checkImplicitType(node, ctx)
     ]
   };
 }
@@ -106,35 +106,22 @@ function checkTypeReference(
   return [];
 }
 
-function checkVariableLikeImplicitType(
+export function checkImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): ReadonlyArray<InvalidNode> {
-  // The initializer is used to set and implicit type
   if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
     return [];
   }
+  // Check if the initializer is used to set an implicit array type
   if (
-    isVariableLikeDeclaration(node) &&
+    isVariableOrParameterOrPropertyDeclaration(node) &&
     isUntypedAndHasArrayLiteralExpressionInitializer(node)
   ) {
     const length = node.name.getWidth(ctx.sourceFile);
     const nameText = node.name.getText(ctx.sourceFile);
     let typeArgument = "any";
-    // Not sure it is a good idea to guess what the element types are...
-    // if (node.initializer.elements.length > 0) {
-    //   const element = node.initializer.elements[0];
-    //   if (utils.isNumericLiteral(element)) {
-    //     typeArgument = "number";
-    //   } else if (utils.isStringLiteral(element)) {
-    //     typeArgument = "string";
-    //   } else if (
-    //     element.kind === ts.SyntaxKind.TrueKeyword ||
-    //     element.kind === ts.SyntaxKind.FalseKeyword
-    //   ) {
-    //     typeArgument = "boolean";
-    //   }
-    // }
+
     return [
       createInvalidNode(node.name, [
         new Lint.Replacement(
@@ -157,15 +144,17 @@ function checkIsReturnType(node: ts.Node): boolean {
 }
 
 function isUntypedAndHasArrayLiteralExpressionInitializer(
-  node: ts.VariableLikeDeclaration
-): node is ts.VariableLikeDeclaration & {
-  initializer: ts.ArrayLiteralExpression;
-} {
-  // tslint:disable:no-any
+  node:
+    | ts.VariableDeclaration
+    | ts.ParameterDeclaration
+    | ts.PropertyDeclaration
+): node is
+  | ts.VariableDeclaration
+  | ts.ParameterDeclaration & {
+      initializer: ts.ArrayLiteralExpression;
+    } {
   return Boolean(
-    !(node as any).type &&
-      (node as any).initializer &&
-      utils.isArrayLiteralExpression((node as any).initializer)
+    !node.type &&
+      (node.initializer && utils.isArrayLiteralExpression(node.initializer))
   );
-  // tslint:enable:no-any
 }

@@ -1,13 +1,7 @@
 
 class Foo {
-
-  foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3]) {
-           ~~~~~~~~~~~~~ [failure]
-                                                      ~~~ [failure]
-
-    const foo: Array<string> = [];
-  }
-
+  const foo = [1, 2, 3]
+        ~~~ [failure]
 }
 
 [failure]: Only ReadonlyArray allowed.
