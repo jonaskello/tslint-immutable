@@ -44,3 +44,16 @@ export function isVariableLikeDeclaration(
     utils.isVariableDeclaration(node)
   );
 }
+
+export function isVariableOrParameterOrPropertyDeclaration(
+  node: ts.Node
+): node is
+  | ts.VariableDeclaration
+  | ts.ParameterDeclaration
+  | ts.PropertyDeclaration {
+  return (
+    utils.isVariableDeclaration(node) ||
+    utils.isParameterDeclaration(node) ||
+    utils.isPropertyDeclaration(node)
+  );
+}

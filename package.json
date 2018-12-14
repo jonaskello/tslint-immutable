@@ -39,7 +39,7 @@
     "build": "rimraf rules && yarn compile",
     "lint": "tslint './src/**/*.ts{,x}'",
     "test": "tslint --test test/rules/**/*",
-    "test:work": "yarn build && tslint --test test/rules/readonly-array/*",
+    "test:work": "yarn build && tslint --test test/rules/readonly-array/work",
     "verify": "yarn build && yarn lint && yarn coverage",
     "coverage": "rimraf coverage .nyc_output && nyc yarn test",
     "report-coverage": "codecov -f coverage/*.json",
