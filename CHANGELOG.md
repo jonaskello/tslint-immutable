@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.0.1] - 2018-12-15
+
+### Fixed
+
+* Fixed a regression in the `readonly-array`. See [#104](https://github.com/jonaskello/tslint-immutable/issues/104).
+
 ## [v5.0.0] - 2018-11-24
 
 ### Changed
