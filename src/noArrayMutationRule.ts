@@ -11,7 +11,8 @@ import {
 import * as Ignore from "./shared/ignore";
 import { isAccessExpression } from "./shared/typeguard";
 
-type Options = Ignore.IgnoreMutationFollowingAccessorOption &
+type Options = Ignore.IgnoreChainedMutationOnNewArrayOption &
+  Ignore.IgnoreMutationFollowingAccessorOption &
   Ignore.IgnorePrefixOption;
 
 type ArrayType = ts.Type & {
@@ -70,7 +71,7 @@ const mutatorMethods: ReadonlyArray<string> = [
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Iteration_methods
  */
-const safeMethods: ReadonlyArray<string> = [
+const newArrayReturningMethods: ReadonlyArray<string> = [
   "concat",
   "slice",
   "filter",
@@ -242,8 +243,11 @@ function checkCallExpression(
       ctx.options.ignorePrefix
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&
-    (!ctx.options.ignoreMutationFollowingAccessor ||
-      !isInChainCallAndFollowsSafe(node.expression, checker)) &&
+    (!(
+      ctx.options.ignoreChainedMutationOnNewArray ||
+      ctx.options.ignoreMutationFollowingAccessor
+    ) ||
+      !isInChainCallAndFollowsNew(node.expression, checker)) &&
     mutatorMethods.some(
       m => m === (node.expression as ts.PropertyAccessExpression).name.text
     )
@@ -262,11 +266,11 @@ function checkCallExpression(
 
 /**
  * Check if the given the given PropertyAccessExpression is part of a chain and
- * immediately follows a safe method/function call.
+ * immediately follows a method/function call that returns a new array.
  *
  * If this is the case, then the given PropertyAccessExpression is allowed to be a mutator method call.
  */
-function isInChainCallAndFollowsSafe(
+function isInChainCallAndFollowsNew(
   node: ts.PropertyAccessExpression,
   checker: ts.TypeChecker
 ): boolean {
@@ -286,7 +290,9 @@ function isInChainCallAndFollowsSafe(
       )) ||
     (utils.isCallExpression(node.expression) &&
       utils.isPropertyAccessExpression(node.expression.expression) &&
-      safeMethods.some(isExpected(node.expression.expression.name.text)))
+      newArrayReturningMethods.some(
+        isExpected(node.expression.expression.name.text)
+      ))
   );
 }
 
