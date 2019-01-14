@@ -251,8 +251,8 @@ No
 #### Options
 
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-chained-mutation-on-new-array](#using-the-ignore-chained-mutation-on-new-array-option-with-no-array-mutation)
-* ~~ignore-mutation-following-accessor~~ - *deprecated in favor of [ignore-chained-mutation-on-new-array](#using-the-ignore-chained-mutation-on-new-array-option-with-no-array-mutation)*
+* [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
+* ~~ignore-mutation-following-accessor~~ - *deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)*
 
 #### Example config
 
@@ -265,7 +265,7 @@ No
 ```
 
 ```javascript
-"no-array-mutation": [true, "ignore-chained-mutation-on-new-array"]
+"no-array-mutation": [true, "ignore-new-array"]
 ```
 
 ### no-object-mutation
@@ -533,7 +533,7 @@ const doSomething(arg:string) => {
 }
 ```
 
-### Using the `ignore-chained-mutation-on-new-array` option with `no-array-mutation`
+### Using the `ignore-new-array` option with `no-array-mutation`
 
 This option allows for the use of array mutator methods to be chained to newly created arrays.
 
@@ -541,7 +541,7 @@ For example, an array can be immutably sorted like so:
 
 ```typescript
 const original = ["foo", "bar", "baz"];
-const sorted = original.slice().sort((a, b) => a.localeCompare(b)); // This is OK with ignore-chained-mutation-on-new-array - note the use of the `slice` method which returns a copy of the original array.
+const sorted = original.slice().sort((a, b) => a.localeCompare(b)); // This is OK with ignore-new-array - note the use of the `slice` method which returns a copy of the original array.
 ```
 
 ## Recommended built-in rules

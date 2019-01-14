@@ -11,7 +11,7 @@ import {
 import * as Ignore from "./shared/ignore";
 import { isAccessExpression } from "./shared/typeguard";
 
-type Options = Ignore.IgnoreChainedMutationOnNewArrayOption &
+type Options = Ignore.IgnoreNewArrayOption &
   Ignore.IgnoreMutationFollowingAccessorOption &
   Ignore.IgnorePrefixOption;
 
@@ -244,7 +244,7 @@ function checkCallExpression(
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&
     (!(
-      ctx.options.ignoreChainedMutationOnNewArray ||
+      ctx.options.ignoreNewArray ||
       ctx.options.ignoreMutationFollowingAccessor
     ) ||
       !isInChainCallAndFollowsNew(node.expression, checker)) &&

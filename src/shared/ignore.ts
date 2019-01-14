@@ -42,12 +42,12 @@ export interface IgnoreInterfaceOption {
   readonly ignoreInterface?: boolean;
 }
 
-export interface IgnoreChainedMutationOnNewArrayOption {
-  readonly ignoreChainedMutationOnNewArray?: boolean;
+export interface IgnoreNewArrayOption {
+  readonly ignoreNewArray?: boolean;
 }
 
 /**
- * @deprecated Use `IgnoreChainedMutationOnNewArrayOption` instead.
+ * @deprecated Use `IgnoreNewArrayOption` instead.
  */
 export interface IgnoreMutationFollowingAccessorOption {
   readonly ignoreMutationFollowingAccessor?: boolean;
