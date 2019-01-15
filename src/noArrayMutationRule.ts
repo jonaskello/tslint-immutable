@@ -244,8 +244,7 @@ function checkCallExpression(
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&
     (!(
-      ctx.options.ignoreNewArray ||
-      ctx.options.ignoreMutationFollowingAccessor
+      ctx.options.ignoreNewArray || ctx.options.ignoreMutationFollowingAccessor
     ) ||
       !isInChainCallAndFollowsNew(node.expression, checker)) &&
     mutatorMethods.some(
