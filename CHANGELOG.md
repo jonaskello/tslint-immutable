@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.1.0] - 2019-01-15
+
+### Added
+
+* New option `ignore-new-array` for the `readonly-array` rule. This option replaces the `ignore-mutation-following-accessor` option, however the old option name will remain as an alias and will be removed in the next major release. See [#102](https://github.com/jonaskello/tslint-immutable/issues/102). Thanks to [@RebeccaStevens](https://github.com/RebeccaStevens) for adding this option! (See PR [#110](https://github.com/jonaskello/tslint-immutable/pull/110))
+
 ## [v5.0.1] - 2018-12-15
 
 ### Fixed
