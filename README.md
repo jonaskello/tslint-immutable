@@ -251,7 +251,8 @@ No
 #### Options
 
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-mutation-following-accessor](#using-the-ignore-mutation-following-accessor-option-with-no-array-mutation)
+* [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
+* ~~ignore-mutation-following-accessor~~ - *deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)*
 
 #### Example config
 
@@ -264,7 +265,7 @@ No
 ```
 
 ```javascript
-"no-array-mutation": [true, "ignore-mutation-following-accessor"]
+"no-array-mutation": [true, "ignore-new-array"]
 ```
 
 ### no-object-mutation
@@ -532,14 +533,15 @@ const doSomething(arg:string) => {
 }
 ```
 
-### Using the `ignore-mutation-following-accessor` option with `no-array-mutation`
+### Using the `ignore-new-array` option with `no-array-mutation`
 
-This option allows for the use of array mutator methods to be chained to an array accessor method (methods that modify the original array are known as [mutator methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Mutator_methods) (eg. `sort`) and methods that return a copy are known as [accessor methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Accessor_methods) (eg. `slice` and `concat`)).
+This option allows for the use of array mutator methods to be chained to newly created arrays.
 
-For example, an array can be immutably sorted with a single line like so:
+For example, an array can be immutably sorted like so:
 
 ```typescript
-const sorted = ["foo", "bar"].slice().sort((a, b) => a.localeCompare(b)); // This is OK with ignore-mutation-following-accessor
+const original = ["foo", "bar", "baz"];
+const sorted = original.slice().sort((a, b) => a.localeCompare(b)); // This is OK with ignore-new-array - note the use of the `slice` method which returns a copy of the original array.
 ```
 
 ## Recommended built-in rules

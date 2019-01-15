@@ -11,12 +11,19 @@ import {
 import * as Ignore from "./shared/ignore";
 import { isAccessExpression } from "./shared/typeguard";
 
-type Options = Ignore.IgnoreMutationFollowingAccessorOption &
+type Options = Ignore.IgnoreNewArrayOption &
+  Ignore.IgnoreMutationFollowingAccessorOption &
   Ignore.IgnorePrefixOption;
 
 type ArrayType = ts.Type & {
   symbol: {
     name: "Array";
+  };
+};
+
+type ArrayConstructorType = ts.Type & {
+  symbol: {
+    name: "ArrayConstructor";
   };
 };
 
@@ -28,6 +35,12 @@ export const Rule = createCheckNodeTypedRule(
 
 export function isArrayType(type: ts.Type): type is ArrayType {
   return Boolean(type.symbol && type.symbol.name === "Array");
+}
+
+export function isArrayConstructorType(
+  type: ts.Type
+): type is ArrayConstructorType {
+  return Boolean(type.symbol && type.symbol.name === "ArrayConstructor");
 }
 
 const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
@@ -56,8 +69,23 @@ const mutatorMethods: ReadonlyArray<string> = [
  * Methods that return a new array without mutating the original.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Methods#Accessor_methods
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/prototype#Iteration_methods
  */
-const accessorMethods: ReadonlyArray<string> = ["concat", "slice"];
+const newArrayReturningMethods: ReadonlyArray<string> = [
+  "concat",
+  "slice",
+  "filter",
+  "map",
+  "reduce",
+  "reduceRight"
+];
+
+/**
+ * Functions that create a new array.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array#Methods
+ */
+const constructorFunctions = ["from", "of"];
 
 function checkTypedNode(
   node: ts.BinaryExpression,
@@ -215,8 +243,10 @@ function checkCallExpression(
       ctx.options.ignorePrefix
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&
-    (!ctx.options.ignoreMutationFollowingAccessor ||
-      !isInChainCallAndFollowsAccessor(node.expression)) &&
+    (!(
+      ctx.options.ignoreNewArray || ctx.options.ignoreMutationFollowingAccessor
+    ) ||
+      !isInChainCallAndFollowsNew(node.expression, checker)) &&
     mutatorMethods.some(
       m => m === (node.expression as ts.PropertyAccessExpression).name.text
     )
@@ -235,21 +265,39 @@ function checkCallExpression(
 
 /**
  * Check if the given the given PropertyAccessExpression is part of a chain and
- * immediately follows an accessor method call.
+ * immediately follows a method/function call that returns a new array.
  *
  * If this is the case, then the given PropertyAccessExpression is allowed to be a mutator method call.
  */
-function isInChainCallAndFollowsAccessor(
-  node: ts.PropertyAccessExpression
+function isInChainCallAndFollowsNew(
+  node: ts.PropertyAccessExpression,
+  checker: ts.TypeChecker
 ): boolean {
   return (
-    utils.isCallExpression(node.expression) &&
-    utils.isPropertyAccessExpression(node.expression.expression) &&
-    accessorMethods.some(
-      m =>
-        m ===
-        ((node.expression as ts.CallExpression)
-          .expression as ts.PropertyAccessExpression).name.text
-    )
+    utils.isArrayLiteralExpression(node.expression) ||
+    (utils.isNewExpression(node.expression) &&
+      isArrayConstructorType(
+        checker.getTypeAtLocation(node.expression.expression)
+      )) ||
+    (utils.isCallExpression(node.expression) &&
+      utils.isPropertyAccessExpression(node.expression.expression) &&
+      constructorFunctions.some(
+        isExpected(node.expression.expression.name.text)
+      ) &&
+      isArrayConstructorType(
+        checker.getTypeAtLocation(node.expression.expression.expression)
+      )) ||
+    (utils.isCallExpression(node.expression) &&
+      utils.isPropertyAccessExpression(node.expression.expression) &&
+      newArrayReturningMethods.some(
+        isExpected(node.expression.expression.name.text)
+      ))
   );
+}
+
+/**
+ * Returns a function that checks if the given value is the same as the expected value.
+ */
+function isExpected<T>(expected: T): (actual: T) => boolean {
+  return actual => actual === expected;
 }
