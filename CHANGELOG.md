@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.1.1] - 2019-01-25
+
+### Fixed
+
+* Fixes readonly-keyword fixer adds the `readonly` modifier in the wrong place for decorated class properties. See [#81](https://github.com/jonaskello/tslint-immutable/issues/81). Thanks to [@tkryskiewicz](https://github.com/tkryskiewicz) for this fix! (See PR [#113](https://github.com/jonaskello/tslint-immutable/pull/113)).
+
+### Added
+
 ## [v5.1.0] - 2019-01-15
 
 ### Added
@@ -306,7 +314,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.0...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.1...master
+[v5.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.1
 [v5.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.0
 [v5.0.1]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.0...v5.0.1
 [v5.0.0]: https://github.com/jonaskello/tslint-immutable/compare/v4.9.1...v5.0.0
