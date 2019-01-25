@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.1.2] - 2019-01-25
+
+* Republished without changes (becuase previous publish failed).
+
 ## [v5.1.1] - 2019-01-25
 
 ### Fixed
@@ -314,7 +318,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.1...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.2...master
+[v5.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.1...v5.1.2
 [v5.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.1
 [v5.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.0
 [v5.0.1]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.0...v5.0.1
