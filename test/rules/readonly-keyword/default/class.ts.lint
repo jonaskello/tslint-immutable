@@ -8,6 +8,9 @@ class Foo {
 
   static foo: number;
   ~~~~~~~~~~~~~~~~~~~ [failure]
+
+  @decorator() foo: number;
+  ~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
 }
 
 [failure]: A readonly modifier is required.

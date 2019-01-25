@@ -50,9 +50,9 @@ function checkPropertySignatureAndIndexSignature(
       return [];
     }
 
-    const start = node.modifiers
-      ? node.modifiers.end + 1
-      : node.getStart(ctx.sourceFile);
+    const start = utils.isIndexSignatureDeclaration(node)
+      ? node.getStart(ctx.sourceFile)
+      : node.name.getStart(ctx.sourceFile);
 
     return [
       createInvalidNode(node, [new Lint.Replacement(start, 0, "readonly ")])

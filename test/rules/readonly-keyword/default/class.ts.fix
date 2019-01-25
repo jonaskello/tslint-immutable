@@ -5,5 +5,7 @@ class Foo {
   private readonly foo: number;
 
   static readonly foo: number;
+
+  @decorator() readonly foo: number;
 }
 
