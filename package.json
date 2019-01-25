@@ -7,10 +7,7 @@
     "type": "git",
     "url": "git+https://github.com/jonaskello/tslint-immutable.git"
   },
-  "keywords": [
-    "tslint",
-    "immutability"
-  ],
+  "keywords": ["tslint", "immutability"],
   "author": "Jonas Kello",
   "license": "MIT",
   "bugs": {
@@ -46,17 +43,12 @@
     "verify": "yarn build && yarn lint && yarn coverage",
     "coverage": "rimraf coverage .nyc_output && nyc yarn test",
     "report-coverage": "codecov -f coverage/*.json",
-    "publish:major": "npm run build && node scripts/publish.js major",
-    "publish:minor": "npm run build && node scripts/publish.js minor",
-    "publish:patch": "npm run build && node scripts/publish.js patch",
     "preversion": "yarn verify",
-    "postversion": "git push --tags && yarn publish --new-version $npm_package_version && git push && echo \"Successfully released version $npm_package_version!\""
+    "postversion":
+      "git push --tags && yarn publish --new-version $npm_package_version && git push && echo \"Successfully released version $npm_package_version!\""
   },
   "lint-staged": {
     "*.{ts,tsx}": "tslint",
-    "*.{ts,tsx,json,css}": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.{ts,tsx,json,css}": ["prettier --write", "git add"]
   }
 }
