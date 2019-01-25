@@ -49,10 +49,13 @@ function checkPropertySignatureAndIndexSignature(
     if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
       return [];
     }
+
+    const start = node.modifiers
+      ? node.modifiers.end + 1
+      : node.getStart(ctx.sourceFile);
+
     return [
-      createInvalidNode(node, [
-        new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")
-      ])
+      createInvalidNode(node, [new Lint.Replacement(start, 0, "readonly ")])
     ];
   }
   return [];

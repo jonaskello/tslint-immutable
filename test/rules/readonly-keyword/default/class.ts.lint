@@ -1,8 +1,13 @@
 class Foo {
-
+  
   foo: number;
   ~~~~~~~~~~~~ [failure]
 
+  private foo: number;
+  ~~~~~~~~~~~~~~~~~~~~ [failure]
+
+  static foo: number;
+  ~~~~~~~~~~~~~~~~~~~ [failure]
 }
 
 [failure]: A readonly modifier is required.
