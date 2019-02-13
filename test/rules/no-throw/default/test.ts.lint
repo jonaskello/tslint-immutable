@@ -9,9 +9,6 @@ throw error;
 throw new Error();
 ~~~~~~~~~~~~~~~~~~ [failure]
 
-throw new Error();
-~~~~~~~~~~~~~~~~~~ [failure]
-
 function foo(): Promise<number> {
     if (Math.random() > 0.5) {
         return Promise.reject(new Error("bar"))
