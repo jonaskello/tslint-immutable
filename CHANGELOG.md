@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.2.0] - 2019-02-14
+
+### Added
+
+* Update `no-throw` to not allow Promise.reject(). See [#115](https://github.com/jonaskello/tslint-immutable/issues/115) and PR [#116](https://github.com/jonaskello/tslint-immutable/pull/116). Thanks to [@sbdchd](https://github.com/sbdchd) for this addition!
+
 ## [v5.1.2] - 2019-01-25
 
 * Republished without changes (becuase previous publish failed).
@@ -16,8 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 * Fixes readonly-keyword fixer adds the `readonly` modifier in the wrong place for decorated class properties. See [#81](https://github.com/jonaskello/tslint-immutable/issues/81). Thanks to [@tkryskiewicz](https://github.com/tkryskiewicz) for this fix! (See PR [#113](https://github.com/jonaskello/tslint-immutable/pull/113)).
-
-### Added
 
 ## [v5.1.0] - 2019-01-15
 
@@ -318,7 +322,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * `no-mutation` rule.
 * `no-this` rule.
 
-[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.2...master
+[unreleased]: https://github.com/jonaskello/tslint-immutable/compare/v5.2.0...master
+[v5.2.0]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.2...v5.2.0
 [v5.1.2]: https://github.com/jonaskello/tslint-immutable/compare/v5.1.1...v5.1.2
 [v5.1.1]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.1
 [v5.1.0]: https://github.com/jonaskello/tslint-immutable/compare/v5.0.1...v5.1.0
