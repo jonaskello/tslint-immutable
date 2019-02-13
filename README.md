@@ -451,14 +451,14 @@ function divide(x: number, y: number): number | Error {
 }
 ```
 
-Or in the case of an async function, a rejected promise should be returned:
+And likewise for async functions:
 
 ```typescript
-async function divide(x: Promise<number>, y: Promise<number>): Promise<number> {
+async function divide(x: Promise<number>, y: Promise<number>): Promise<number | Error> {
   const [xv, yv] = await Promise.all([x, y]);
 
   return yv === 0
-    ? Promise.reject(new Error("Cannot divide by zero."))
+    ? new Error("Cannot divide by zero.")
     : xv / yv;
 }
 ```
