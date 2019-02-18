@@ -647,8 +647,6 @@ Please review the [tslint performance tips](https://palantir.github.io/tslint/de
 
 In order to know which AST nodes are created for a snippet of typescript code you can use [ast explorer](https://astexplorer.net/).
 
-To release a new package version run `yarn publish:patch`, `yarn publish:minor`, or `yarn publish:major`.
-
 ## How to publish
 
 ```
