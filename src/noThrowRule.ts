@@ -19,16 +19,7 @@ function checkNode(
   node: ts.Node,
   _ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  if (utils.isThrowStatement(node)) {
-    return { invalidNodes: [createInvalidNode(node, [])] };
-  }
-  if (
-    ts.isPropertyAccessExpression(node) &&
-    ts.isIdentifier(node.expression) &&
-    node.expression.text === "Promise" &&
-    node.name.text === "reject"
-  ) {
-    return { invalidNodes: [createInvalidNode(node, [])] };
-  }
-  return { invalidNodes: [] };
+  return utils.isThrowStatement(node)
+    ? { invalidNodes: [createInvalidNode(node, [])] }
+    : { invalidNodes: [] };
 }
