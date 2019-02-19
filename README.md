@@ -52,6 +52,7 @@ In addition to immutable rules this project also contains a few rules for enforc
   * [no-loop-statement](#no-loop-statement)
   * [no-throw](#no-throw)
   * [no-try](#no-try)
+  * [no-reject](#no-reject)
 * [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
@@ -451,7 +452,25 @@ function divide(x: number, y: number): number | Error {
 }
 ```
 
-And likewise for async functions:
+Or in the case of an async function, a rejected promise should be returned.
+
+```typescript
+async function divide(x: Promise<number>, y: Promise<number>): Promise<number> {
+  const [xv, yv] = await Promise.all([x, y]);
+
+  return yv === 0
+    ? Promise.reject(new Error("Cannot divide by zero."))
+    : xv / yv;
+}
+```
+
+### no-try
+
+Try statements are not part of functional programming. See [no-throw](#no-throw) for more information.
+
+### no-reject
+
+You can view a `Promise` as a result object with built-in error (something like `{ value: number } | { error: Error }`) in which case a rejected `Promise` can be viewed a returned result and thus fits with functional programming. You can also view a rejected promise as something similar to an exception and as such something that does not fit with functional programming. If your view is the latter you can use the `no-reject` rule to disallow rejected promises.
 
 ```typescript
 async function divide(
@@ -460,13 +479,15 @@ async function divide(
 ): Promise<number | Error> {
   const [xv, yv] = await Promise.all([x, y]);
 
+  // Rejecting the promise is not allowed so resolve to an Error instead
+
+  // return yv === 0
+  //   ? Promise.reject(new Error("Cannot divide by zero."))
+  //   : xv / yv;
+
   return yv === 0 ? new Error("Cannot divide by zero.") : xv / yv;
 }
 ```
-
-### no-try
-
-Try statements are not part of functional programming. See [no-throw](#no-throw) for more information.
 
 ## Options
 
