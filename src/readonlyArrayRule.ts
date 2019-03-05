@@ -59,7 +59,7 @@ function checkArrayType(
       return [];
     }
 
-    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedIn(node)) {
+    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedWithIn(node)) {
       return [];
     }
 
@@ -93,7 +93,7 @@ function checkTypeReference(
       return [];
     }
 
-    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedIn(node)) {
+    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedWithIn(node)) {
       return [];
     }
 
@@ -135,7 +135,7 @@ export function checkImplicitType(
   return [];
 }
 
-function checkIsReturnTypeOrNestedIn(
+function checkIsReturnTypeOrNestedWithIn(
   node: ts.TypeReferenceNode | ts.ArrayTypeNode
 ): boolean {
   const getRootTypeReferenceNode = (
