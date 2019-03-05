@@ -59,7 +59,7 @@ function checkArrayType(
       return [];
     }
 
-    if (ctx.options.ignoreReturnType && checkIsReturnType(node)) {
+    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedIn(node)) {
       return [];
     }
 
@@ -93,7 +93,7 @@ function checkTypeReference(
       return [];
     }
 
-    if (ctx.options.ignoreReturnType && checkIsReturnType(node)) {
+    if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedIn(node)) {
       return [];
     }
 
@@ -135,11 +135,24 @@ export function checkImplicitType(
   return [];
 }
 
-function checkIsReturnType(node: ts.Node): boolean {
-  return Boolean(
-    node.parent &&
-      isFunctionLikeDeclaration(node.parent) &&
-      node === node.parent.type
+function checkIsReturnTypeOrNestedIn(node: ts.Node): boolean {
+  if (
+    !node.parent ||
+    !(utils.isTypeReferenceNode(node) || utils.isArrayTypeNode(node))
+  ) {
+    return false;
+  }
+
+  const getRootTypeReferenceNode = (node2: ts.Node): ts.Node =>
+    utils.isTypeReferenceNode(node2.parent)
+      ? getRootTypeReferenceNode(node2.parent)
+      : node2;
+
+  const rootTypeReferenceNode = getRootTypeReferenceNode(node);
+
+  return (
+    isFunctionLikeDeclaration(rootTypeReferenceNode.parent) &&
+    rootTypeReferenceNode === rootTypeReferenceNode.parent.type
   );
 }
 

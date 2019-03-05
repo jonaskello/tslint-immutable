@@ -109,3 +109,22 @@ class Test {
                   ~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
   }
 }
+
+
+
+// Type Arguments
+
+function foo(...numbers: ReadOnlyArray<number>): Promise<Array<number>> {
+}
+
+function foo(...numbers: ReadOnlyArray<number>): Promise<number[]> {
+}
+
+
+// Deep Type Arguments
+
+function foo(...numbers: ReadOnlyArray<number>): Promise<ReadOnlyArray<Array<number>>> {
+}
+
+function foo(...numbers: ReadOnlyArray<number>): Promise<ReadOnlyArray<number[]>> {
+}
