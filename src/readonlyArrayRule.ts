@@ -135,22 +135,20 @@ export function checkImplicitType(
   return [];
 }
 
-function checkIsReturnTypeOrNestedIn(node: ts.Node): boolean {
-  if (
-    !node.parent ||
-    !(utils.isTypeReferenceNode(node) || utils.isArrayTypeNode(node))
-  ) {
-    return false;
-  }
-
-  const getRootTypeReferenceNode = (node2: ts.Node): ts.Node =>
-    utils.isTypeReferenceNode(node2.parent)
-      ? getRootTypeReferenceNode(node2.parent)
-      : node2;
+function checkIsReturnTypeOrNestedIn(
+  node: ts.TypeReferenceNode | ts.ArrayTypeNode
+): boolean {
+  const getRootTypeReferenceNode = (
+    typeNode: ts.TypeReferenceNode | ts.ArrayTypeNode
+  ): ts.TypeReferenceNode | ts.ArrayTypeNode =>
+    utils.isTypeReferenceNode(typeNode.parent)
+      ? getRootTypeReferenceNode(typeNode.parent)
+      : typeNode;
 
   const rootTypeReferenceNode = getRootTypeReferenceNode(node);
 
   return (
+    rootTypeReferenceNode.parent &&
     isFunctionLikeDeclaration(rootTypeReferenceNode.parent) &&
     rootTypeReferenceNode === rootTypeReferenceNode.parent.type
   );
