@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.3.1] - 2019-03-07
+
+### Fixed
+
+* Fixed rule readonly-array with option ignore-return-type not checking within generic parameters. See [#117](https://github.com/jonaskello/tslint-immutable/issues/117). Thanks to [@RebeccaStevens](https://github.com/RebeccaStevens) for this fix! (See PR [#120](https://github.com/jonaskello/tslint-immutable/pull/120)).
+
 ## [v5.3.0] - 2019-02-19
 
 ### Added
