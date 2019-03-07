@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.3.2] - 2019-03-07
+
 ### Fixed
 
-* Fixed rule readonly-array with option ignore-return-type not checking within tuple types. See [#121](https://github.com/jonaskello/tslint-immutable/issues/121).
+* Fixed rule readonly-array with option ignore-return-type not checking within tuple types. See [#121](https://github.com/jonaskello/tslint-immutable/issues/121). See PR [#122](https://github.com/jonaskello/tslint-immutable/pull/122)
 
 ## [v5.3.1] - 2019-03-07
 
