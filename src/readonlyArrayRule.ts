@@ -139,9 +139,10 @@ function checkIsReturnTypeOrNestedWithIn(
   node: ts.TypeReferenceNode | ts.ArrayTypeNode
 ): boolean {
   const getRootTypeReferenceNode = (
-    typeNode: ts.TypeReferenceNode | ts.ArrayTypeNode
-  ): ts.TypeReferenceNode | ts.ArrayTypeNode =>
-    utils.isTypeReferenceNode(typeNode.parent)
+    typeNode: ts.TypeReferenceNode | ts.ArrayTypeNode | ts.TupleTypeNode
+  ): ts.TypeReferenceNode | ts.ArrayTypeNode | ts.TupleTypeNode =>
+    utils.isTypeReferenceNode(typeNode.parent) ||
+    utils.isTupleTypeNode(typeNode.parent)
       ? getRootTypeReferenceNode(typeNode.parent)
       : typeNode;
 
