@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+* Fixed rule readonly-array with option ignore-return-type not checking within tuple types. See [#121](https://github.com/jonaskello/tslint-immutable/issues/121).
+
 ## [v5.3.1] - 2019-03-07
 
 ### Fixed
@@ -17,7 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-* New rule `no-reject` (moved from no-throw rule in previous version). See PR [#118](https://github.com/jonaskello/tslint-immutable/pull/116).
+* New rule `no-reject` (moved from no-throw rule in previous version). See PR [#118](https://github.com/jonaskello/tslint-immutable/pull/118).
 
 ## [v5.2.0] - 2019-02-14
 

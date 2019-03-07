@@ -128,3 +128,12 @@ function foo(...numbers: ReadOnlyArray<number>): Promise<ReadOnlyArray<Array<num
 
 function foo(...numbers: ReadOnlyArray<number>): Promise<ReadOnlyArray<number[]>> {
 }
+
+
+// Tuples
+
+function foo(...numbers: ReadOnlyArray<number>): [number, Array<number>, number] {
+}
+
+function foo(...numbers: ReadOnlyArray<number>): [number, number[], number] {
+}
