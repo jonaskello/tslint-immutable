@@ -137,3 +137,21 @@ function foo(...numbers: ReadOnlyArray<number>): [number, Array<number>, number]
 
 function foo(...numbers: ReadOnlyArray<number>): [number, number[], number] {
 }
+
+
+// Union Types
+
+function foo(...numbers: ReadOnlyArray<number>): { a: Array<number> } | { b: string[] } {
+}
+
+
+// Intersection Types
+
+function foo(...numbers: ReadOnlyArray<number>): { a: Array<number> } & { b: string[] } {
+}
+
+
+// Conditional Types
+
+function foo<T>(x: T): T extends Array<number> ? string : number[] {
+}

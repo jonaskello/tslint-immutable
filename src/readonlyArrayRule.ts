@@ -135,24 +135,12 @@ export function checkImplicitType(
   return [];
 }
 
-function checkIsReturnTypeOrNestedWithIn(
-  node: ts.TypeReferenceNode | ts.ArrayTypeNode
-): boolean {
-  const getRootTypeReferenceNode = (
-    typeNode: ts.TypeReferenceNode | ts.ArrayTypeNode | ts.TupleTypeNode
-  ): ts.TypeReferenceNode | ts.ArrayTypeNode | ts.TupleTypeNode =>
-    utils.isTypeReferenceNode(typeNode.parent) ||
-    utils.isTupleTypeNode(typeNode.parent)
-      ? getRootTypeReferenceNode(typeNode.parent)
-      : typeNode;
-
-  const rootTypeReferenceNode = getRootTypeReferenceNode(node);
-
-  return (
-    rootTypeReferenceNode.parent &&
-    isFunctionLikeDeclaration(rootTypeReferenceNode.parent) &&
-    rootTypeReferenceNode === rootTypeReferenceNode.parent.type
-  );
+function checkIsReturnTypeOrNestedWithIn(node: ts.Node): boolean {
+  return node.parent
+    ? isFunctionLikeDeclaration(node.parent) && node === node.parent.type
+      ? true
+      : checkIsReturnTypeOrNestedWithIn(node.parent)
+    : false;
 }
 
 function isUntypedAndHasArrayLiteralExpressionInitializer(
