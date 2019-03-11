@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.3.3] - 2019-03-12
+
 * Fixed rule readonly-array with option ignore-return-type not checking within union, intersection and conditional types. This fix should now catch all return types that contain a nested array. See [#124](https://github.com/jonaskello/tslint-immutable/issues/124). See PR [#125](https://github.com/jonaskello/tslint-immutable/pull/125)
 
 ## [v5.3.2] - 2019-03-07
