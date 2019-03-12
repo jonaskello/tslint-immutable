@@ -93,14 +93,14 @@ class Foo {
     }
 }
 
-// Disallow Object.assign() on non-new objects.
+// Disallow Object.assign() on identifiers.
 
 const value = { msg1: 'hello' };
 
 const foo = Object.assign(value, { msg2: 'world' });
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
 
-// Allow Object.assign() on new objects.
+// Allow Object.assign() on non identifiers
 
 const bar = (a, b, c) => ({a, b, c});
 

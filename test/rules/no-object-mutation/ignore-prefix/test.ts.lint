@@ -30,7 +30,7 @@ mutableY.a++;
 
 ++mutableY.a;
 
-// Disallow Object.assign() on non-new objects.
+// Disallow Object.assign() on identifiers.
 
 const value = { msg1: 'hello' };
 const mutableValue = value;

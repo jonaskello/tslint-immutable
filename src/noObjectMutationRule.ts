@@ -90,7 +90,7 @@ function checkNode(
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
-  // No Object.assign on non-new.
+  // No Object.assign on identifiers.
   if (
     utils.isCallExpression(node) &&
     utils.isPropertyAccessExpression(node.expression) &&
@@ -102,6 +102,7 @@ function checkNode(
       node.arguments[0].getText(node.arguments[0].getSourceFile()),
       ctx.options.ignorePrefix
     ) &&
+    // Do type checking as late as possible as it is expensive.
     isObjectConstructorType(
       checker.getTypeAtLocation(node.expression.expression)
     )
