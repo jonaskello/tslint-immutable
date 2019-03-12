@@ -5,7 +5,7 @@ import { isAssignmentKind } from "tsutils/util";
 import {
   createInvalidNode,
   CheckNodeResult,
-  createCheckNodeRule,
+  createCheckNodeTypedRule,
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
@@ -14,10 +14,16 @@ import { isAccessExpression } from "./shared/typeguard";
 type Options = Ignore.IgnorePrefixOption;
 
 // tslint:disable-next-line:variable-name
-export const Rule = createCheckNodeRule(
+export const Rule = createCheckNodeTypedRule(
   checkNode,
   "Modifying properties of existing object not allowed."
 );
+
+type ObjectConstructorType = ts.Type & {
+  symbol: {
+    name: "ObjectConstructor";
+  };
+};
 
 const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
   ts.SyntaxKind.PlusPlusToken,
@@ -26,7 +32,8 @@ const forbidUnaryOps: ReadonlyArray<ts.SyntaxKind> = [
 
 function checkNode(
   node: ts.Node,
-  ctx: Lint.WalkContext<Options>
+  ctx: Lint.WalkContext<Options>,
+  checker: ts.TypeChecker
 ): CheckNodeResult {
   let invalidNodes: Array<InvalidNode> = [];
 
@@ -83,6 +90,21 @@ function checkNode(
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
   }
 
+  // No Object.assign on non-new.
+  if (
+    utils.isCallExpression(node) &&
+    utils.isPropertyAccessExpression(node.expression) &&
+    utils.isIdentifier(node.expression.name) &&
+    node.expression.name.text === "assign" &&
+    node.arguments.length >= 2 &&
+    utils.isIdentifier(node.arguments[0]) &&
+    isObjectConstructorType(
+      checker.getTypeAtLocation(node.expression.expression)
+    )
+  ) {
+    invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
+  }
+
   return { invalidNodes };
 }
 
@@ -95,4 +117,10 @@ function inConstructor(nodeIn: ts.Node): boolean {
     node = node.parent;
   }
   return false;
+}
+
+export function isObjectConstructorType(
+  type: ts.Type
+): type is ObjectConstructorType {
+  return Boolean(type.symbol && type.symbol.name === "ObjectConstructor");
 }

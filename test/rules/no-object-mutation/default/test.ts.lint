@@ -93,4 +93,19 @@ class Foo {
     }
 }
 
+// Disallow Object.assign() on non-new objects.
+
+const value = { msg1: 'hello' };
+
+const foo = Object.assign(value, { msg2: 'world' });
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+// Allow Object.assign() on new objects.
+
+const bar = (a, b, c) => ({a, b, c});
+
+const foo = Object.assign({}, { msg: 'hello world' });
+const foo = Object.assign({ ...value }, { msg2: 'world' });
+const foo = Object.assign(bar(1, 2, 3), { d: 4 });
+
 [failure]: Modifying properties of existing object not allowed.
