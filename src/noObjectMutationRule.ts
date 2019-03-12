@@ -98,6 +98,10 @@ function checkNode(
     node.expression.name.text === "assign" &&
     node.arguments.length >= 2 &&
     utils.isIdentifier(node.arguments[0]) &&
+    !Ignore.isIgnoredPrefix(
+      node.arguments[0].getText(node.arguments[0].getSourceFile()),
+      ctx.options.ignorePrefix
+    ) &&
     isObjectConstructorType(
       checker.getTypeAtLocation(node.expression.expression)
     )

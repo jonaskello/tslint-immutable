@@ -30,4 +30,14 @@ mutableY.a++;
 
 ++mutableY.a;
 
+// Disallow Object.assign() on non-new objects.
+
+const value = { msg1: 'hello' };
+const mutableValue = value;
+
+const foo = Object.assign(value, { msg2: 'world' });
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
+
+const foo = Object.assign(mutableValue, { msg2: 'world' });
+
 [failure]: Modifying properties of existing object not allowed.
