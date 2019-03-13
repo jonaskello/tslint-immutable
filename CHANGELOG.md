@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-* no-object-mutation rule now disallows Object.assign mutation on identifiers. See [#112](https://github.com/jonaskello/tslint-immutable/issues/112). See PR [#127](https://github.com/jonaskello/tslint-immutable/pull/127)
+## [v5.4.0] - 2019-03-14
+
+* no-object-mutation rule now disallows Object.assign mutation on identifiers and property access expressions. See [#112](https://github.com/jonaskello/tslint-immutable/issues/112). See PR [#127](https://github.com/jonaskello/tslint-immutable/pull/127)
 
 ## [v5.3.3] - 2019-03-12
 
