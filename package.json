@@ -12,6 +12,12 @@
     "immutability"
   ],
   "author": "Jonas Kello",
+  "contributors": [
+    {
+      "name": "Rebecca Stevens",
+      "email": "rebecca.stevens@outlook.co.nz"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jonaskello/tslint-immutable/issues"
