@@ -97,7 +97,8 @@ function checkNode(
     utils.isIdentifier(node.expression.name) &&
     node.expression.name.text === "assign" &&
     node.arguments.length >= 2 &&
-    utils.isIdentifier(node.arguments[0]) &&
+    (utils.isIdentifier(node.arguments[0]) ||
+      utils.isPropertyAccessExpression(node.arguments[0])) &&
     !Ignore.isIgnoredPrefix(
       node.arguments[0].getText(node.arguments[0].getSourceFile()),
       ctx.options.ignorePrefix
