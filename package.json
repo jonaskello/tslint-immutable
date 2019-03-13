@@ -1,6 +1,6 @@
 {
   "name": "tslint-immutable",
-  "version": "5.3.3",
+  "version": "5.4.0",
   "description": "TSLint rules to disable mutation in TypeScript.",
   "main": "tslint-immutable.json",
   "repository": {
