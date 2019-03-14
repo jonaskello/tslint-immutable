@@ -13,7 +13,7 @@ import {
 } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreLocalOption &
-  Ignore.IgnorePrefixOption &
+  Ignore.IgnoreOption &
   Ignore.IgnoreRestParametersOption &
   Ignore.IgnoreReturnType;
 
@@ -60,7 +60,7 @@ function checkArrayType(
 
     if (
       node.parent &&
-      Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+      Ignore.shouldIgnore(node.parent, ctx.options, ctx.sourceFile)
     ) {
       return {
         invalidNodes: [],
@@ -110,7 +110,7 @@ function checkTypeReference(
   ) {
     if (
       node.parent &&
-      Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
+      Ignore.shouldIgnore(node.parent, ctx.options, ctx.sourceFile)
     ) {
       return {
         invalidNodes: [],
@@ -137,7 +137,7 @@ export function checkImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+  if (Ignore.shouldIgnore(node, ctx.options, ctx.sourceFile)) {
     return {
       invalidNodes: [],
       skipChildren: true

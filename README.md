@@ -118,7 +118,9 @@ Yes
 * [ignore-local](#using-the-ignore-local-option)
 * [ignore-class](#using-the-ignore-class-option)
 * [ignore-interface](#using-the-ignore-interface-option)
+* [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-postfix](#using-the-ignore-postfix-option)
 
 #### Example config
 
@@ -172,7 +174,9 @@ Yes
 #### Options
 
 * [ignore-local](#using-the-ignore-local-option)
+* [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-postfix](#using-the-ignore-postfix-option)
 * [ignore-return-type](#using-the-ignore-return-type-option)
 * [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
 
@@ -218,7 +222,9 @@ Yes
 #### Options
 
 * [ignore-local](#using-the-ignore-local-option)
+* [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-postfix](#using-the-ignore-postfix-option)
 
 #### Example config
 
@@ -254,7 +260,9 @@ No
 
 #### Options
 
+* [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-postfix](#using-the-ignore-postfix-option)
 * [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
 * ~~ignore-mutation-following-accessor~~ - _deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)_
 
@@ -293,7 +301,9 @@ No
 
 #### Options
 
+* [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-postfix](#using-the-ignore-postfix-option)
 
 #### Example config
 
@@ -543,6 +553,14 @@ type person = {
 ```
 
 Yes, variable names like `mutableAge` are ugly, but then again mutation is an ugly business :-).
+
+### Using the `ignore` option
+
+Like ignore-prefix but with exact matching.
+
+### Using the `ignore-postfix` option
+
+Like ignore-prefix but with postfix matching instead of prefix matching.
 
 ### Using the `ignore-prefix` option with `no-expression-statement`
 

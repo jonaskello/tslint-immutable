@@ -9,7 +9,7 @@ import {
 } from "./shared/check-node";
 
 type Options = Ignore.IgnoreLocalOption &
-  Ignore.IgnorePrefixOption &
+  Ignore.IgnoreOption &
   Ignore.IgnoreClassOption &
   Ignore.IgnoreInterfaceOption;
 
@@ -45,7 +45,7 @@ function checkPropertySignatureAndIndexSignature(
     )
   ) {
     // Check if ignore-prefix applies
-    if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
+    if (Ignore.shouldIgnore(node, ctx.options, ctx.sourceFile)) {
       return { invalidNodes: [] };
     }
 

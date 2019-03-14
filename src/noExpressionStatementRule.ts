@@ -8,7 +8,7 @@ import {
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
 
-type Options = Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreOption;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
@@ -25,14 +25,13 @@ function checkNode(
     const isYield = children.every(
       n => n.kind === ts.SyntaxKind.YieldExpression
     );
-    let text = node.getText(node.getSourceFile());
-    if (utils.isAwaitExpression(node.expression)) {
-      text = node.expression.expression.getText(
-        node.expression.getSourceFile()
-      );
-    }
-    const isIgnored2 = Ignore.isIgnoredPrefix(text, ctx.options.ignorePrefix);
-    if (!isYield && !isIgnored2) {
+    const isIgnored = Ignore.isIgnored(
+      node.expression,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
+    );
+    if (!isYield && !isIgnored) {
       return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }

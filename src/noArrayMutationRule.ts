@@ -12,7 +12,7 @@ import { isAccessExpression, AccessExpression } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreNewArrayOption &
   Ignore.IgnoreMutationFollowingAccessorOption &
-  Ignore.IgnorePrefixOption;
+  Ignore.IgnoreOption;
 
 type ArrayType = ts.Type & {
   symbol: {
@@ -124,9 +124,11 @@ function checkBinaryExpression(
   checker: ts.TypeChecker
 ): CheckNodeResult {
   if (
-    !Ignore.isIgnoredPrefix(
-      node.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
     ) &&
     isAssignmentKind(node.operatorToken.kind) &&
     isAccessExpression(node.left)
@@ -151,9 +153,11 @@ function checkDeleteExpression(
   checker: ts.TypeChecker
 ): CheckNodeResult {
   if (
-    !Ignore.isIgnoredPrefix(
-      node.expression.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.expression,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
     ) &&
     isAccessExpression(node.expression)
   ) {
@@ -177,9 +181,11 @@ function checkPrefixUnaryExpression(
   checker: ts.TypeChecker
 ): CheckNodeResult {
   if (
-    !Ignore.isIgnoredPrefix(
-      node.operand.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.operand,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
     ) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator)
@@ -204,9 +210,11 @@ function checkPostfixUnaryExpression(
   checker: ts.TypeChecker
 ): CheckNodeResult {
   if (
-    !Ignore.isIgnoredPrefix(
-      node.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.operand,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
     ) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator)
@@ -231,9 +239,11 @@ function checkCallExpression(
   checker: ts.TypeChecker
 ): CheckNodeResult {
   if (
-    !Ignore.isIgnoredPrefix(
-      node.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node,
+      ctx.options.ignorePrefix,
+      ctx.options.ignore,
+      ctx.options.ignorePostfix
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&
     (!(

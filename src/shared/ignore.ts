@@ -12,7 +12,7 @@ import {
 } from "./typeguard";
 
 export type Options = IgnoreLocalOption &
-  IgnorePrefixOption &
+  IgnoreOption &
   IgnoreRestParametersOption &
   IgnoreClassOption &
   IgnoreInterfaceOption &
@@ -22,8 +22,10 @@ export interface IgnoreLocalOption {
   readonly ignoreLocal?: boolean;
 }
 
-export interface IgnorePrefixOption {
+export interface IgnoreOption {
   readonly ignorePrefix?: string | Array<string> | undefined;
+  readonly ignore?: string | Array<string> | undefined;
+  readonly ignorePostfix?: string | Array<string> | undefined;
 }
 
 export interface IgnoreRestParametersOption {
@@ -126,33 +128,72 @@ function checkIgnoreLocalFunctionNode(
   return myInvalidNodes;
 }
 
-export function shouldIgnorePrefix(
+export function shouldIgnore(
   node: ts.Node,
-  options: IgnorePrefixOption,
+  options: IgnoreOption,
   sourceFile: ts.SourceFile
 ): boolean {
-  // Check ignore-prefix for VariableLikeDeclaration, TypeAliasDeclaration
-  if (options.ignorePrefix) {
-    if (
-      node &&
-      (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
-    ) {
-      const variableText = node.name.getText(sourceFile);
-      // if (
-      //   variableText.substr(0, options.ignorePrefix.length) ===
-      //   options.ignorePrefix
-      // ) {
-      //   return true;
-      // }
-      if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
-        return true;
-      }
+  // Check ignore for VariableLikeDeclaration, TypeAliasDeclaration
+  if (
+    node &&
+    (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
+  ) {
+    const variableText = node.name.getText(sourceFile);
+
+    if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
+      return true;
+    }
+    if (isIgnoredExact(variableText, options.ignore)) {
+      return true;
+    }
+    if (isIgnoredPostfix(variableText, options.ignorePostfix)) {
+      return true;
     }
   }
   return false;
 }
 
-export function isIgnoredPrefix(
+export function isIgnored(
+  node: ts.Node,
+  ignorePrefix: Array<string> | string | undefined,
+  ignoreExact: Array<string> | string | undefined,
+  ignorePostfix: Array<string> | string | undefined
+): boolean {
+  const nodeText = node.getText();
+
+  if (
+    isIgnoredPrefix(nodeText, ignorePrefix) ||
+    isIgnoredExact(nodeText, ignoreExact) ||
+    isIgnoredPostfix(nodeText, ignorePostfix)
+  ) {
+    return true;
+  }
+
+  if (utils.isBinaryExpression(node)) {
+    return isIgnored(node.left, ignorePrefix, ignoreExact, ignorePostfix);
+  }
+
+  if (
+    utils.isPrefixUnaryExpression(node) ||
+    utils.isPostfixUnaryExpression(node)
+  ) {
+    return isIgnored(node.operand, ignorePrefix, ignoreExact, ignorePostfix);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(node, "expression")) {
+    return isIgnored(
+      // tslint:disable-next-line: no-any
+      (node as any).expression,
+      ignorePrefix,
+      ignoreExact,
+      ignorePostfix
+    );
+  }
+
+  return false;
+}
+
+function isIgnoredPrefix(
   text: string,
   ignorePrefix: Array<string> | string | undefined
 ): boolean {
@@ -165,6 +206,46 @@ export function isIgnoredPrefix(
     }
   } else {
     if (text.indexOf(ignorePrefix) === 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isIgnoredPostfix(
+  text: string,
+  ignorePostfix: Array<string> | string | undefined
+): boolean {
+  if (!ignorePostfix) {
+    return false;
+  }
+  if (Array.isArray(ignorePostfix)) {
+    if (
+      ignorePostfix.find(pfx => text.indexOf(pfx) === text.length - pfx.length)
+    ) {
+      return true;
+    }
+  } else {
+    if (text.indexOf(ignorePostfix) === text.length - ignorePostfix.length) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isIgnoredExact(
+  text: string,
+  ignore: Array<string> | string | undefined
+): boolean {
+  if (!ignore) {
+    return false;
+  }
+  if (Array.isArray(ignore)) {
+    if (ignore.find(pfx => text === pfx)) {
+      return true;
+    }
+  } else {
+    if (text === ignore) {
       return true;
     }
   }

@@ -8,7 +8,7 @@ import {
   createCheckNodeRule
 } from "./shared/check-node";
 
-type Options = Ignore.IgnoreLocalOption & Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreLocalOption & Ignore.IgnoreOption;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeRule(
@@ -77,7 +77,7 @@ function checkDeclarationList(
     let addFix = true;
     for (const variableDeclarationNode of declarationList.declarations) {
       if (
-        !Ignore.shouldIgnorePrefix(
+        !Ignore.shouldIgnore(
           variableDeclarationNode,
           ctx.options,
           ctx.sourceFile
