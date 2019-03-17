@@ -29,11 +29,11 @@ const foo = (): ReadonlyArray<string> => {
 }
 
 // Should fail on shorthand syntax Array type as return type
-function foo(): ReadonlyArray<number> {
+function foo(): readonly number[] {
 }
 
 // Should fail on shorthand syntax Array type as return type
-const foo = (): ReadonlyArray<number> => {
+const foo = (): readonly number[] => {
 }
 
 function foo(): ReadonlyArray<number> {
