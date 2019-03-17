@@ -32,7 +32,8 @@ function checkNode(
     invalidNodes: [
       ...checkArrayType(node, ctx),
       ...checkTypeReference(node, ctx),
-      ...checkImplicitType(node, ctx)
+      ...checkImplicitType(node, ctx),
+      ...checkTupleType(node, ctx)
     ]
   };
 }
@@ -86,30 +87,6 @@ function checkArrayType(
     ];
   }
   return [];
-}
-
-function getReadonlyKeywordFix(
-  node: ts.ArrayTypeNode,
-  ctx: Lint.WalkContext<Options>
-): Lint.Replacement[] {
-  // Nested shorthand syntax array?
-  if (utils.isArrayTypeNode(node.parent)) {
-    return [
-      new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "(readonly "),
-      new Lint.Replacement(node.end, 0, ")")
-    ];
-  }
-  return [new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")];
-}
-
-function getReadonlyArrayFix(
-  node: ts.ArrayTypeNode,
-  ctx: Lint.WalkContext<Options>
-): Lint.Replacement[] {
-  return [
-    new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "ReadonlyArray<"),
-    new Lint.Replacement(node.end - 2, 2, ">")
-  ];
 }
 
 function checkTypeReference(
@@ -192,4 +169,51 @@ function isUntypedAndHasArrayLiteralExpressionInitializer(
     !node.type &&
       (node.initializer && utils.isArrayLiteralExpression(node.initializer))
   );
+}
+function checkTupleType(
+  node: ts.Node,
+  ctx: Lint.WalkContext<Options>
+): ReadonlyArray<InvalidNode> {
+  const [major, minor] = ts.version.split(".").map(n => Number.parseInt(n, 10));
+
+  // Only applies to ts 3.4 and newer.
+  if (major > 3 || (major === 3 && minor >= 4)) {
+    if (utils.isTupleTypeNode(node)) {
+      // Ignore arrays decleared with readonly keyword.
+      if (
+        node.parent &&
+        utils.isTypeOperatorNode(node.parent) &&
+        node.parent.operator === ts.SyntaxKind.ReadonlyKeyword
+      ) {
+        return [];
+      }
+
+      return [createInvalidNode(node, getReadonlyKeywordFix(node, ctx))];
+    }
+  }
+  return [];
+}
+
+function getReadonlyKeywordFix(
+  node: ts.ArrayTypeNode | ts.TupleTypeNode,
+  ctx: Lint.WalkContext<Options>
+): Lint.Replacement[] {
+  // Nested shorthand syntax array?
+  if (utils.isArrayTypeNode(node.parent)) {
+    return [
+      new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "(readonly "),
+      new Lint.Replacement(node.end, 0, ")")
+    ];
+  }
+  return [new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "readonly ")];
+}
+
+function getReadonlyArrayFix(
+  node: ts.ArrayTypeNode,
+  ctx: Lint.WalkContext<Options>
+): Lint.Replacement[] {
+  return [
+    new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "ReadonlyArray<"),
+    new Lint.Replacement(node.end - 2, 2, ">")
+  ];
 }
