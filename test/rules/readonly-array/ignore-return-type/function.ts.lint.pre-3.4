@@ -132,10 +132,10 @@ function foo(...numbers: ReadOnlyArray<number>): Promise<ReadOnlyArray<number[]>
 
 // Tuples
 
-function foo(...numbers: ReadOnlyArray<number>): readonly [number, Array<number>, number] {
+function foo(...numbers: ReadOnlyArray<number>): [number, Array<number>, number] {
 }
 
-function foo(...numbers: ReadOnlyArray<number>): readonly [number, number[], number] {
+function foo(...numbers: ReadOnlyArray<number>): [number, number[], number] {
 }
 
 

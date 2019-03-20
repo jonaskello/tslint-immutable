@@ -4,3 +4,12 @@ function foo(...numbers: number[]) {
                          ~~~~~~~~    [Only ReadonlyArray allowed.]
 }
 
+function foo(...numbers: Array<number>) {
+                         ~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
+}
+
+function foo(...numbers: ReadonlyArray<number>) {
+}
+
+function foo(...numbers: readonly number[]) {
+}

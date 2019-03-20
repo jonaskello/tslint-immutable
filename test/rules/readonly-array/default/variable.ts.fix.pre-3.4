@@ -10,7 +10,7 @@ const foo: ReadonlyArray<string> = [];
 const foo: ReadonlyArray<any> = [1, 2, 3]
 
 // Should fail on shorthand Array syntax
-const foo: readonly number[] = [1, 2, 3];
+const foo: ReadonlyArray<number> = [1, 2, 3];
 
 // Should fail on Array type being used as template param
 let x: Foo<ReadonlyArray<string>>;
@@ -19,15 +19,15 @@ let x: Foo<ReadonlyArray<string>>;
 let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
 
 // Should fail on nested shorthand arrays
-let x: readonly (readonly (readonly string[])[])[];
+let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
 
 // Should fail on mixed nested arrays
-let x: ReadonlyArray<readonly ReadonlyArray<string>[]>;
+let x: ReadonlyArray<ReadonlyArray<ReadonlyArray<string>>>;
 
 // -- Local variable declarations
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
-function foo(bar: ReadonlyArray<string>, zoo: ReadonlyArray<string>, boo: ReadonlyArray<any> = [1, 2, 3], soo: readonly number[]) {
+function foo(bar: ReadonlyArray<string>, zoo: ReadonlyArray<string>, boo: ReadonlyArray<any> = [1, 2, 3], soo: ReadonlyArray<number>) {
 
   // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
   const foo: ReadonlyArray<string> = [];
@@ -40,7 +40,7 @@ function foo(bar: ReadonlyArray<string>, zoo: ReadonlyArray<string>, boo: Readon
 }
 
 // Should fail on Array type in variable declaration as function parameter (TypeReferenceNode)
-const foo = (bar: ReadonlyArray<string>, zoo: ReadonlyArray<string>, boo: ReadonlyArray<any> = [1, 2, 3], soo: readonly number[]) => {
+const foo = (bar: ReadonlyArray<string>, zoo: ReadonlyArray<string>, boo: ReadonlyArray<any> = [1, 2, 3], soo: ReadonlyArray<number>) => {
 
   // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
   const foo: ReadonlyArray<string> = [];

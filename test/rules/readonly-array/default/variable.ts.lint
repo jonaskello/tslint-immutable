@@ -25,11 +25,17 @@ let x: Array<Array<Array<string>>>;
              ~~~~~~~~~~~~~~~~~~~~ [failure]
                    ~~~~~~~~~~~~~ [failure]
 
-// Should fail on nested shorthand arrayss
+// Should fail on nested shorthand arrays
 let x: string[][][];
        ~~~~~~~~~~~~ [failure]
        ~~~~~~~~~~ [failure]
        ~~~~~~~~ [failure]
+
+// Should fail on mixed nested arrays
+let x: Array<Array<string>[]>;
+       ~~~~~~~~~~~~~~~~~~~~~~ [failure]
+             ~~~~~~~~~~~~~~~ [failure]
+             ~~~~~~~~~~~~~ [failure]
 
 // -- Local variable declarations
 

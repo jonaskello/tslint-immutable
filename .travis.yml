@@ -9,9 +9,23 @@ node_js:
   - "8"
   - "7"
   - "6"
+env:
+  - TSVERSION=next
+  - TSVERSION=latest
+  - TSVERSION=3.0
+  - TSVERSION=2.8
+matrix:
+  allow_failures:
+    - env: TSVERSION=next
 before_install:
 before_script:
 script:
-  - yarn verify
+  - yarn build
+  - yarn lint
+  - yarn add -D typescript@$TSVERSION
+  - ./node_modules/.bin/tsc --version
+  - ./node_modules/.bin/tsc -p scripts/tsconfig.json
+  - node scripts/prepare-tests.js
+  - yarn coverage
 after_success:
   - yarn report-coverage
