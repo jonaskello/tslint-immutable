@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v5.5.0] - 2019-03-21
+
+* readonly-array rule now allows for the readonly keyword to specify an array as readonly. This is a new feature supported in TypeScript 3.4. See [#129](https://github.com/jonaskello/tslint-immutable/issues/129). See PR [#130](https://github.com/jonaskello/tslint-immutable/pull/130)
+
 ## [v5.4.0] - 2019-03-14
 
 * no-object-mutation rule now disallows Object.assign mutation on identifiers and property access expressions. See [#112](https://github.com/jonaskello/tslint-immutable/issues/112). See PR [#127](https://github.com/jonaskello/tslint-immutable/pull/127)

@@ -136,7 +136,7 @@ Yes
 
 ### readonly-array
 
-This rule enforces use of `ReadonlyArray<T>` instead of `Array<T>` or `T[]`.
+This rule enforces use of `ReadonlyArray<T>` or `readonly T[]` instead of `Array<T>` or `T[]`.
 
 Below is some information about the `ReadonlyArray<T>` type and the benefits of using it:
 
@@ -151,14 +151,17 @@ const points: Array<Point> = [{ x: 23, y: 44 }];
 points.push({ x: 1, y: 2 }); // This is legal
 ```
 
-Using the `ReadonlyArray<T>` type will stop this mutation:
+Using the `ReadonlyArray<T>` type or `readonly T[]` will stop this mutation:
 
 ```typescript
 interface Point {
   readonly x: number;
   readonly y: number;
 }
+
 const points: ReadonlyArray<Point> = [{ x: 23, y: 44 }];
+// const points: readonly Point[] = [{ x: 23, y: 44 }]; // This is the alternative syntax for the line above
+
 points.push({ x: 1, y: 2 }); // Unresolved method push()
 ```
 
