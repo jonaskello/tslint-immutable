@@ -23,6 +23,15 @@
     "url": "https://github.com/jonaskello/tslint-immutable/issues"
   },
   "homepage": "https://github.com/jonaskello/tslint-immutable#readme",
+  "files": [
+    "/rules",
+    "tslint-immutable.json",
+    "all.json",
+    "package.json",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
   "dependencies": {
     "tsutils": "^2.28.0 || ^3.0.0"
   },
