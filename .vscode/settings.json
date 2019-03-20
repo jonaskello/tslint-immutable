@@ -9,5 +9,10 @@
     ".vscode/**": true,
     "**/temp": true,
     "rules/**": true
+  },
+  "files.exclude": {
+    ".nyc_output": true,
+    "coverage": true,
+    "scripts/**/*.js": true
   }
 }
