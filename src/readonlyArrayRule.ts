@@ -3,7 +3,6 @@ import * as Lint from "tslint";
 import * as utils from "tsutils/typeguard/2.8";
 import * as Ignore from "./shared/ignore";
 import {
-  InvalidNode,
   createInvalidNode,
   CheckNodeResult,
   createCheckNodeRule
@@ -28,20 +27,26 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
+  const results = [
+    checkArrayType(node, ctx),
+    checkTypeReference(node, ctx),
+    checkImplicitType(node, ctx),
+    checkTupleType(node, ctx)
+  ];
+
   return {
-    invalidNodes: [
-      ...checkArrayType(node, ctx),
-      ...checkTypeReference(node, ctx),
-      ...checkImplicitType(node, ctx),
-      ...checkTupleType(node, ctx)
-    ]
+    invalidNodes: results.reduce(
+      (merged, result) => [...merged, ...result.invalidNodes],
+      []
+    ),
+    skipChildren: results.some(result => result.skipChildren === true)
   };
 }
 
 function checkArrayType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   // We need to check both shorthand syntax "number[]"...
   if (utils.isArrayTypeNode(node)) {
     // Ignore arrays decleared with readonly keyword.
@@ -50,14 +55,17 @@ function checkArrayType(
       utils.isTypeOperatorNode(node.parent) &&
       node.parent.operator === ts.SyntaxKind.ReadonlyKeyword
     ) {
-      return [];
+      return { invalidNodes: [] };
     }
 
     if (
       node.parent &&
       Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
     ) {
-      return [];
+      return {
+        invalidNodes: [],
+        skipChildren: true
+      };
     }
 
     if (
@@ -66,33 +74,35 @@ function checkArrayType(
       utils.isParameterDeclaration(node.parent) &&
       node.parent.dotDotDotToken
     ) {
-      return [];
+      return { invalidNodes: [] };
     }
 
     if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedWithIn(node)) {
-      return [];
+      return { invalidNodes: [] };
     }
 
     const [major, minor] = ts.version
       .split(".")
       .map(n => Number.parseInt(n, 10));
 
-    return [
-      createInvalidNode(
-        node,
-        major > 3 || (major === 3 && minor >= 4)
-          ? getReadonlyKeywordFix(node, ctx)
-          : getReadonlyArrayFix(node, ctx)
-      )
-    ];
+    return {
+      invalidNodes: [
+        createInvalidNode(
+          node,
+          major > 3 || (major === 3 && minor >= 4)
+            ? getReadonlyKeywordFix(node, ctx)
+            : getReadonlyArrayFix(node, ctx)
+        )
+      ]
+    };
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 function checkTypeReference(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   // ...and type reference "Array<number>"
   if (
     utils.isTypeReferenceNode(node) &&
@@ -102,28 +112,36 @@ function checkTypeReference(
       node.parent &&
       Ignore.shouldIgnorePrefix(node.parent, ctx.options, ctx.sourceFile)
     ) {
-      return [];
+      return {
+        invalidNodes: [],
+        skipChildren: true
+      };
     }
 
     if (ctx.options.ignoreReturnType && checkIsReturnTypeOrNestedWithIn(node)) {
-      return [];
+      return { invalidNodes: [] };
     }
 
-    return [
-      createInvalidNode(node, [
-        new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
-      ])
-    ];
+    return {
+      invalidNodes: [
+        createInvalidNode(node, [
+          new Lint.Replacement(node.getStart(ctx.sourceFile), 0, "Readonly")
+        ])
+      ]
+    };
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 export function checkImplicitType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-    return [];
+    return {
+      invalidNodes: [],
+      skipChildren: true
+    };
   }
   // Check if the initializer is used to set an implicit array type
   if (
@@ -134,17 +152,19 @@ export function checkImplicitType(
     const nameText = node.name.getText(ctx.sourceFile);
     let typeArgument = "any";
 
-    return [
-      createInvalidNode(node.name, [
-        new Lint.Replacement(
-          node.name.end - length,
-          length,
-          `${nameText}: ReadonlyArray<${typeArgument}>`
-        )
-      ])
-    ];
+    return {
+      invalidNodes: [
+        createInvalidNode(node.name, [
+          new Lint.Replacement(
+            node.name.end - length,
+            length,
+            `${nameText}: ReadonlyArray<${typeArgument}>`
+          )
+        ])
+      ]
+    };
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 function checkIsReturnTypeOrNestedWithIn(node: ts.Node): boolean {
@@ -173,7 +193,7 @@ function isUntypedAndHasArrayLiteralExpressionInitializer(
 function checkTupleType(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   const [major, minor] = ts.version.split(".").map(n => Number.parseInt(n, 10));
 
   // Only applies to ts 3.4 and newer.
@@ -185,13 +205,17 @@ function checkTupleType(
         utils.isTypeOperatorNode(node.parent) &&
         node.parent.operator === ts.SyntaxKind.ReadonlyKeyword
       ) {
-        return [];
+        return { invalidNodes: [] };
       }
 
-      return [createInvalidNode(node, getReadonlyKeywordFix(node, ctx))];
+      return {
+        invalidNodes: [
+          createInvalidNode(node, getReadonlyKeywordFix(node, ctx))
+        ]
+      };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 function getReadonlyKeywordFix(

@@ -1,0 +1,7 @@
+const _2DArray: number[][] = [[0], [1], [2]];
+                ~~~~~~~~~~                    [failure]
+                ~~~~~~~~                      [failure]
+
+const mutable2DArray: number[][] = [[0], [1], [2]];
+
+[failure]: Only ReadonlyArray allowed.
