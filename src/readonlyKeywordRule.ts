@@ -3,7 +3,6 @@ import * as Lint from "tslint";
 import * as utils from "tsutils/typeguard/2.8";
 import * as Ignore from "./shared/ignore";
 import {
-  InvalidNode,
   createInvalidNode,
   CheckNodeResult,
   createCheckNodeRule
@@ -28,13 +27,13 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  return { invalidNodes: checkPropertySignatureAndIndexSignature(node, ctx) };
+  return checkPropertySignatureAndIndexSignature(node, ctx);
 }
 
 function checkPropertySignatureAndIndexSignature(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     (utils.isPropertySignature(node) ||
       utils.isIndexSignatureDeclaration(node) ||
@@ -47,16 +46,18 @@ function checkPropertySignatureAndIndexSignature(
   ) {
     // Check if ignore-prefix applies
     if (Ignore.shouldIgnorePrefix(node, ctx.options, ctx.sourceFile)) {
-      return [];
+      return { invalidNodes: [] };
     }
 
     const start = utils.isIndexSignatureDeclaration(node)
       ? node.getStart(ctx.sourceFile)
       : node.name.getStart(ctx.sourceFile);
 
-    return [
-      createInvalidNode(node, [new Lint.Replacement(start, 0, "readonly ")])
-    ];
+    return {
+      invalidNodes: [
+        createInvalidNode(node, [new Lint.Replacement(start, 0, "readonly ")])
+      ]
+    };
   }
-  return [];
+  return { invalidNodes: [] };
 }
