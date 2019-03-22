@@ -9,7 +9,7 @@ import {
   InvalidNode
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
-import { isAccessExpression } from "./shared/typeguard";
+import { isAccessExpression, AccessExpression } from "./shared/typeguard";
 
 type Options = Ignore.IgnoreNewArrayOption &
   Ignore.IgnoreMutationFollowingAccessorOption &
@@ -136,11 +136,12 @@ function checkBinaryExpression(
       node.getText(node.getSourceFile()),
       ctx.options.ignorePrefix
     ) &&
-    utils.isBinaryExpression(node) &&
     isAssignmentKind(node.operatorToken.kind) &&
     isAccessExpression(node.left)
   ) {
-    const leftExpressionType = checker.getTypeAtLocation(node.left.expression);
+    const leftExpressionType = checker.getTypeAtLocation(
+      getRootAccessExpression(node.left).expression
+    );
 
     if (isArrayType(leftExpressionType)) {
       return [createInvalidNode(node, [])];
@@ -165,7 +166,7 @@ function checkDeleteExpression(
     isAccessExpression(node.expression)
   ) {
     const expressionType = checker.getTypeAtLocation(
-      node.expression.expression
+      getRootAccessExpression(node.expression).expression
     );
 
     if (isArrayType(expressionType)) {
@@ -192,7 +193,7 @@ function checkPrefixUnaryExpression(
     forbidUnaryOps.some(o => o === node.operator)
   ) {
     const operandExpressionType = checker.getTypeAtLocation(
-      node.operand.expression
+      getRootAccessExpression(node.operand).expression
     );
 
     if (isArrayType(operandExpressionType)) {
@@ -219,7 +220,7 @@ function checkPostfixUnaryExpression(
     forbidUnaryOps.some(o => o === node.operator)
   ) {
     const operandExpressionType = checker.getTypeAtLocation(
-      node.operand.expression
+      getRootAccessExpression(node.operand).expression
     );
 
     if (isArrayType(operandExpressionType)) {
@@ -253,7 +254,7 @@ function checkCallExpression(
   ) {
     // Do the type checking as late as possible (as it is expensive).
     const expressionType = checker.getTypeAtLocation(
-      node.expression.expression
+      getRootAccessExpression(node.expression).expression
     );
 
     if (isArrayType(expressionType)) {
@@ -300,4 +301,11 @@ function isInChainCallAndFollowsNew(
  */
 function isExpected<T>(expected: T): (actual: T) => boolean {
   return actual => actual === expected;
+}
+
+function getRootAccessExpression(n: AccessExpression): AccessExpression {
+  if (isAccessExpression(n.expression)) {
+    return getRootAccessExpression(n.expression);
+  }
+  return n;
 }
