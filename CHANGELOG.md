@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* no-array-mutation now checks nested arrays. See [#134](https://github.com/jonaskello/tslint-immutable/issues/134). See PR [#135](https://github.com/jonaskello/tslint-immutable/pull/135)
+
 ## [v5.5.0] - 2019-03-21
 
 * readonly-array rule now allows for the readonly keyword to specify an array as readonly. This is a new feature supported in TypeScript 3.4. See [#129](https://github.com/jonaskello/tslint-immutable/issues/129). See PR [#130](https://github.com/jonaskello/tslint-immutable/pull/130)
