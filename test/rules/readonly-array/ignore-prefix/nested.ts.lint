@@ -4,4 +4,6 @@ const _2DArray: number[][] = [[0], [1], [2]];
 
 const mutable2DArray: number[][] = [[0], [1], [2]];
 
+const mutableObjectArray: { foo: number[] } = { foo: [0] };
+
 [failure]: Only ReadonlyArray allowed.
