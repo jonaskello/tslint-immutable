@@ -3,7 +3,6 @@ import * as Lint from "tslint";
 import * as utils from "tsutils/typeguard/2.8";
 import * as Ignore from "./shared/ignore";
 import {
-  InvalidNode,
   createInvalidNode,
   CheckNodeResult,
   createCheckNodeRule
@@ -21,27 +20,34 @@ function checkNode(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
 ): CheckNodeResult {
-  const variableStatementFailures = checkVariableStatement(node, ctx);
-  const forStatementsFailures = checkForStatements(node, ctx);
+  const results = [
+    checkVariableStatement(node, ctx),
+    checkForStatements(node, ctx)
+  ];
+
   return {
-    invalidNodes: [...variableStatementFailures, ...forStatementsFailures]
+    invalidNodes: results.reduce(
+      (merged, result) => [...merged, ...result.invalidNodes],
+      []
+    ),
+    skipChildren: results.some(result => result.skipChildren === true)
   };
 }
 
 function checkVariableStatement(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (utils.isVariableStatement(node)) {
     return checkDeclarationList(node.declarationList, ctx);
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 function checkForStatements(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     (utils.isForStatement(node) ||
       utils.isForInStatement(node) ||
@@ -52,13 +58,13 @@ function checkForStatements(
   ) {
     return checkDeclarationList(node.initializer, ctx);
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 function checkDeclarationList(
   declarationList: ts.VariableDeclarationList,
   ctx: Lint.WalkContext<Options>
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (Lint.isNodeFlagSet(declarationList, ts.NodeFlags.Let)) {
     // It is a let declaration, now check each variable that is declared
     const invalidVariableDeclarationNodes = [];
@@ -94,7 +100,7 @@ function checkDeclarationList(
         addFix = false;
       }
     }
-    return invalidVariableDeclarationNodes;
+    return { invalidNodes: invalidVariableDeclarationNodes };
   }
-  return [];
+  return { invalidNodes: [] };
 }

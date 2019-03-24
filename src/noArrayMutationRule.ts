@@ -5,8 +5,7 @@ import { isAssignmentKind } from "tsutils/util";
 import {
   createInvalidNode,
   CheckNodeResult,
-  createCheckNodeTypedRule,
-  InvalidNode
+  createCheckNodeTypedRule
 } from "./shared/check-node";
 import * as Ignore from "./shared/ignore";
 import { isAccessExpression, AccessExpression } from "./shared/typeguard";
@@ -88,18 +87,10 @@ const newArrayReturningMethods: ReadonlyArray<string> = [
 const constructorFunctions = ["from", "of"];
 
 function checkTypedNode(
-  node: ts.BinaryExpression,
-  ctx: Lint.WalkContext<Options>,
-  checker: ts.TypeChecker
-): CheckNodeResult {
-  return { invalidNodes: getInvalidNodes(node, ctx, checker) };
-}
-
-function getInvalidNodes(
   node: ts.Node,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (utils.isBinaryExpression(node)) {
     return checkBinaryExpression(node, ctx, checker);
   }
@@ -119,7 +110,8 @@ function getInvalidNodes(
   if (utils.isCallExpression(node)) {
     return checkCallExpression(node, ctx, checker);
   }
-  return [];
+
+  return { invalidNodes: [] };
 }
 
 /**
@@ -130,7 +122,7 @@ function checkBinaryExpression(
   node: ts.BinaryExpression,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
@@ -144,10 +136,10 @@ function checkBinaryExpression(
     );
 
     if (isArrayType(leftExpressionType)) {
-      return [createInvalidNode(node, [])];
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 /**
@@ -157,7 +149,7 @@ function checkDeleteExpression(
   node: ts.DeleteExpression,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     !Ignore.isIgnoredPrefix(
       node.expression.getText(node.getSourceFile()),
@@ -170,10 +162,10 @@ function checkDeleteExpression(
     );
 
     if (isArrayType(expressionType)) {
-      return [createInvalidNode(node, [])];
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 /**
@@ -183,7 +175,7 @@ function checkPrefixUnaryExpression(
   node: ts.PrefixUnaryExpression,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     !Ignore.isIgnoredPrefix(
       node.operand.getText(node.getSourceFile()),
@@ -197,10 +189,10 @@ function checkPrefixUnaryExpression(
     );
 
     if (isArrayType(operandExpressionType)) {
-      return [createInvalidNode(node, [])];
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 /**
@@ -210,7 +202,7 @@ function checkPostfixUnaryExpression(
   node: ts.PostfixUnaryExpression,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
@@ -224,10 +216,10 @@ function checkPostfixUnaryExpression(
     );
 
     if (isArrayType(operandExpressionType)) {
-      return [createInvalidNode(node, [])];
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 /**
@@ -237,7 +229,7 @@ function checkCallExpression(
   node: ts.CallExpression,
   ctx: Lint.WalkContext<Options>,
   checker: ts.TypeChecker
-): ReadonlyArray<InvalidNode> {
+): CheckNodeResult {
   if (
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
@@ -258,10 +250,10 @@ function checkCallExpression(
     );
 
     if (isArrayType(expressionType)) {
-      return [createInvalidNode(node, [])];
+      return { invalidNodes: [createInvalidNode(node, [])] };
     }
   }
-  return [];
+  return { invalidNodes: [] };
 }
 
 /**

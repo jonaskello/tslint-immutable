@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* readonly-array rule with the option ignore-prefix set will now ignore nested arrays within an ignored variable. See [#132](https://github.com/jonaskello/tslint-immutable/issues/132). See PR [#133](https://github.com/jonaskello/tslint-immutable/pull/133)
+
 ## [v5.5.1] - 2019-03-22
 
 * no-array-mutation now checks nested arrays. See [#134](https://github.com/jonaskello/tslint-immutable/issues/134). See PR [#135](https://github.com/jonaskello/tslint-immutable/pull/135)
