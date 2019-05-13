@@ -57,3 +57,9 @@ export function isVariableOrParameterOrPropertyDeclaration(
     utils.isPropertyDeclaration(node)
   );
 }
+
+export function hasExpression(
+  node: ts.Node
+): node is ts.Node & { expression: ts.Node } {
+  return Object.prototype.hasOwnProperty.call(node, "expression");
+}

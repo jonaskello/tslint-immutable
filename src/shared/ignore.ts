@@ -7,6 +7,7 @@ import * as Lint from "tslint";
 import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
 import {
+  hasExpression,
   isFunctionLikeDeclaration,
   isVariableLikeDeclaration
 } from "./typeguard";
@@ -180,14 +181,8 @@ export function isIgnored(
     return isIgnored(node.operand, ignorePrefix, ignoreExact, ignoreSuffix);
   }
 
-  if (Object.prototype.hasOwnProperty.call(node, "expression")) {
-    return isIgnored(
-      // tslint:disable-next-line: no-any
-      (node as any).expression,
-      ignorePrefix,
-      ignoreExact,
-      ignoreSuffix
-    );
+  if (hasExpression(node)) {
+    return isIgnored(node.expression, ignorePrefix, ignoreExact, ignoreSuffix);
   }
 
   return false;
