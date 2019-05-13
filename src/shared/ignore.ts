@@ -221,12 +221,16 @@ function isIgnoredSuffix(
   }
   if (Array.isArray(ignoreSuffix)) {
     if (
-      ignoreSuffix.find(pfx => text.indexOf(pfx) === text.length - pfx.length)
+      ignoreSuffix.find(sfx => {
+        const indexToFindAt = text.length - sfx.length;
+        return indexToFindAt >= 0 && text.indexOf(sfx) === indexToFindAt;
+      })
     ) {
       return true;
     }
   } else {
-    if (text.indexOf(ignoreSuffix) === text.length - ignoreSuffix.length) {
+    const indexToFindAt = text.length - ignoreSuffix.length;
+    if (indexToFindAt >= 0 && text.indexOf(ignoreSuffix) === indexToFindAt) {
       return true;
     }
   }
