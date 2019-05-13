@@ -29,7 +29,7 @@ function checkNode(
       node.expression,
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     );
     if (!isYield && !isIgnored) {
       return { invalidNodes: [createInvalidNode(node, [])] };

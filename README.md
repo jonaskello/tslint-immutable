@@ -120,7 +120,7 @@ Yes
 * [ignore-interface](#using-the-ignore-interface-option)
 * [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-postfix](#using-the-ignore-postfix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
 
 #### Example config
 
@@ -176,7 +176,7 @@ Yes
 * [ignore-local](#using-the-ignore-local-option)
 * [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-postfix](#using-the-ignore-postfix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
 * [ignore-return-type](#using-the-ignore-return-type-option)
 * [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
 
@@ -224,7 +224,7 @@ Yes
 * [ignore-local](#using-the-ignore-local-option)
 * [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-postfix](#using-the-ignore-postfix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
 
 #### Example config
 
@@ -262,7 +262,7 @@ No
 
 * [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-postfix](#using-the-ignore-postfix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
 * [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
 * ~~ignore-mutation-following-accessor~~ - _deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)_
 
@@ -303,7 +303,7 @@ No
 
 * [ignore](#using-the-ignore-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-postfix](#using-the-ignore-postfix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
 
 #### Example config
 
@@ -558,9 +558,9 @@ Yes, variable names like `mutableAge` are ugly, but then again mutation is an ug
 
 Like ignore-prefix but with exact matching.
 
-### Using the `ignore-postfix` option
+### Using the `ignore-suffix` option
 
-Like ignore-prefix but with postfix matching instead of prefix matching.
+Like ignore-prefix but with suffix matching instead of prefix matching.
 
 ### Using the `ignore-prefix` option with `no-expression-statement`
 

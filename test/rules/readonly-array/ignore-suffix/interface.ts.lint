@@ -6,7 +6,7 @@ interface Foo {
        ~~~~~~~~~~~~~ [failure]
 }
 
-// Should not fail on Array type in interface with postfix (TypeReferenceNode)
+// Should not fail on Array type in interface with suffix (TypeReferenceNode)
 interface Foo {
   bar: arrayMutable<string>
 }
@@ -21,7 +21,7 @@ function foo() {
          ~~~~~~~~~~~~~ [failure]
   }
 
-  // Should not fail on Array type in interface with postfix (TypeReferenceNode)
+  // Should not fail on Array type in interface with suffix (TypeReferenceNode)
   interface Foo {
     bar: arrayMutable<string>
   }
@@ -36,7 +36,7 @@ const foo = () => {
          ~~~~~~~~~~~~~ [failure]
   }
 
-  // Should not fail on Array type in interface with postfix (TypeReferenceNode)
+  // Should not fail on Array type in interface with suffix (TypeReferenceNode)
   interface Foo {
     barMutable: Array<string>
   }

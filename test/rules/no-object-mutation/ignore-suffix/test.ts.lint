@@ -18,7 +18,7 @@ x.a++;
 ++x.a;
 ~~~~~ [failure]
 
-// Allowed postfix
+// Allowed suffix
 
 yMutable.foo = 'bar';
 

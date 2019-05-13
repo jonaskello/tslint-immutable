@@ -4,7 +4,7 @@
 let foo: { bar: Array<string> };
                 ~~~~~~~~~~~~~ [failure]
 
-// Should not fail on Array as type literal member with postfix (TypeReferenceNode)
+// Should not fail on Array as type literal member with suffix (TypeReferenceNode)
 let foo: { barMutable: Array<string> };
 
 // Check shorthand syntax as well
@@ -20,7 +20,7 @@ function foo(param1: { bar: Array<string>, boo: ReadonlyArray<string> }) {
   let foo: { bar: Array<string> };
                   ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array as type literal member with postfix (TypeReferenceNode)
+  // Should not fail on Array as type literal member with suffix (TypeReferenceNode)
   let foo: { barMutable: Array<string> };
 
 }
@@ -33,7 +33,7 @@ const foo = (param1: { bar: Array<string>, boo: ReadonlyArray<string> }) => {
   let foo: { bar: Array<string> };
                   ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array as type literal member with postfix (TypeReferenceNode)
+  // Should not fail on Array as type literal member with suffix (TypeReferenceNode)
   let foo: { barMutable: Array<string> };
 
 }

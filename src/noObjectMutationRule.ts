@@ -46,7 +46,7 @@ function checkNode(
       node,
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     ) &&
     !inConstructor(node)
   ) {
@@ -61,7 +61,7 @@ function checkNode(
       node.expression,
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -76,7 +76,7 @@ function checkNode(
       node.operand,
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -91,7 +91,7 @@ function checkNode(
       node,
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -110,7 +110,7 @@ function checkNode(
       node.arguments[0],
       ctx.options.ignorePrefix,
       ctx.options.ignore,
-      ctx.options.ignorePostfix
+      ctx.options.ignoreSuffix
     ) &&
     // Do type checking as late as possible as it is expensive.
     isObjectConstructorType(

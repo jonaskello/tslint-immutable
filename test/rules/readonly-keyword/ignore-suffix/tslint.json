@@ -1,6 +1,6 @@
 {
   "rulesDirectory": ["../../../../rules"],
   "rules": {
-    "no-let": [true, { "ignore-postfix": "Mutable" }]
+    "readonly-keyword": [true, {"ignore-suffix": "Mutable"}]
   }
 }

@@ -1,6 +1,6 @@
 {
     "rulesDirectory": ["../../../../rules"],
     "rules": {
-        "no-expression-statement": [true, {"ignore-postfix": "og"}]
+        "no-expression-statement": [true, {"ignore-suffix": "og"}]
     }
 }

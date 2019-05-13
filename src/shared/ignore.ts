@@ -25,7 +25,7 @@ export interface IgnoreLocalOption {
 export interface IgnoreOption {
   readonly ignorePrefix?: string | Array<string> | undefined;
   readonly ignore?: string | Array<string> | undefined;
-  readonly ignorePostfix?: string | Array<string> | undefined;
+  readonly ignoreSuffix?: string | Array<string> | undefined;
 }
 
 export interface IgnoreRestParametersOption {
@@ -146,7 +146,7 @@ export function shouldIgnore(
     if (isIgnoredExact(variableText, options.ignore)) {
       return true;
     }
-    if (isIgnoredPostfix(variableText, options.ignorePostfix)) {
+    if (isIgnoredSuffix(variableText, options.ignoreSuffix)) {
       return true;
     }
   }
@@ -157,27 +157,27 @@ export function isIgnored(
   node: ts.Node,
   ignorePrefix: Array<string> | string | undefined,
   ignoreExact: Array<string> | string | undefined,
-  ignorePostfix: Array<string> | string | undefined
+  ignoreSuffix: Array<string> | string | undefined
 ): boolean {
   const nodeText = node.getText();
 
   if (
     isIgnoredPrefix(nodeText, ignorePrefix) ||
     isIgnoredExact(nodeText, ignoreExact) ||
-    isIgnoredPostfix(nodeText, ignorePostfix)
+    isIgnoredSuffix(nodeText, ignoreSuffix)
   ) {
     return true;
   }
 
   if (utils.isBinaryExpression(node)) {
-    return isIgnored(node.left, ignorePrefix, ignoreExact, ignorePostfix);
+    return isIgnored(node.left, ignorePrefix, ignoreExact, ignoreSuffix);
   }
 
   if (
     utils.isPrefixUnaryExpression(node) ||
     utils.isPostfixUnaryExpression(node)
   ) {
-    return isIgnored(node.operand, ignorePrefix, ignoreExact, ignorePostfix);
+    return isIgnored(node.operand, ignorePrefix, ignoreExact, ignoreSuffix);
   }
 
   if (Object.prototype.hasOwnProperty.call(node, "expression")) {
@@ -186,7 +186,7 @@ export function isIgnored(
       (node as any).expression,
       ignorePrefix,
       ignoreExact,
-      ignorePostfix
+      ignoreSuffix
     );
   }
 
@@ -212,21 +212,21 @@ function isIgnoredPrefix(
   return false;
 }
 
-function isIgnoredPostfix(
+function isIgnoredSuffix(
   text: string,
-  ignorePostfix: Array<string> | string | undefined
+  ignoreSuffix: Array<string> | string | undefined
 ): boolean {
-  if (!ignorePostfix) {
+  if (!ignoreSuffix) {
     return false;
   }
-  if (Array.isArray(ignorePostfix)) {
+  if (Array.isArray(ignoreSuffix)) {
     if (
-      ignorePostfix.find(pfx => text.indexOf(pfx) === text.length - pfx.length)
+      ignoreSuffix.find(pfx => text.indexOf(pfx) === text.length - pfx.length)
     ) {
       return true;
     }
   } else {
-    if (text.indexOf(ignorePostfix) === text.length - ignorePostfix.length) {
+    if (text.indexOf(ignoreSuffix) === text.length - ignoreSuffix.length) {
       return true;
     }
   }

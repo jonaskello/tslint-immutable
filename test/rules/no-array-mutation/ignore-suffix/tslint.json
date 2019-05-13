@@ -1,6 +1,6 @@
 {
   "rulesDirectory": ["../../../../rules"],
   "rules": {
-    "readonly-array": [true, {"ignore-postfix": "Mutable"}]
+    "no-array-mutation": [true, { "ignore-suffix": "Mutable" }]
   }
 }

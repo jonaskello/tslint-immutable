@@ -7,7 +7,7 @@ type Foo = ReadonlyArray<string>;
 type Foo = Array<string>;
            ~~~~~~~~~~~~~ [failure]
 
-// Should not fail on Array type alias with postfix (TypeReferenceNode)
+// Should not fail on Array type alias with suffix (TypeReferenceNode)
 type fooMutable = Array<string>;
 
 // Should fail on Array as type member (TypeReferenceNode)
@@ -16,7 +16,7 @@ type Foo = {
        ~~~~~~~~~~~~~ [failure]
 }
 
-// Should not fail on Array as type member with postfix (TypeReferenceNode)
+// Should not fail on Array as type member with suffix (TypeReferenceNode)
 type Foo = {
   barMutable: Array<string>
 }
@@ -32,7 +32,7 @@ function foo() {
   type Foo = Array<string>;
              ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array type alias with postfix (TypeReferenceNode)
+  // Should not fail on Array type alias with suffix (TypeReferenceNode)
   type fooMutable = Array<string>;
 
   // Should fail on Array as type member (TypeReferenceNode)
@@ -41,7 +41,7 @@ function foo() {
          ~~~~~~~~~~~~~ [failure]
   }
 
-  // Should not fail on Array as type member with postfix (TypeReferenceNode)
+  // Should not fail on Array as type member with suffix (TypeReferenceNode)
   type Foo = {
     barMutable: Array<string>
   }
@@ -57,7 +57,7 @@ const foo = () => {
   type Foo = Array<string>;
              ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array type alias with postfix (TypeReferenceNode)
+  // Should not fail on Array type alias with suffix (TypeReferenceNode)
   type fooMutable = Array<string>;
 
   // Should fail on Array as type member (TypeReferenceNode)
@@ -66,7 +66,7 @@ const foo = () => {
          ~~~~~~~~~~~~~ [failure]
   }
 
-  // Should not fail on Array as type member with postfix (TypeReferenceNode)
+  // Should not fail on Array as type member with suffix (TypeReferenceNode)
   type Foo = {
     barMutable: Array<string>
   }

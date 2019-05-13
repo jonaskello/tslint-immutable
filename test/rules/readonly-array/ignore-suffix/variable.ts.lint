@@ -7,14 +7,14 @@ const foo: ReadonlyArray<string> = [];
 const foo: Array<string> = [];
            ~~~~~~~~~~~~~ [failure]
 
-// Should not fail on Array type in variable declaration with postfix (TypeReferenceNode)
+// Should not fail on Array type in variable declaration with suffix (TypeReferenceNode)
 const fooMutable: Array<string> = [];
 
 // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
 const foo = [1, 2, 3]
       ~~~ [failure]
 
-// Should not fail on implicit Array type in variable declaration with postfix (ArrayLiteralExpression)
+// Should not fail on implicit Array type in variable declaration with suffix (ArrayLiteralExpression)
 const fooMutable = [1, 2, 3]
 
 // -- Local variable declarations
@@ -31,14 +31,14 @@ function foo(bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3], fo
   const foo: Array<string> = [];
              ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array type in variable declaration with postfix (TypeReferenceNode)
+  // Should not fail on Array type in variable declaration with suffix (TypeReferenceNode)
   const fooMutable: Array<string> = [];
 
   // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
   const foo = [1, 2, 3]
         ~~~ [failure]
 
-  // Should not fail on implicit Array type in variable declaration with postfix (ArrayLiteralExpression)
+  // Should not fail on implicit Array type in variable declaration with suffix (ArrayLiteralExpression)
   const fooMutable = [1, 2, 3]
 
 }
@@ -55,14 +55,14 @@ const foo = (bar: Array<string>, zoo: ReadonlyArray<string>, boo = [1, 2, 3], fo
   const foo: Array<string> = [];
              ~~~~~~~~~~~~~ [failure]
 
-  // Should not fail on Array type in variable declaration with postfix (TypeReferenceNode)
+  // Should not fail on Array type in variable declaration with suffix (TypeReferenceNode)
   const fooMutable: Array<string> = [];
 
   // Should fail on implicit Array type in variable declaration (ArrayLiteralExpression)
   const foo = [1, 2, 3]
         ~~~ [failure]
 
-  // Should not fail on implicit Array type in variable declaration with postfix (ArrayLiteralExpression)
+  // Should not fail on implicit Array type in variable declaration with suffix (ArrayLiteralExpression)
   const fooMutable = [1, 2, 3]
 
 }
