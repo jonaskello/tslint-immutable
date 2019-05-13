@@ -41,7 +41,6 @@ function checkNode(
   if (
     utils.isBinaryExpression(node) &&
     isAccessExpression(node.left) &&
-    utils.isBinaryExpression(node) &&
     isAssignmentKind(node.operatorToken.kind) &&
     !Ignore.isIgnoredPrefix(
       node.getText(node.getSourceFile()),
