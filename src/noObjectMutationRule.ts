@@ -43,9 +43,9 @@ function checkNode(
     isAccessExpression(node.left) &&
     isAssignmentKind(node.operatorToken.kind) &&
     !Ignore.isIgnored(
-      node,
+      node.left,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     !inConstructor(node)
@@ -59,8 +59,8 @@ function checkNode(
     isAccessExpression(node.expression) &&
     !Ignore.isIgnored(
       node.expression,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     )
   ) {
@@ -74,8 +74,8 @@ function checkNode(
     forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnored(
       node.operand,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     )
   ) {
@@ -88,9 +88,9 @@ function checkNode(
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator) &&
     !Ignore.isIgnored(
-      node,
+      node.operand,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     )
   ) {
@@ -108,8 +108,8 @@ function checkNode(
       utils.isPropertyAccessExpression(node.arguments[0])) &&
     !Ignore.isIgnored(
       node.arguments[0],
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     // Do type checking as late as possible as it is expensive.

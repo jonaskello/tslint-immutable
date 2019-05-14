@@ -1,6 +1,6 @@
 {
     "rulesDirectory": ["../../../../rules"],
     "rules": {
-        "no-expression-statement": [true, {"ignore-prefix": "console.l"}]
+        "no-expression-statement": [true, {"ignore-prefix": "console.log"}]
     }
 }

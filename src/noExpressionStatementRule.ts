@@ -27,8 +27,8 @@ function checkNode(
     );
     const isIgnored = Ignore.isIgnored(
       node.expression,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     );
     if (!isYield && !isIgnored) {

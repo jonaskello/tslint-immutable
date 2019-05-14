@@ -125,9 +125,9 @@ function checkBinaryExpression(
 ): CheckNodeResult {
   if (
     !Ignore.isIgnored(
-      node,
+      node.left,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     isAssignmentKind(node.operatorToken.kind) &&
@@ -155,8 +155,8 @@ function checkDeleteExpression(
   if (
     !Ignore.isIgnored(
       node.expression,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     isAccessExpression(node.expression)
@@ -183,8 +183,8 @@ function checkPrefixUnaryExpression(
   if (
     !Ignore.isIgnored(
       node.operand,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     isAccessExpression(node.operand) &&
@@ -212,8 +212,8 @@ function checkPostfixUnaryExpression(
   if (
     !Ignore.isIgnored(
       node.operand,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     isAccessExpression(node.operand) &&
@@ -240,9 +240,9 @@ function checkCallExpression(
 ): CheckNodeResult {
   if (
     !Ignore.isIgnored(
-      node,
+      node.expression,
+      ctx.options.ignorePattern,
       ctx.options.ignorePrefix,
-      ctx.options.ignore,
       ctx.options.ignoreSuffix
     ) &&
     utils.isPropertyAccessExpression(node.expression) &&

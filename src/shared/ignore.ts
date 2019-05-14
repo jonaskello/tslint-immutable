@@ -4,6 +4,7 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import { escapeRegExp } from "tslint/lib/utils";
 import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
 import {
@@ -24,8 +25,8 @@ export interface IgnoreLocalOption {
 }
 
 export interface IgnoreOption {
+  readonly ignorePattern?: string | Array<string> | undefined;
   readonly ignorePrefix?: string | Array<string> | undefined;
-  readonly ignore?: string | Array<string> | undefined;
   readonly ignoreSuffix?: string | Array<string> | undefined;
 }
 
@@ -141,10 +142,10 @@ export function shouldIgnore(
   ) {
     const variableText = node.name.getText(sourceFile);
 
-    if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
+    if (isIgnoredPattern(variableText, options.ignorePattern)) {
       return true;
     }
-    if (isIgnoredExact(variableText, options.ignore)) {
+    if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
       return true;
     }
     if (isIgnoredSuffix(variableText, options.ignoreSuffix)) {
@@ -156,33 +157,22 @@ export function shouldIgnore(
 
 export function isIgnored(
   node: ts.Node,
+  ignorePattern: Array<string> | string | undefined,
   ignorePrefix: Array<string> | string | undefined,
-  ignoreExact: Array<string> | string | undefined,
   ignoreSuffix: Array<string> | string | undefined
 ): boolean {
-  const nodeText = node.getText();
+  const text = node.getText();
 
   if (
-    isIgnoredPrefix(nodeText, ignorePrefix) ||
-    isIgnoredExact(nodeText, ignoreExact) ||
-    isIgnoredSuffix(nodeText, ignoreSuffix)
+    isIgnoredPrefix(text, ignorePrefix) ||
+    isIgnoredSuffix(text, ignoreSuffix) ||
+    isIgnoredPattern(node.getText(), ignorePattern)
   ) {
     return true;
   }
 
-  if (utils.isBinaryExpression(node)) {
-    return isIgnored(node.left, ignorePrefix, ignoreExact, ignoreSuffix);
-  }
-
-  if (
-    utils.isPrefixUnaryExpression(node) ||
-    utils.isPostfixUnaryExpression(node)
-  ) {
-    return isIgnored(node.operand, ignorePrefix, ignoreExact, ignoreSuffix);
-  }
-
   if (hasExpression(node)) {
-    return isIgnored(node.expression, ignorePrefix, ignoreExact, ignoreSuffix);
+    return isIgnored(node.expression, undefined, ignorePrefix, ignoreSuffix);
   }
 
   return false;
@@ -232,21 +222,67 @@ function isIgnoredSuffix(
   return false;
 }
 
-function isIgnoredExact(
+function isIgnoredPattern(
   text: string,
-  ignore: Array<string> | string | undefined
+  ignorePattern: Array<string> | string | undefined
 ): boolean {
-  if (!ignore) {
+  if (!ignorePattern) {
     return false;
   }
-  if (Array.isArray(ignore)) {
-    if (ignore.find(pfx => text === pfx)) {
-      return true;
+  const patterns = Array.isArray(ignorePattern)
+    ? ignorePattern
+    : [ignorePattern];
+
+  const findMatch = (
+    patternParts: ReadonlyArray<string>,
+    textParts: ReadonlyArray<string>
+  ): boolean => {
+    let index = 0;
+    for (; index < patternParts.length; index++) {
+      // Out of text?
+      if (index >= textParts.length) {
+        return false;
+      }
+
+      switch (patternParts[index]) {
+        // Match any depth (including 0)?
+        case "**":
+          const subpattern = patternParts.slice(index + 1);
+          for (let offset = index; offset < textParts.length; offset++) {
+            const submatch = findMatch(subpattern, textParts.slice(offset));
+            if (submatch) {
+              return submatch;
+            }
+          }
+          return false;
+
+        // Match anything?
+        case "*":
+          continue;
+
+        default:
+          break;
+      }
+
+      // textParts[i] matches patternParts[i]?
+      if (
+        new RegExp(
+          "^" + escapeRegExp(patternParts[index]).replace(/\\\*/g, ".*") + "$"
+        ).test(textParts[index])
+      ) {
+        continue;
+      }
+
+      // No Match.
+      return false;
     }
-  } else {
-    if (text === ignore) {
-      return true;
-    }
-  }
-  return false;
+
+    // Match.
+    return textParts.length === index;
+  };
+
+  // One or more patterns match?
+  return patterns.some(pattern =>
+    findMatch(pattern.split("."), text.split("."))
+  );
 }

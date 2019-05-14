@@ -1,6 +1,6 @@
 {
   "rulesDirectory": ["../../../../rules"],
   "rules": {
-    "no-let": [true, { "ignore": "mutable" }]
+    "readonly-array": [true, {"ignore-pattern": ["a", "b"]}]
   }
 }
