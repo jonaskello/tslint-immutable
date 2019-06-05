@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [v6.0.0] - 2019-06-05
 
-* Overhaul ignore-prefix, adding in ignore-suffix and ignore-pattern.
+* Overhaul ignore-prefix, adding in ignore-suffix and ignore-pattern. See PR [#137](https://github.com/jonaskello/tslint-immutable/pull/137)
+* Updated the list of rules included in each ruleset. See PR [#138](https://github.com/jonaskello/tslint-immutable/pull/138)
 
 ## [v5.5.2] - 2019-03-25
 
