@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v6.0.0] - 2019-06-05
+
 * Overhaul ignore-prefix, adding in ignore-suffix and ignore-pattern.
 
 ## [v5.5.2] - 2019-03-25
