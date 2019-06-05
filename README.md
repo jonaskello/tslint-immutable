@@ -119,6 +119,8 @@ Yes
 * [ignore-class](#using-the-ignore-class-option)
 * [ignore-interface](#using-the-ignore-interface-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
+* [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -173,6 +175,8 @@ Yes
 
 * [ignore-local](#using-the-ignore-local-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
+* [ignore-pattern](#using-the-ignore-pattern-option)
 * [ignore-return-type](#using-the-ignore-return-type-option)
 * [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
 
@@ -219,6 +223,8 @@ Yes
 
 * [ignore-local](#using-the-ignore-local-option)
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
+* [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -255,6 +261,8 @@ No
 #### Options
 
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
+* [ignore-pattern](#using-the-ignore-pattern-option)
 * [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
 * ~~ignore-mutation-following-accessor~~ - _deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)_
 
@@ -294,6 +302,8 @@ No
 #### Options
 
 * [ignore-prefix](#using-the-ignore-prefix-option)
+* [ignore-suffix](#using-the-ignore-suffix-option)
+* [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -543,6 +553,29 @@ type person = {
 ```
 
 Yes, variable names like `mutableAge` are ugly, but then again mutation is an ugly business :-).
+
+### Using the `ignore-suffix` option
+
+Like ignore-prefix but with suffix matching instead of prefix matching.
+
+### Using the `ignore-pattern` option
+
+Like ignore-prefix and ignore-suffix but with more control.
+
+This option allows you to specify dot seperated paths what should be ignored.
+
+For example, the following config would ignore all object mutations for all properties that start with "mutable".
+
+```json
+{
+  "no-object-mutation": [true, { "ignore-pattern": "**.mutable*" }]
+}
+```
+
+The following wildcards can be used when specifing a pattern:
+
+* `**` - Match any depth (including zero). Can only be used as a full accessor.
+* `*`  - When used as a full accessor, match the next accessor. When used as part of an accessor, match any characters.
 
 ### Using the `ignore-prefix` option with `no-expression-statement`
 

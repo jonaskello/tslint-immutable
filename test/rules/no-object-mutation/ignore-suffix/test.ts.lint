@@ -1,5 +1,5 @@
 const x = {a: 1};
-const mutableY = {a: 1};
+const yMutable = {a: 1};
 
 // Disallowed object mutation patterns
 
@@ -18,27 +18,27 @@ x.a++;
 ++x.a;
 ~~~~~ [failure]
 
-// Allowed prefix
+// Allowed suffix
 
-mutableY.foo = 'bar';
+yMutable.foo = 'bar';
 
-mutableY['foo'] = 'bar';
+yMutable['foo'] = 'bar';
 
-delete mutableY.foo;
+delete yMutable.foo;
 
-mutableY.a++;
+yMutable.a++;
 
-++mutableY.a;
+++yMutable.a;
 
 // Disallow Object.assign() on identifiers.
 
 const value = { msg1: 'hello' };
-const mutableValue = value;
+const valueMutable = value;
 
 const foo = Object.assign(value, { msg2: 'world' });
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [failure]
 
-const foo = Object.assign(mutableValue, { msg2: 'world' });
+const foo = Object.assign(valueMutable, { msg2: 'world' });
 
 // Don't allow mutation of properties on immutable object.
 

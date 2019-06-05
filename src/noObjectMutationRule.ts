@@ -11,7 +11,7 @@ import {
 import * as Ignore from "./shared/ignore";
 import { isAccessExpression } from "./shared/typeguard";
 
-type Options = Ignore.IgnorePrefixOption;
+type Options = Ignore.IgnoreOption;
 
 // tslint:disable-next-line:variable-name
 export const Rule = createCheckNodeTypedRule(
@@ -42,9 +42,11 @@ function checkNode(
     utils.isBinaryExpression(node) &&
     isAccessExpression(node.left) &&
     isAssignmentKind(node.operatorToken.kind) &&
-    !Ignore.isIgnoredPrefix(
-      node.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.left,
+      ctx.options.ignorePattern,
+      ctx.options.ignorePrefix,
+      ctx.options.ignoreSuffix
     ) &&
     !inConstructor(node)
   ) {
@@ -55,9 +57,11 @@ function checkNode(
   if (
     utils.isDeleteExpression(node) &&
     isAccessExpression(node.expression) &&
-    !Ignore.isIgnoredPrefix(
-      node.expression.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.expression,
+      ctx.options.ignorePattern,
+      ctx.options.ignorePrefix,
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -68,9 +72,11 @@ function checkNode(
     utils.isPrefixUnaryExpression(node) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator) &&
-    !Ignore.isIgnoredPrefix(
-      node.operand.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.operand,
+      ctx.options.ignorePattern,
+      ctx.options.ignorePrefix,
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -81,9 +87,11 @@ function checkNode(
     utils.isPostfixUnaryExpression(node) &&
     isAccessExpression(node.operand) &&
     forbidUnaryOps.some(o => o === node.operator) &&
-    !Ignore.isIgnoredPrefix(
-      node.getText(node.getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.operand,
+      ctx.options.ignorePattern,
+      ctx.options.ignorePrefix,
+      ctx.options.ignoreSuffix
     )
   ) {
     invalidNodes = [...invalidNodes, createInvalidNode(node, [])];
@@ -98,9 +106,11 @@ function checkNode(
     node.arguments.length >= 2 &&
     (utils.isIdentifier(node.arguments[0]) ||
       utils.isPropertyAccessExpression(node.arguments[0])) &&
-    !Ignore.isIgnoredPrefix(
-      node.arguments[0].getText(node.arguments[0].getSourceFile()),
-      ctx.options.ignorePrefix
+    !Ignore.isIgnored(
+      node.arguments[0],
+      ctx.options.ignorePattern,
+      ctx.options.ignorePrefix,
+      ctx.options.ignoreSuffix
     ) &&
     // Do type checking as late as possible as it is expensive.
     isObjectConstructorType(

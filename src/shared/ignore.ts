@@ -4,15 +4,17 @@
 
 import * as ts from "typescript";
 import * as Lint from "tslint";
+import { escapeRegExp } from "tslint/lib/utils";
 import * as utils from "tsutils/typeguard/2.8";
 import * as CheckNode from "./check-node";
 import {
+  hasExpression,
   isFunctionLikeDeclaration,
   isVariableLikeDeclaration
 } from "./typeguard";
 
 export type Options = IgnoreLocalOption &
-  IgnorePrefixOption &
+  IgnoreOption &
   IgnoreRestParametersOption &
   IgnoreClassOption &
   IgnoreInterfaceOption &
@@ -22,8 +24,10 @@ export interface IgnoreLocalOption {
   readonly ignoreLocal?: boolean;
 }
 
-export interface IgnorePrefixOption {
+export interface IgnoreOption {
+  readonly ignorePattern?: string | Array<string> | undefined;
   readonly ignorePrefix?: string | Array<string> | undefined;
+  readonly ignoreSuffix?: string | Array<string> | undefined;
 }
 
 export interface IgnoreRestParametersOption {
@@ -126,33 +130,55 @@ function checkIgnoreLocalFunctionNode(
   return myInvalidNodes;
 }
 
-export function shouldIgnorePrefix(
+export function shouldIgnore(
   node: ts.Node,
-  options: IgnorePrefixOption,
+  options: IgnoreOption,
   sourceFile: ts.SourceFile
 ): boolean {
-  // Check ignore-prefix for VariableLikeDeclaration, TypeAliasDeclaration
-  if (options.ignorePrefix) {
-    if (
-      node &&
-      (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
-    ) {
-      const variableText = node.name.getText(sourceFile);
-      // if (
-      //   variableText.substr(0, options.ignorePrefix.length) ===
-      //   options.ignorePrefix
-      // ) {
-      //   return true;
-      // }
-      if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
-        return true;
-      }
+  // Check ignore for VariableLikeDeclaration, TypeAliasDeclaration
+  if (
+    node &&
+    (isVariableLikeDeclaration(node) || utils.isTypeAliasDeclaration(node))
+  ) {
+    const variableText = node.name.getText(sourceFile);
+
+    if (isIgnoredPattern(variableText, options.ignorePattern)) {
+      return true;
+    }
+    if (isIgnoredPrefix(variableText, options.ignorePrefix)) {
+      return true;
+    }
+    if (isIgnoredSuffix(variableText, options.ignoreSuffix)) {
+      return true;
     }
   }
   return false;
 }
 
-export function isIgnoredPrefix(
+export function isIgnored(
+  node: ts.Node,
+  ignorePattern: Array<string> | string | undefined,
+  ignorePrefix: Array<string> | string | undefined,
+  ignoreSuffix: Array<string> | string | undefined
+): boolean {
+  const text = node.getText();
+
+  if (
+    isIgnoredPrefix(text, ignorePrefix) ||
+    isIgnoredSuffix(text, ignoreSuffix) ||
+    isIgnoredPattern(node.getText(), ignorePattern)
+  ) {
+    return true;
+  }
+
+  if (hasExpression(node)) {
+    return isIgnored(node.expression, undefined, ignorePrefix, ignoreSuffix);
+  }
+
+  return false;
+}
+
+function isIgnoredPrefix(
   text: string,
   ignorePrefix: Array<string> | string | undefined
 ): boolean {
@@ -169,4 +195,94 @@ export function isIgnoredPrefix(
     }
   }
   return false;
+}
+
+function isIgnoredSuffix(
+  text: string,
+  ignoreSuffix: Array<string> | string | undefined
+): boolean {
+  if (!ignoreSuffix) {
+    return false;
+  }
+  if (Array.isArray(ignoreSuffix)) {
+    if (
+      ignoreSuffix.find(sfx => {
+        const indexToFindAt = text.length - sfx.length;
+        return indexToFindAt >= 0 && text.indexOf(sfx) === indexToFindAt;
+      })
+    ) {
+      return true;
+    }
+  } else {
+    const indexToFindAt = text.length - ignoreSuffix.length;
+    if (indexToFindAt >= 0 && text.indexOf(ignoreSuffix) === indexToFindAt) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isIgnoredPattern(
+  text: string,
+  ignorePattern: Array<string> | string | undefined
+): boolean {
+  if (!ignorePattern) {
+    return false;
+  }
+  const patterns = Array.isArray(ignorePattern)
+    ? ignorePattern
+    : [ignorePattern];
+
+  const findMatch = (
+    patternParts: ReadonlyArray<string>,
+    textParts: ReadonlyArray<string>
+  ): boolean => {
+    let index = 0;
+    for (; index < patternParts.length; index++) {
+      // Out of text?
+      if (index >= textParts.length) {
+        return false;
+      }
+
+      switch (patternParts[index]) {
+        // Match any depth (including 0)?
+        case "**":
+          const subpattern = patternParts.slice(index + 1);
+          for (let offset = index; offset < textParts.length; offset++) {
+            const submatch = findMatch(subpattern, textParts.slice(offset));
+            if (submatch) {
+              return submatch;
+            }
+          }
+          return false;
+
+        // Match anything?
+        case "*":
+          continue;
+
+        default:
+          break;
+      }
+
+      // textParts[i] matches patternParts[i]?
+      if (
+        new RegExp(
+          "^" + escapeRegExp(patternParts[index]).replace(/\\\*/g, ".*") + "$"
+        ).test(textParts[index])
+      ) {
+        continue;
+      }
+
+      // No Match.
+      return false;
+    }
+
+    // Match.
+    return textParts.length === index;
+  };
+
+  // One or more patterns match?
+  return patterns.some(pattern =>
+    findMatch(pattern.split("."), text.split("."))
+  );
 }

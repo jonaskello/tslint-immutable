@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+* Overhaul ignore-prefix, adding in ignore-suffix and ignore-pattern.
+
 ## [v5.5.2] - 2019-03-25
 
 * readonly-array rule with the option ignore-prefix set will now ignore nested arrays within an ignored variable. See [#132](https://github.com/jonaskello/tslint-immutable/issues/132). See PR [#133](https://github.com/jonaskello/tslint-immutable/pull/133)
