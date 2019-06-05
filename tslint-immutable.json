@@ -1,6 +1,7 @@
 {
   "rulesDirectory": "./rules",
   "rules": {
+    "no-array-mutation": false,
     "no-class": false,
     "no-delete": false,
     "no-expression-statement": false,
@@ -10,8 +11,11 @@
     "no-method-signature": false,
     "no-mixed-interface": false,
     "no-object-mutation": false,
+    "no-reject": false,
     "no-this": false,
-    "readonly-keyword": false,
-    "readonly-array": false
+    "no-throw": false,
+    "no-try": false,
+    "readonly-array": false,
+    "readonly-keyword": false
   }
 }
