@@ -1,3 +1,4 @@
+[typescript]: < 3.4.0
 // Function Declarations
 
 function foo(...numbers: ReadOnlyArray<number>): ReadOnlyArray<number> {

@@ -1,4 +1,4 @@
-[typescript]: >= 3.4.0
+[typescript]: < 3.4.0
 // -- Top-level interface declarations
 
 // Should fail on Array type in interface (TypeReferenceNode)

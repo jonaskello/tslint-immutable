@@ -24,8 +24,6 @@ script:
   - yarn lint
   - yarn add -D typescript@$TSVERSION
   - ./node_modules/.bin/tsc --version
-  - ./node_modules/.bin/tsc -p scripts/tsconfig.json
-  - node scripts/prepare-tests.js
   - yarn coverage
 after_success:
   - yarn report-coverage
