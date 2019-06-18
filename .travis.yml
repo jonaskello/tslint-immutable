@@ -24,7 +24,6 @@ script:
   - yarn build
   - yarn lint
   - yarn add -D typescript@$TSVERSION
-  - ./node_modules/.bin/tsc --version
   - yarn coverage
 after_success:
   - yarn report-coverage
