@@ -1,4 +1,4 @@
-[typescript]: >= 3.4.0
+[typescript]: < 3.4.0
 // -- Function spread arguments
 
 function foo(...numbers: number[]) {

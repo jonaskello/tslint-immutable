@@ -1,13 +1,14 @@
 language: node_js
 cache:
+  yarn: true
   directories:
     - node_modules
 notifications:
   email: false
 node_js:
+  - "12"
   - "10"
   - "8"
-  - "7"
   - "6"
 env:
   - TSVERSION=next
@@ -23,9 +24,6 @@ script:
   - yarn build
   - yarn lint
   - yarn add -D typescript@$TSVERSION
-  - ./node_modules/.bin/tsc --version
-  - ./node_modules/.bin/tsc -p scripts/tsconfig.json
-  - node scripts/prepare-tests.js
   - yarn coverage
 after_success:
   - yarn report-coverage

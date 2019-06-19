@@ -1,3 +1,4 @@
+[typescript]: >= 3.4.0
 function foo(tuple: [number, string]) {
                     ~~~~~~~~~~~~~~~~    [Only ReadonlyArray allowed.]
 }

@@ -1,4 +1,4 @@
-[typescript]: >= 3.4.0
+[typescript]: < 3.4.0
 // -- Top-level variable declarations
 
 // Should not fail on ReadonlyArray in variable declaration (TypeReferenceNode)
