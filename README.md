@@ -8,6 +8,10 @@
 
 [TSLint](https://palantir.github.io/tslint/) rules to disable mutation in TypeScript.
 
+:warning: **TSLint will be deprecated some time in 2019**. See this issue for more details: [Roadmap: TSLint &rarr; ESLint](https://github.com/palantir/tslint/issues/4534).
+
+:rocket: **Work has started to port these rules to a new eslint plugin** over at the [eslint-plugin-ts-immutable](https://github.com/jonaskello/eslint-plugin-ts-immutable) repo. Please head over there and give it a :star: :-).
+
 ## Background
 
 In some applications it is important to not mutate any data, for example when using Redux to store state in a React application. Moreover immutable data structures has a lot of advantages in general so I want to use them everywhere in my applications.
@@ -26,34 +30,34 @@ See the [example](#sample-configuration-file) tslint.json file for configuration
 
 ## Compability
 
-* tslint-immutable 5.x.x requires typescript >=2.8, node >=6, and tslint 5.x.x.
-* tslint-immutable 3.x.x requires tslint 5.x.x.
-* tslint-immutable 2.x.x requires tslint 4.x.x.
-* tslint-immutable 1.x.x requires tslint 3.x.x.
+- tslint-immutable 5.x.x requires typescript >=2.8, node >=6, and tslint 5.x.x.
+- tslint-immutable 3.x.x requires tslint 5.x.x.
+- tslint-immutable 2.x.x requires tslint 4.x.x.
+- tslint-immutable 1.x.x requires tslint 3.x.x.
 
 ## TSLint Rules
 
 In addition to immutable rules this project also contains a few rules for enforcing a functional style of programming. The following rules are available:
 
-* [Immutability rules](#immutability-rules)
-  * [readonly-keyword](#readonly-keyword)
-  * [readonly-array](#readonly-array)
-  * [no-let](#no-let)
-  * [no-array-mutation](#no-array-mutation)
-  * [no-object-mutation](#no-object-mutation)
-  * [no-method-signature](#no-method-signature)
-  * [no-delete](#no-delete)
-* [Functional style rules](#functional-style-rules)
-  * [no-this](#no-this-no-class)
-  * [no-class](#no-this-no-class)
-  * [no-mixed-interface](#no-mixed-interface)
-  * [no-expression-statement](#no-expression-statement)
-  * [no-if-statement](#no-if-statement)
-  * [no-loop-statement](#no-loop-statement)
-  * [no-throw](#no-throw)
-  * [no-try](#no-try)
-  * [no-reject](#no-reject)
-* [Recommended built-in rules](#recommended-built-in-rules)
+- [Immutability rules](#immutability-rules)
+  - [readonly-keyword](#readonly-keyword)
+  - [readonly-array](#readonly-array)
+  - [no-let](#no-let)
+  - [no-array-mutation](#no-array-mutation)
+  - [no-object-mutation](#no-object-mutation)
+  - [no-method-signature](#no-method-signature)
+  - [no-delete](#no-delete)
+- [Functional style rules](#functional-style-rules)
+  - [no-this](#no-this-no-class)
+  - [no-class](#no-this-no-class)
+  - [no-mixed-interface](#no-mixed-interface)
+  - [no-expression-statement](#no-expression-statement)
+  - [no-if-statement](#no-if-statement)
+  - [no-loop-statement](#no-loop-statement)
+  - [no-throw](#no-throw)
+  - [no-try](#no-try)
+  - [no-reject](#no-reject)
+- [Recommended built-in rules](#recommended-built-in-rules)
 
 ## Immutability rules
 
@@ -115,12 +119,12 @@ Yes
 
 #### Options
 
-* [ignore-local](#using-the-ignore-local-option)
-* [ignore-class](#using-the-ignore-class-option)
-* [ignore-interface](#using-the-ignore-interface-option)
-* [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-suffix](#using-the-ignore-suffix-option)
-* [ignore-pattern](#using-the-ignore-pattern-option)
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-class](#using-the-ignore-class-option)
+- [ignore-interface](#using-the-ignore-interface-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-suffix](#using-the-ignore-suffix-option)
+- [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -173,12 +177,12 @@ Yes
 
 #### Options
 
-* [ignore-local](#using-the-ignore-local-option)
-* [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-suffix](#using-the-ignore-suffix-option)
-* [ignore-pattern](#using-the-ignore-pattern-option)
-* [ignore-return-type](#using-the-ignore-return-type-option)
-* [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-suffix](#using-the-ignore-suffix-option)
+- [ignore-pattern](#using-the-ignore-pattern-option)
+- [ignore-return-type](#using-the-ignore-return-type-option)
+- [ignore-rest-parameters](#using-the-ignore-rest-parameters-option)
 
 #### Example config
 
@@ -209,7 +213,9 @@ What about `for` loops? Loops can be replaced with the Array methods like `map`,
 ```typescript
 const SearchResults = ({ results }) => (
   <ul>
-    {results.map(result => <li>result</li>) // <- Who needs let?
+    {results.map(result => (
+      <li>result</li>
+    )) // <- Who needs let?
     }
   </ul>
 );
@@ -221,10 +227,10 @@ Yes
 
 #### Options
 
-* [ignore-local](#using-the-ignore-local-option)
-* [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-suffix](#using-the-ignore-suffix-option)
-* [ignore-pattern](#using-the-ignore-pattern-option)
+- [ignore-local](#using-the-ignore-local-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-suffix](#using-the-ignore-suffix-option)
+- [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -260,11 +266,11 @@ No
 
 #### Options
 
-* [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-suffix](#using-the-ignore-suffix-option)
-* [ignore-pattern](#using-the-ignore-pattern-option)
-* [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
-* ~~ignore-mutation-following-accessor~~ - _deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)_
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-suffix](#using-the-ignore-suffix-option)
+- [ignore-pattern](#using-the-ignore-pattern-option)
+- [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)
+- ~~ignore-mutation-following-accessor~~ - _deprecated in favor of [ignore-new-array](#using-the-ignore-new-array-option-with-no-array-mutation)_
 
 #### Example config
 
@@ -301,9 +307,9 @@ No
 
 #### Options
 
-* [ignore-prefix](#using-the-ignore-prefix-option)
-* [ignore-suffix](#using-the-ignore-suffix-option)
-* [ignore-pattern](#using-the-ignore-pattern-option)
+- [ignore-prefix](#using-the-ignore-prefix-option)
+- [ignore-suffix](#using-the-ignore-suffix-option)
+- [ignore-pattern](#using-the-ignore-pattern-option)
 
 #### Example config
 
@@ -394,7 +400,7 @@ This rule checks that the value of an expression is assigned to a variable and t
 
 #### Options
 
-* [ignore-prefix](#using-the-ignore-prefix-option-with-no-expression-statement)
+- [ignore-prefix](#using-the-ignore-prefix-option-with-no-expression-statement)
 
 #### Example config
 
@@ -574,8 +580,8 @@ For example, the following config would ignore all object mutations for all prop
 
 The following wildcards can be used when specifing a pattern:
 
-* `**` - Match any depth (including zero). Can only be used as a full accessor.
-* `*`  - When used as a full accessor, match the next accessor. When used as part of an accessor, match any characters.
+- `**` - Match any depth (including zero). Can only be used as a full accessor.
+- `*` - When used as a full accessor, match the next accessor. When used as part of an accessor, match any characters.
 
 ### Using the `ignore-prefix` option with `no-expression-statement`
 
