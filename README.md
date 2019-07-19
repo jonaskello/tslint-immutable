@@ -10,7 +10,7 @@
 
 :warning: **TSLint will be deprecated some time in 2019**. See this issue for more details: [Roadmap: TSLint &rarr; ESLint](https://github.com/palantir/tslint/issues/4534).
 
-:rocket: **Work has started to port these rules to a new eslint plugin** over at the [eslint-plugin-ts-immutable](https://github.com/jonaskello/eslint-plugin-ts-immutable) repo. Please head over there and give it a :star: :-).
+:rocket: **Work has started to port these rules to a new eslint plugin** over at the [eslint-plugin-functional](https://github.com/jonaskello/eslint-plugin-functional) repo. Please head over there and give it a :star: :-).
 
 ## Background
 
